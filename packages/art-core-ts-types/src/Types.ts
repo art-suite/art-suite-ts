@@ -24,7 +24,9 @@ type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint
 
   */
 
-export const isPlainObject = (v: any): v is Record<string, any> => v != null && null == Object.getPrototypeOf(Object.getPrototypeOf(v))
+export const isObject = (v: any): v is Record<string, any> => v != null && typeof v === 'object'
+export const isPlainObject = (v: any): v is Record<string, any> => isObject(v) && null == Object.getPrototypeOf(Object.getPrototypeOf(v))
+export const isCustomObject = (v: any): v is Record<string, any> => isObject(v) && null != Object.getPrototypeOf(Object.getPrototypeOf(v))
 
 export const isFunction = (obj: any): obj is Function => typeof obj === "function"
 export const isNumber = (obj: any): obj is number => typeof obj === "number"
