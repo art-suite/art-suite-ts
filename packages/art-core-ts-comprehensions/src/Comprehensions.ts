@@ -1,6 +1,9 @@
 import { isPlainObject, isFunction, exists } from 'art-core-ts-types'
 import { EachFunction, ArrayFunction, ObjectFunction, ReduceFunction, FindFunction } from './ComprehensionTypes'
 
+const isMap = (source: any): source is Map<any, any> => source instanceof Map;
+const isSet = (source: any): source is Set<any> => source instanceof Set;
+
 const isArrayIterable = (source: any): source is any[] => source != null && source.length >= 0;
 const isOfIterable = (o: any): boolean => isFunction(o[Symbol.iterator] || o.next);
 
@@ -12,10 +15,11 @@ const emptyOptions = {};
 const iterate = (source: any, body: (value: any, key: any) => boolean) => {
   if (exists(source))
     if (isArrayIterable(source)) for (let key = 0, { length } = source; key < length; key++) { if (body(source[key], key)) break; }
-    else if (isOfIterable(source))
-      if (isFunction(source.entries)) for (const [key, value] of source.entries()) { if (body(value, key)) break; }
-      else for (const value of source) { if (body(value, value)) break; }
-    else for (const key in source) { if (body(source[key], key)) break; }
+    else if (isPlainObject(source)) for (const key in source) { if (body(source[key], key)) break; }
+    else if (isMap(source)) for (const [key, value] of source.entries()) { if (body(value, key)) break; }
+    else if (isSet(source)) for (const value of source) { if (body(value, value)) break; }
+    else if (isOfIterable(source)) for (const value of source) { if (body(value, value)) break; }
+    else throw new Error(`Unsupported source type: ${typeof source}`);
 };
 
 /*
