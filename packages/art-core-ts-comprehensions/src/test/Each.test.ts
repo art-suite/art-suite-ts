@@ -1,36 +1,66 @@
 import { describe, it, expect } from "vitest"
-import { testComprehension } from "./testLib"
 import { each } from "../Comprehensions"
 
 describe("Each comprehensions", () => {
-  // Basic null/undefined tests
-  testComprehension(undefined, each, undefined)
-  testComprehension(undefined, each, null)
-  testComprehension(null, each, null, { into: null })
-  testComprehension(null, each, null, { inject: null })
-  testComprehension(null, each, null, { returning: null })
+  describe("null/undefined handling", () => {
+    it("returns undefined for undefined input", () => {
+      expect(each(undefined)).toBeUndefined()
+    })
 
-  // Array iteration test
-  it("each [1 2 3]", () => {
-    let count = 0
-    each([1, 2, 3], (v, k) => count++)
-    expect(count).toBe(3)
+    it("returns undefined for null input", () => {
+      expect(each(null)).toBeUndefined()
+    })
+
+    it("returns null when into is null", () => {
+      expect(each(null, { into: null })).toBeNull()
+    })
+
+    it("returns null when inject is null", () => {
+      expect(each(null, { inject: null })).toBeNull()
+    })
+
+    it("returns null when returning is null", () => {
+      expect(each(null, { returning: null })).toBeNull()
+    })
   })
 
-  // Object iteration test
-  it("each {a:1 b:2 c:3}", () => {
-    let count = 0
-    each({ a: 1, b: 2, c: 3 }, (v, k) => count++)
-    expect(count).toBe(3)
+  describe("array iteration", () => {
+    it("iterates over array elements", () => {
+      let count = 0
+      each([1, 2, 3], (v, k) => count++)
+      expect(count).toBe(3)
+    })
+
+    it("stops iteration when stopWhen is true", () => {
+      let acc: any[] = []
+      each(
+        [1, 2, 3],
+        { with: (v) => acc.push(v * 3), stopWhen: (v) => v > 2 }
+      )
+      expect(acc).toEqual([3, 6])
+    })
   })
 
-  // stopWhen test
-  it("stopWhen", () => {
-    let acc: any[] = []
-    each(
-      [1, 2, 3],
-      { with: (v) => acc.push(v * 3), stopWhen: (v) => v > 2 }
-    )
-    expect(acc).toEqual([3, 6])
+  describe("object iteration", () => {
+    it("iterates over object entries", () => {
+      let count = 0
+      each({ a: 1, b: 2, c: 3 }, (v, k) => count++)
+      expect(count).toBe(3)
+    })
+  })
+
+  describe("iterable iteration", () => {
+    it("iterates over map entries", () => {
+      let count = 0
+      const map = new Map([['a', 1], ['b', 2], ['c', 3]])
+      each(map, (v, k) => count++)
+      expect(count).toBe(3)
+    })
+
+    it("iterates over set values", () => {
+      let count = 0
+      each(new Set([1, 2, 3]), (v, k) => count++)
+      expect(count).toBe(3)
+    })
   })
 })
