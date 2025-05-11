@@ -1,8 +1,8 @@
 // import { lowerCamelCase } from '../ArtStandardLib'
 import { object } from 'art-core-ts-comprehensions'
-import { isPlainObject, isDate } from 'art-core-ts-types'
+import { isPlainObject, isDate, isCustomObject, isObject, isFunction } from 'art-core-ts-types'
 import { JsonObject, JsonArray, JsonValue, JsonScalerValue, JsonPropsObject } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonScalerValue, isJsonArray } from './JsonTypeTests'
+import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonScalerValue, isJsonArray } from './JsonTypeFunctions'
 
 
 /**
@@ -14,8 +14,11 @@ import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonScalerVa
  */
 export const toJsonValue = (value: any, normalizeKeys: boolean = false): JsonValue => {
   if (isDate(value)) return value.toISOString();
-  if (isJsonObject(value)) return toJsonObject(value, normalizeKeys);
   if (isJsonArray(value)) return value.map((v) => toJsonValue(v, normalizeKeys));
+  if (isObject(value)) {
+    if (isFunction(value.toJsonValue)) return value.toJsonValue();
+    if (isJsonObject(value)) return toJsonObject(value, normalizeKeys);
+  }
   if (isJsonString(value) || isJsonNumber(value) || isJsonBoolean(value)) return value;
   if (value == null) return null; //return null if null or undefined
   return `${value}`;

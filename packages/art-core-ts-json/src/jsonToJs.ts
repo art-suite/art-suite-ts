@@ -1,5 +1,5 @@
 import { JsonObject, JsonArray, JsonValue } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonScalerValue, isJsonArray } from './JsonTypeTests'
+import { isJsonString, isJsonObject, isJsonScalerValue, isJsonArray } from './JsonTypeFunctions'
 import { objectHasKeys } from 'art-core-ts-containers'
 import { array } from 'art-core-ts-comprehensions'
 

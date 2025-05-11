@@ -1,5 +1,5 @@
-export * from "./toJson"
+export * from "./toJsonValue"
 export * from "./asJson"
-export * from "./JsonTypeTests"
+export * from "./JsonTypeFunctions"
 export * from "./JsonTypes"
 export * from "./jsonToJs"

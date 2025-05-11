@@ -1,3 +1,7 @@
+export interface ToJsonValue {
+  toJsonValue: () => JsonValue;
+}
+
 export type JsonScalerValue = string | number | boolean | null;
 export type JsonArray = JsonValue[];
 export type JsonObject = { [key: string]: JsonValue; }
