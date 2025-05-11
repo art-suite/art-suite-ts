@@ -25,7 +25,7 @@ describe("Object comprehensions", () => {
     })
 
     it("transforms keys and values", () => {
-      expect(object({ a: 1, b: 2 }, (v, k) => k + v)).toEqual({ a1: 1, b2: 2 })
+      expect(object({ a: 1, b: 2 }, (v, k) => k + v)).toEqual({ a: "a1", b: "b2" })
     })
 
     it("transforms keys with key option", () => {
@@ -47,7 +47,7 @@ describe("Object comprehensions", () => {
     })
 
     it("transforms string array with key and value", () => {
-      expect(object(["a", "b"], (v, k) => v + k)).toEqual({ a0: "a", b1: "b" })
+      expect(object(["a", "b"], (v, k) => v + k)).toEqual({ a: "a0", b: "b1" })
     })
   })
 
@@ -63,11 +63,11 @@ describe("Object comprehensions", () => {
     })
   })
 
-  // describe("fromSets", () => {
-  //   it("converts set to object", () => {
-  //     expect(object(new Set([1, 2]))).toEqual({ 1: 1, 2: 2 })
-  //   })
-  // })
+  describe("fromSets", () => {
+    it("converts set to object", () => {
+      expect(object(new Set([1, 2]))).toEqual({ 1: 1, 2: 2 })
+    })
+  })
 
   describe("fromGenerators", () => {
     it("converts generator to object with x2 transform", () => {

@@ -78,10 +78,11 @@ export interface ArrayFunction {
   <InV, OutV>(source: ObjectInput<InV>, into: OutV[], withFn: ObjectWithFn<InV, OutV>): OutV[];
   <InV, OutV>(source: ObjectInput<InV>, into: OutV[], options: Omit<ObjectResultOptions<InV, string, OutV>, 'key' | 'withKey' | 'into'>): OutV[];
 
-  // Source: IterableInput (e.g. Set<InV> - key is InV)
-  <InV>(source: IterableInput<InV>): InV[];
-  <InV, OutV>(source: IterableInput<InV>, withFn: IterableWithFn<InV, InV, OutV>): OutV[]; // Assuming key is InV for Set-like
-  // More specific Iterable overloads for Map<K,V> would be needed for full key-type safety
+  // Source: IterableInput (e.g. Set<InV> or Map<KeyV, InV>)
+  <InV>(source: IterableInput<InV>): InV[]; // For Set-like where key and value are the same
+  <KeyV, InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>): InV[]; // For Map-like where key and value are different
+  <InV, OutV = InV>(source: IterableInput<InV>, withFnOrOptions: IterableWithFn<InV, InV, OutV> | Omit<ObjectResultOptions<InV, InV, OutV>, 'key' | 'withKey' | 'into'> & { into?: OutV[] }): OutV[]; // For Set-like
+  <KeyV, InV, OutV = InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, withFnOrOptions: IterableWithFn<InV, KeyV, OutV> | Omit<ObjectResultOptions<InV, KeyV, OutV>, 'key' | 'withKey' | 'into'> & { into?: OutV[] }): OutV[]; // For Map-like
 
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any, into?: any): [];
@@ -100,9 +101,11 @@ export interface ObjectFunction {
   <InV, OutV = InV, OutK extends string | number | symbol = string>(source: ObjectInput<InV>, withFnOrOptions: ObjectWithFn<InV, OutV> | ObjectResultOptions<InV, string, OutV, OutK>): PlainObject<OutV>;
   <InV, OutV = InV, OutK extends string | number | symbol = string>(source: ObjectInput<InV>, into: PlainObject<OutV>, withFnOrOptions: ObjectWithFn<InV, OutV> | ObjectResultOptions<InV, string, OutV, OutK>): PlainObject<OutV>;
 
-  // Source: IterableInput (e.g. Map<KeyV, InV>)
-  <KeyV, InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>): PlainObject<InV>; // Assumes iterating entries for Map
-  <KeyV, InV, OutV = InV, OutK extends string | number | symbol = string>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, withFnOrOptions: IterableWithFn<InV, KeyV, OutV> | ObjectResultOptions<InV, KeyV, OutV, OutK>): PlainObject<OutV>;
+  // Source: IterableInput (e.g. Map<KeyV, InV> or Set<InV>)
+  <InV>(source: IterableInput<InV>): PlainObject<InV>; // For Set-like where key and value are the same
+  <KeyV, InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>): PlainObject<InV>; // For Map-like where key and value are different
+  <InV, OutV = InV, OutK extends string | number | symbol = string>(source: IterableInput<InV>, withFnOrOptions: IterableWithFn<InV, InV, OutV> | ObjectResultOptions<InV, InV, OutV, OutK>): PlainObject<OutV>; // For Set-like
+  <KeyV, InV, OutV = InV, OutK extends string | number | symbol = string>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, withFnOrOptions: IterableWithFn<InV, KeyV, OutV> | ObjectResultOptions<InV, KeyV, OutV, OutK>): PlainObject<OutV>; // For Map-like
 
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any, into?: any): PlainObject<never>;
@@ -119,9 +122,11 @@ export interface FindFunction {
   <InV>(source: ObjectInput<InV>): InV | undefined;
   <InV, OutV = InV>(source: ObjectInput<InV>, withFnOrOptions: ObjectWithFn<InV, OutV | boolean> | FindOptions<InV, string, OutV>): OutV | undefined;
 
-  // Source: IterableInput
-  <InV>(source: IterableInput<InV>): InV | undefined;
-  <InV, KeyV, OutV = InV>(source: IterableInput<InV>, withFnOrOptions: IterableWithFn<InV, KeyV, OutV | boolean> | FindOptions<InV, KeyV, OutV>): OutV | undefined;
+  // Source: IterableInput (e.g. Set<InV> or Map<KeyV, InV>)
+  <InV>(source: IterableInput<InV>): InV | undefined; // For Set-like where key and value are the same
+  <KeyV, InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>): InV | undefined; // For Map-like where key and value are different
+  <InV, OutV = InV>(source: IterableInput<InV>, withFnOrOptions: IterableWithFn<InV, InV, OutV | boolean> | FindOptions<InV, InV, OutV>): OutV | undefined; // For Set-like
+  <KeyV, InV, OutV = InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, withFnOrOptions: IterableWithFn<InV, KeyV, OutV | boolean> | FindOptions<InV, KeyV, OutV>): OutV | undefined; // For Map-like
 
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any): undefined;
@@ -163,9 +168,11 @@ export interface EachFunction {
   <InV, IntoV = undefined>(source: ObjectInput<InV>, withFnOrOptions?: ObjectWithFn<InV, any> | (BaseComprehensionOptions<InV, string> & { into?: IntoV })): IntoV;
   <InV, IntoV>(source: ObjectInput<InV>, into: IntoV, withFnOrOptions?: ObjectWithFn<InV, any> | BaseComprehensionOptions<InV, string>): IntoV;
 
-  // Source: IterableInput
-  <InV, KeyV, IntoV = undefined>(source: IterableInput<InV>, withFnOrOptions?: IterableWithFn<InV, KeyV, any> | (BaseComprehensionOptions<InV, KeyV> & { into?: IntoV })): IntoV;
-  <InV, KeyV, IntoV>(source: IterableInput<InV>, into: IntoV, withFnOrOptions?: IterableWithFn<InV, KeyV, any> | BaseComprehensionOptions<InV, KeyV>): IntoV;
+  // Source: IterableInput (e.g. Set<InV> or Map<KeyV, InV>)
+  <InV, IntoV = undefined>(source: IterableInput<InV>, withFnOrOptions?: IterableWithFn<InV, InV, any> | (BaseComprehensionOptions<InV, InV> & { into?: IntoV })): IntoV; // For Set-like where key and value are the same
+  <KeyV, InV, IntoV = undefined>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, withFnOrOptions?: IterableWithFn<InV, KeyV, any> | (BaseComprehensionOptions<InV, KeyV> & { into?: IntoV })): IntoV; // For Map-like where key and value are different
+  <InV, IntoV>(source: IterableInput<InV>, into: IntoV, withFnOrOptions?: IterableWithFn<InV, InV, any> | BaseComprehensionOptions<InV, InV>): IntoV; // For Set-like
+  <KeyV, InV, IntoV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>, into: IntoV, withFnOrOptions?: IterableWithFn<InV, KeyV, any> | BaseComprehensionOptions<InV, KeyV>): IntoV; // For Map-like
 
   // Source: NotPresent
   <IntoV = undefined>(source: NotPresent, withFnOrOptions?: any, intoArg?: IntoV): IntoV;
