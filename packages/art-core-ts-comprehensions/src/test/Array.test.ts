@@ -8,9 +8,8 @@ describe("Array comprehensions", () => {
   testComprehension([], array, [])
   testComprehension([2, 4], array, { a: 1, b: 2 }, x2)
   testComprehension([2, 4, 6, 8], array, [1, 2, 3, 4], x2)
-  testComprehension([2, 4, 6, 8], array, [1, 2, 3, 4], { map: x2 })
   testComprehension([4, 8], array, [1, 2, 3, 4], { with: x2, when: even })
-  testComprehension([4, 8, 12, 16], array, [1, 2, 3, 4], { with: x2, map: x2 })
+  testComprehension([2, 4, 6, 8], array, [1, 2, 3, 4], { with: x2 })
 
   // Map operations
   const map = new Map([

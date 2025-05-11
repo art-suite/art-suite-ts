@@ -25,6 +25,7 @@ type ObjectKeyFn<InV, InK_Actual, OutK extends string | number | symbol = string
 // Options
 interface BaseComprehensionOptions<InV, InK_Actual> {
   when?: InK_Actual extends number ? ArrayWhenFn<InV> : InK_Actual extends string ? ObjectWhenFn<InV> : IterableWhenFn<InV, InK_Actual>;
+  stopWhen?: InK_Actual extends number ? ArrayWhenFn<InV> : InK_Actual extends string ? ObjectWhenFn<InV> : IterableWhenFn<InV, InK_Actual>;
   // 'map' option from Comprehensions.js is mainly for reduce/inject internal step,
   // if it needs to be exposed, it would be: map?: (value: InV, key: InK_Actual) => any;
 }
@@ -62,7 +63,7 @@ interface ReduceOptions<AccV, InV, InK_Actual> extends BaseComprehensionOptions<
 
 
 // ### array ###
-interface ArrayFunction {
+export interface ArrayFunction {
   // Source: ArrayInput
   <InV>(source: ArrayInput<InV>): InV[];
   <InV, OutV>(source: ArrayInput<InV>, withFn: ArrayWithFn<InV, OutV>): OutV[];
@@ -85,11 +86,10 @@ interface ArrayFunction {
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any, into?: any): [];
 }
-export declare const array: ArrayFunction;
 
 
 // ### object ###
-interface ObjectFunction {
+export interface ObjectFunction {
   // Source: ArrayInput
   <InV>(source: ArrayInput<InV>): PlainObject<InV>; // Keys are indices as strings by default, or values if keyfn used.
   <InV, OutV = InV, OutK extends string | number | symbol = string>(source: ArrayInput<InV>, withFnOrOptions: ArrayWithFn<InV, OutV> | ObjectResultOptions<InV, number, OutV, OutK>): PlainObject<OutV>;
@@ -107,11 +107,10 @@ interface ObjectFunction {
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any, into?: any): PlainObject<never>;
 }
-export declare const object: ObjectFunction;
 
 
 // ### find ###
-interface FindFunction {
+export interface FindFunction {
   // Source: ArrayInput
   <InV>(source: ArrayInput<InV>): InV | undefined;
   <InV, OutV = InV>(source: ArrayInput<InV>, withFnOrOptions: ArrayWithFn<InV, OutV | boolean> | FindOptions<InV, number, OutV>): OutV | undefined; // withFn can return boolean for filtering
@@ -127,11 +126,9 @@ interface FindFunction {
   // Source: NotPresent
   (source: NotPresent, withFnOrOptions?: any): undefined;
 }
-export declare const find: FindFunction;
-
 
 // ### reduce ###
-interface ReduceFunction {
+export interface ReduceFunction {
   // Source: ArrayInput
   <InV>(source: ArrayInput<InV>): InV; // Returns last element if no reducer/options
   <InV, AccV>(source: ArrayInput<InV>, reducer: ReduceWithFn<AccV, InV, number>, initialValue: AccV): AccV;
@@ -153,12 +150,11 @@ interface ReduceFunction {
   // Source: NotPresent
   (source: NotPresent, reducerOrOptions?: any, initialValue?: any): undefined;
 }
-export declare const reduce: ReduceFunction;
 
 // ### each ###
 // `each` returns its `into` argument if provided (via param or options), otherwise returns undefined.
 // The `into` is NOT modified by `each` itself, but the callbacks might modify it if it's an object/array.
-interface EachFunction {
+export interface EachFunction {
   // Source: ArrayInput
   <InV, IntoV = undefined>(source: ArrayInput<InV>, withFnOrOptions?: ArrayWithFn<InV, any> | (BaseComprehensionOptions<InV, number> & { into?: IntoV })): IntoV;
   <InV, IntoV>(source: ArrayInput<InV>, into: IntoV, withFnOrOptions?: ArrayWithFn<InV, any> | BaseComprehensionOptions<InV, number>): IntoV;
@@ -174,4 +170,3 @@ interface EachFunction {
   // Source: NotPresent
   <IntoV = undefined>(source: NotPresent, withFnOrOptions?: any, intoArg?: IntoV): IntoV;
 }
-export declare const each: EachFunction;

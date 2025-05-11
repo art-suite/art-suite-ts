@@ -1,4 +1,5 @@
 import { test, expect } from "vitest"
+import { isArray, isFunction, isPlainObject } from "art-core-ts-types"
 
 /*
 toS = (el) ->
@@ -37,9 +38,9 @@ const toS = (el: any): string => {
   if (el === null) return "null"
   if (el === undefined) return "undefined"
   if (el.name) return el.name
-  if (typeof el === "function") return `${el}`
-  if (Array.isArray(el)) return `[${el.map(v => toS(v)).join(", ")}]`
-  if (typeof el === "object") {
+  if (isFunction(el)) return `${el}`
+  if (isArray(el)) return `[${el.map(v => toS(v)).join(", ")}]`
+  if (isPlainObject(el)) {
     return `{${Object.entries(el).map(([k, v]) => `${k}: ${toS(v)}`).join(", ")}}`
   }
   return `${el}`
