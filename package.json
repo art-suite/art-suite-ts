@@ -5,8 +5,12 @@
     "art-core-ts-comprehensions": "file:packages/art-core-ts-comprehensions",
     "art-core-ts-containers": "file:packages/art-core-ts-containers",
     "art-core-ts-json": "file:packages/art-core-ts-json",
+    "art-core-ts-string-case": "file:packages/art-core-ts-string-case",
+    "art-core-ts-time": "file:packages/art-core-ts-time",
     "art-core-ts-types": "file:packages/art-core-ts-types",
     "boilerplate": "file:boilerplate",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "typescript": "^5.3.3",
     "vitest": "^3.1.3"
   },
