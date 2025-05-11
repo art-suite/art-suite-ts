@@ -1,19 +1,19 @@
 import { describe, it, expect } from 'vitest'
-import { objectHasKey, objectKeyCount } from '../ObjectKeys'
+import { objectHasKeys, objectKeyCount } from '../ObjectKeys'
 
 describe('objectHasKey', () => {
   it('returns true for object with own properties', () => {
-    expect(objectHasKey({ a: 1 })).toBe(true)
-    expect(objectHasKey({ a: 1, b: 2 })).toBe(true)
+    expect(objectHasKeys({ a: 1 })).toBe(true)
+    expect(objectHasKeys({ a: 1, b: 2 })).toBe(true)
   })
 
   it('returns false for empty object', () => {
-    expect(objectHasKey({})).toBe(false)
+    expect(objectHasKeys({})).toBe(false)
   })
 
   it('returns false for object with only inherited properties', () => {
     const obj = Object.create({ inherited: 1 })
-    expect(objectHasKey(obj)).toBe(false)
+    expect(objectHasKeys(obj)).toBe(false)
   })
 })
 
