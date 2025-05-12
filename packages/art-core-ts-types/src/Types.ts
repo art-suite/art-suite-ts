@@ -62,8 +62,14 @@ export const isNonNegativeInt = (x: number): x is number => ((x | 0) === x) && x
 export const stringIsPresent = (str: string): boolean => isString(str) && !/^(\s+|)$/.test(str)
 
 export const exists = (value: any): boolean => value != null
-export const isNull = (value: any): boolean => value == null
+export const doesNotExist = (value: any): boolean => !exists(value)
+
+export const isNull = (value: any): boolean => value === null
 export const isNotNull = (value: any): boolean => !isNull(value)
+
+export const isUndefined = (value: any): boolean => value === undefined
+export const isNotUndefined = (value: any): boolean => !isUndefined(value)
+
 export const isNullish = (value: any): boolean => value == null || value == undefined
 export const isNotNullish = (value: any): boolean => !isNullish(value)
 
