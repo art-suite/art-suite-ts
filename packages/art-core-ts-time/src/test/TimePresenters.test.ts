@@ -1,7 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { humanDurationString, timeAgo, humanTimeDeltaString, niceDateString, niceFullDateString, niceTimeDetailsString, niceMonthYear } from '../TimePresenters.js'
-import { secondsPer } from '../TimeConstants.js'
-import { toSeconds } from '../DateLib.js'
+import { humanDurationString, timeAgo, humanTimeDeltaString, niceDateString, niceFullDateString, niceTimeDetailsString, niceMonthYear, secondsPer } from '@art-suite/art-core-ts-time'
 
 const now = new Date('2024-07-01T12:35:00')
 

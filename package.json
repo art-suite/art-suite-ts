@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@art-suite/art-core-ts": "file:packages/art-core-ts",
     "@art-suite/art-core-ts-comprehensions": "file:packages/art-core-ts-comprehensions",
     "@art-suite/art-core-ts-containers": "file:packages/art-core-ts-containers",
     "@art-suite/art-core-ts-json": "file:packages/art-core-ts-json",

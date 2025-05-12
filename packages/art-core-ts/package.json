@@ -3,9 +3,12 @@
   "dependencies": {
     "@art-suite/art-core-ts-comprehensions": "^0.1.0",
     "@art-suite/art-core-ts-containers": "^0.1.0",
+    "@art-suite/art-core-ts-json": "^0.1.0",
+    "@art-suite/art-core-ts-string-case": "^0.1.0",
+    "@art-suite/art-core-ts-time": "^0.1.0",
     "@art-suite/art-core-ts-types": "^0.1.0"
   },
-  "description": "A TypeScript JSON utility library",
+  "description": "The full Art-Core-TS library",
   "devDependencies": {
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3",
@@ -21,10 +24,12 @@
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "keywords": [
+    
+  ],
   "license": "MIT",
   "main": "./dist/index.js",
-  "name": "@art-suite/art-core-ts-json",
+  "name": "@art-suite/art-core-ts",
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
