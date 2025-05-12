@@ -20,6 +20,29 @@ describe('compact', () => {
   })
 })
 
+describe('regression', () => {
+
+  it('persists object types', () => {
+    type Foo = { name: string }
+    const exampleArrayOne: Foo[] = [{ name: 'hi' }]
+    const exampleArrayTwo: Foo[] = [{ name: 'bye' }]
+    const bar: Foo[] = flatten([exampleArrayOne, exampleArrayTwo])
+    expect(bar).toEqual([...exampleArrayOne, ...exampleArrayTwo])
+  })
+
+  it('flatten handles sparse arrays', () => {
+    const structure = [0, [false], 1, 2, null, 3, [4, undefined, 5]]
+    const bar = flatten(structure)
+    expect(bar).toEqual([0, false, 1, 2, null, 3, 4, undefined, 5])
+
+    const compacted = compact(structure)
+    expect(compacted).toEqual([0, [false], 1, 2, 3, [4, undefined, 5]])
+
+    const compactFlattened = compactFlatten(structure)
+    expect(compactFlattened).toEqual([0, false, 1, 2, 3, 4, 5])
+  })
+})
+
 describe('flatten', () => {
   it('flattens the type correctly', () => {
     const foo: NestedArray<string> = [[[[[[["hi"]]]]]]]

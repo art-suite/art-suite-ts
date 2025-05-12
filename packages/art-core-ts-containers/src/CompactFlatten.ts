@@ -1,20 +1,23 @@
 type NotPresent = null | undefined;
 
 // Modified type definitions to better support heterogeneous arrays
-export type RecursiveArray<T> = Array<T | RecursiveArray<T>>;
 export type SparseItem<T> = T | NotPresent;
 export type SparseArray<T> = Array<SparseItem<T>>;
-export type NestedArray<T> = T | RecursiveArray<T>;
+export type NestedArray<T> = Array<T | NestedArray<T>>;
 export type SparseNestedArray<T> = NestedArray<SparseItem<T>>;
 export type SparseNestedArrayOrSingleton<T> = SparseNestedArray<T>;
 
-type KeepTester = (value: unknown) => boolean;
-const isPresent = <T>(value: T): value is NonNullable<T> => value != null
+export type FlattenedElementType<
+  T,
+  Seen extends any[] = []
+> = Seen['length'] extends 50 // prevents typescript from blowing up on deeply nested arrays
+  ? T : T extends ReadonlyArray<infer U>
+  ? FlattenedElementType<U, [any, ...Seen]> : T
 
-type CompactedArrayItemType<T> =
-  T extends null | undefined ? never
-  : T extends readonly (infer U)[] ? CompactedArrayItemType<U>
-  : T;
+type CompactedElementType<T extends readonly unknown[]> = Exclude<T[number], null | undefined>;
+type CompactFlattenedElementType<T> = CompactedElementType<FlattenedElementType<T>[]>
+
+const isPresent = <T>(value: T): value is NonNullable<T> => value != null
 
 /**
  * Removes null/undefined values from an array.
@@ -23,24 +26,12 @@ type CompactedArrayItemType<T> =
  * @param keepTester - Optional function to test which values to keep
  * @returns A new array with null/undefined removed, or the original array if no filtering was needed
  */
-export const compact = <T extends readonly any[]>(array: T | NotPresent): CompactedArrayItemType<T>[] => {
+export const compact = <T extends readonly any[]>(array: T | NotPresent): CompactedElementType<T>[] => {
   if (array == null) return []
   let needsFilter = false
   for (const item of array) if (item == null) { needsFilter = true; break }
-  return needsFilter ? array.filter(isPresent) : array as any as CompactedArrayItemType<T>[]
+  return needsFilter ? array.filter(isPresent) : array as any
 }
-
-type ExampleTuple = [number, string, { name: string }]
-type ExampleNestedTuple = [number, string, ExampleTuple[]]
-
-export type FlattenedArrayItemType<T> = T extends NestedArray<infer U>
-  ? U[]
-  : T extends readonly (infer U)[]
-  ? FlattenedArrayItemType<U>
-  : T;
-
-type FlattenedNestedTuple = FlattenedArrayItemType<ExampleNestedTuple>
-
 
 /**
  * Recursively flattens nested arrays into a single array.
@@ -48,7 +39,7 @@ type FlattenedNestedTuple = FlattenedArrayItemType<ExampleNestedTuple>
  * @param args - Arrays that may contain nested arrays
  * @returns A new flattened array, or the original array if no flattening was needed
  */
-export const flatten = <T extends readonly any[]>(array: T | NotPresent, into?: FlattenedArrayItemType<T>[]): FlattenedArrayItemType<T>[] => {
+export const flatten = <T extends readonly any[]>(array: T | NotPresent, into?: FlattenedElementType<T>[]): FlattenedElementType<T>[] => {
   if (array == null) return []
   let needsFlatten = false
   if (!into) {
@@ -67,7 +58,6 @@ export const flatten = <T extends readonly any[]>(array: T | NotPresent, into?: 
   return into
 }
 
-type CompactFlattenedArrayItemType<T> = CompactedArrayItemType<FlattenedArrayItemType<T>[]>
 
 /*
  * Recursively flattens nested arrays and removes null/undefined values.
@@ -75,9 +65,9 @@ type CompactFlattenedArrayItemType<T> = CompactedArrayItemType<FlattenedArrayIte
  * @param array - Array that may contain nested arrays and null/undefined values
  * @returns A new flattened array with null/undefined removed, or the original array if no changes were needed
  */
-export const compactFlatten = <T extends readonly any[]>(array: T | NotPresent, into?: CompactFlattenedArrayItemType<T>[]): CompactFlattenedArrayItemType<T>[] => {
+export const compactFlatten = <T extends readonly any[]>(array: T | NotPresent, into?: CompactFlattenedElementType<T>[]): CompactFlattenedElementType<T>[] => {
   if (array == null) return []
-  if (!Array.isArray(array)) return [array as CompactFlattenedArrayItemType<T>]
+  if (!Array.isArray(array)) return [array] as any
 
   if (!into) {
     let needsFlatten = false
