@@ -22,13 +22,13 @@ A typical README should follow this general structure:
 
 ### 2. "Why This Module?" Section
 
-**Start with Why (Simon Sinek Method) - The Hook**:
+**Start with Why (Simon Sinek Method) - The Hook**. Answer these three questions, in this order:
 
-- **The Why**: Succinctly identify the core problem or developer pain point this module directly addresses. Why would a developer need this?
-- **The How**: Briefly outline the module's strategic approach to solving that problem. How does it uniquely or effectively provide a solution?
-- **The What**: Clearly state what the module delivers. What is the tangible tool or functionality (e.g., "a comprehensive set of `isFoo` type-checking functions")?
+- **Why**: Succinctly identify the core problem or developer pain point this module directly addresses. Why would a developer need this?
+- **How**: Briefly outline the module's strategic approach to solving that problem. How does it uniquely or effectively provide a solution?
+- **What**: Clearly state what the module delivers. What is the tangible tool or functionality (e.g., "a comprehensive set of `isFoo` type-checking functions")?
 
-Be brief and compelling. The goal of this section is to convince the developer to read in more detail, not to provide the details themselves.
+You don't need to explicitly label the "why, how and what" - it should be obvious. Be brief and compelling. The goal of this section is to convince the developer to read in more detail, not to provide the details themselves.
 
 ### 3. Example Installation and Use (Required)
 
