@@ -8,17 +8,15 @@
   },
   "exports": {
     ".": {
-      "default": "./dist/index.js",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
     "dist"
   ],
-  "keywords": [
-    
-  ],
+  "keywords": [],
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@art-suite/boilerplate",
