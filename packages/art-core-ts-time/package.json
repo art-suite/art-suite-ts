@@ -1,6 +1,5 @@
 {
-  "name": "@art-suite/art-core-ts-time",
-  "author": "",
+  "author": "Shane Delamore",
   "dependencies": {
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0"
@@ -13,9 +12,9 @@
   },
   "exports": {
     ".": {
+      "default": "./dist/index.js",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
@@ -24,6 +23,11 @@
   "keywords": [],
   "license": "MIT",
   "main": "./dist/index.js",
+  "name": "@art-suite/art-core-ts-time",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/art-suite/art-suite-ts"
+  },
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
@@ -35,5 +39,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

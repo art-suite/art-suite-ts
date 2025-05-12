@@ -1,4 +1,13 @@
 {
+  "name": "@art-suite/art-suite-ts",
+  "version": "0.1.0",
+  "description": "The Standard Library that ought to exist for JavaScript/TypeScript",
+  "author": "Shane Delamore",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/art-suite/art-suite-ts"
+  },
+  "license": "MIT",
   "dependencies": {
     "@art-suite/art-core-ts": "file:packages/art-core-ts",
     "@art-suite/art-core-ts-comprehensions": "file:packages/art-core-ts-comprehensions",
@@ -27,5 +36,17 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "versions": "npx art-monorepo versions"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "javascript",
+    "standard-library",
+    "utilities",
+    "runtime-types",
+    "json",
+    "time",
+    "string-case",
+    "containers",
+    "comprehensions"
+  ]
 }

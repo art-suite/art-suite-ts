@@ -25,8 +25,8 @@ JavaScript/TypeScript is missing a lot of fundamental, consistent tooling that o
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- npm (v7 or higher)
+- Node.js (v22 or higher)
+- npm (v10 or higher)
 
 ### Setup
 
