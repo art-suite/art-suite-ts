@@ -1,4 +1,4 @@
-# @art-core-ts-string-case
+# @art-suite/art-core-ts-string-case
 
 Effortless, lossless conversion between all common string case formats in programming.
 
@@ -18,7 +18,7 @@ A comprehensive set of functions for converting between camelCase, PascalCase, s
 Install with npm:
 
 ```sh
-npm install @art-core-ts-string-case
+npm install @art-suite/art-core-ts-string-case
 ```
 
 Basic usage:
@@ -36,7 +36,7 @@ import {
   kebabCase,
   constantCase,
   camelCase,
-} from "@art-core-ts-string-case";
+} from "@art-suite/art-core-ts-string-case";
 
 getCodeWords("toHTML"); // ["to", "Html"]
 lowerCamelCase("to HTML"); // "toHtml"

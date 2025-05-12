@@ -1,4 +1,4 @@
-# @art-core-ts-time
+# @art-suite/art-core-ts-time
 
 Seamless, simple utilities for working with dates, times, and durations in JavaScript and TypeScript.
 
@@ -32,7 +32,7 @@ In other words, by making a small sacrifice - not being able to represent date/t
 Install with npm:
 
 ```sh
-npm install @art-core-ts-time
+npm install @art-suite/art-core-ts-time
 ```
 
 Basic usage:
@@ -48,7 +48,7 @@ import {
   firstOfDay,
   firstOfMonth,
   secondsPer,
-} from "@art-core-ts-time";
+} from "@art-suite/art-core-ts-time";
 
 // Convert between types
 toMilliseconds("2024-01-01"); // e.g., 1704067200000

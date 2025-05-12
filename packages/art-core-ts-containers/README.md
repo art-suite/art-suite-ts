@@ -1,4 +1,4 @@
-# @art-core-ts-containers
+# @art-suite/art-core-ts-containers
 
 Essential, high-performance utilities for working with arrays and plain objects in JavaScript and TypeScript.
 
@@ -15,7 +15,7 @@ Working with arrays and plain objects has become much easier in modern JavaScrip
 Install with npm:
 
 ```sh
-npm install @art-core-ts-containers
+npm install @art-suite/art-core-ts-containers
 ```
 
 Basic usage:
@@ -30,7 +30,7 @@ import {
   deepStripNullish,
   stripNulls,
   stripNullish,
-} from "@art-core-ts-containers";
+} from "@art-suite/art-core-ts-containers";
 
 // Merge objects: later objects take priority, null deletes, undefined is ignored/stripped
 merge({ a: 1, b: 2, c: 3 }, { b: null, c: undefined, d: 4 }); // { a: 1, b: null, d: 4 }

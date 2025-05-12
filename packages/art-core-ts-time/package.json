@@ -1,4 +1,5 @@
 {
+  "name": "@art-suite/art-core-ts-time",
   "author": "",
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -20,12 +21,9 @@
   "files": [
     "dist"
   ],
-  "keywords": [
-    
-  ],
+  "keywords": [],
   "license": "MIT",
   "main": "./dist/index.js",
-  "name": "art-core-ts-time",
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",

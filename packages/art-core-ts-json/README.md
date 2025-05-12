@@ -1,4 +1,4 @@
-# @art-core-ts-json
+# @art-suite/art-core-ts-json
 
 Seamless, type-safe utilities for working with JSON in TypeScript.
 
@@ -15,7 +15,7 @@ Working with JSON in JavaScript and TypeScript is common, but the standard APIs 
 Install with npm:
 
 ```sh
-npm install @art-core-ts-json
+npm install @art-suite/art-core-ts-json
 ```
 
 Basic usage:
@@ -31,7 +31,7 @@ import {
   toJsonPropsObject,
   asJsonObject,
   jsonToJs,
-} from "@art-core-ts-json";
+} from "@art-suite/art-core-ts-json";
 
 // Type-safe checks
 const value: unknown = { foo: "bar" };

@@ -1,7 +1,7 @@
 // import &@ArtSuite/ArtCoreTypes, &@ArtSuite/ArtCoreArrays
 
-import { isArray, isString } from 'art-core-ts-types'
-import { compactFlatten } from 'art-core-ts-containers'
+import { isArray, isString } from '@art-suite/art-core-ts-types'
+import { compactFlatten } from '@art-suite/art-core-ts-containers'
 
 const findWordsRegExp = /[a-zA-Z][a-zA-Z0-9]*|[0-9]+/g
 const findCapStartWordsRegExp = /(?:[A-Z]{2,}(?![a-z]))|[A-Z][a-z0-9]*|[a-z0-9]+/g

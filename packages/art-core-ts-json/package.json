@@ -1,5 +1,5 @@
 {
-  "name": "art-core-ts-json",
+  "name": "@art-suite/art-core-ts-json",
   "version": "0.1.0",
   "description": "A TypeScript JSON utility library",
   "type": "module",

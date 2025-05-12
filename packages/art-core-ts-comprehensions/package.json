@@ -1,5 +1,5 @@
 {
-  "name": "art-core-ts-comprehensions",
+  "name": "@art-suite/art-core-ts-comprehensions",
   "version": "0.1.0",
   "description": "A TypeScript string utility library",
   "type": "module",

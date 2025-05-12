@@ -1,5 +1,5 @@
 {
-  "name": "art-core-ts-containers",
+  "name": "@art-suite/art-core-ts-containers",
   "version": "0.1.0",
   "description": "A TypeScript string utility library",
   "type": "module",

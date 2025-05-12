@@ -1,6 +1,6 @@
 // import { lowerCamelCase } from '../ArtStandardLib'
-import { object } from 'art-core-ts-comprehensions'
-import { isPlainObject, isDate, isObject, isFunction } from 'art-core-ts-types'
+import { object } from '@art-suite/art-core-ts-comprehensions'
+import { isPlainObject, isDate, isObject, isFunction } from '@art-suite/art-core-ts-types'
 import { JsonObject, JsonValue, JsonScalerValue, JsonPropsObject } from './JsonTypes'
 import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonScalerValue, isJsonArray } from './JsonTypeFunctions'
 

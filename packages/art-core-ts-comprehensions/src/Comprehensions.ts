@@ -1,4 +1,4 @@
-import { isPlainObject, isFunction, exists } from 'art-core-ts-types'
+import { isPlainObject, isFunction, exists } from '@art-suite/art-core-ts-types'
 import { EachFunction, ArrayFunction, ObjectFunction, ReduceFunction, FindFunction } from './ComprehensionTypes'
 
 const isMap = (source: any): source is Map<any, any> => source instanceof Map;

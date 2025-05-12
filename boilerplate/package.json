@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate",
+  "name": "@art-suite/boilerplate",
   "version": "0.1.0",
   "description": "A TypeScript string utility library",
   "type": "module",
