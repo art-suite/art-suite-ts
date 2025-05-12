@@ -1,23 +1,3 @@
-/*
-  deepStripNulls = (data) ->
-    if isArray data
-      array a in-array data when isNotNull a with deepStripNulls a
-    else if isPlainObject data
-      object a in data when isNotNull a with deepStripNulls a
-    else
-      data
-
-  deepStripNullish = (data) ->
-    if isArray data
-      array a in-array data when isNotNullish a with deepStripNullish a
-    else if isPlainObject data
-      object a in data when isNotNullish a with deepStripNullish a
-    else
-      data
-
-*/
-
-
 /**
  * Recursively strips `null` from all properties of an object and elements of an array/tuple.
  * - If a value is `null`, its type becomes `never`.

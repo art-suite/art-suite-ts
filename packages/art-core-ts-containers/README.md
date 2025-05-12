@@ -60,11 +60,15 @@ stripNullish(data); // { a: 1, c: { d: null, e: 2 } }
   - **Null values**: Replace existing values (use `null` to "delete" a value).
   - **Undefined values**: Are ignored and stripped (do not overwrite or appear in the result).
 
+> Merge is NOT functionally optimized
+
 ### Array Utilities
 
 - `compactFlatten(array)` — Recursively flattens nested arrays and removes all `null`/`undefined` values.
 - `compact(array)` — Removes all `null`/`undefined` values from a (possibly nested) array.
 - `flatten(array)` — Recursively flattens nested arrays into a single array.
+
+> These functions are Functionally Optimized (see below)
 
 ### Object Key Utilities
 
@@ -78,6 +82,16 @@ stripNullish(data); // { a: 1, c: { d: null, e: 2 } }
 - `stripNulls(data)` — Shallowly strips `null` from all properties of an object and elements of an array/tuple. Does not recurse into nested objects or arrays.
 - `stripNullish(data)` — Shallowly strips `null` and `undefined` from all properties of an object and elements of an array/tuple. Does not recurse into nested objects or arrays.
 
+> Null(ish) stripping is NOT functionally optimized
+
 ## API Documentation Reference
 
 For detailed information on all exported functions and their parameters, please refer to the TypeScript typings and JSDoc comments within the source code.
+
+## Functionally Optimized (Work In Progress)
+
+Not all functions are not yet functionally optimized:
+
+- **Functionally Optimized**: If the returned value would be structurally identical to the passed-in value, the passed-in value should be returned without creating any new objects or arrays. This is more efficient and also allows for a quick check to see if there was any change.
+
+The goal is to make all these functions work like this, but for right now only the compact, flatten and compactFlatten functions work this way.
