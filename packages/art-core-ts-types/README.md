@@ -1,4 +1,4 @@
-# @art-core-ts-types
+# @art-suite/art-core-ts-types
 
 A simple, consistent library for runtime identification of JavaScript types.
 
@@ -18,7 +18,7 @@ A comprehensive set of `isFoo` functions (like `isString`, `isDate`, `isPlainObj
 Install with npm:
 
 ```sh
-npm install @art-core-ts-types
+npm install @art-suite/art-core-ts-types
 ```
 
 Basic usage:
@@ -34,7 +34,7 @@ import {
   isNotNullish,
   exists,
   present,
-} from "@art-core-ts-types";
+} from "@art-suite/art-core-ts-types";
 
 isString("hello"); // true
 isPlainObject({ a: 1 }); // true
