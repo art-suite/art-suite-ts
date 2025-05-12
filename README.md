@@ -4,7 +4,7 @@
 
 JavaScript/TypeScript is missing a lot of fundamental, consistent tooling that other languages take for granted:
 
-- runtime typing: e.g. concistent way to identify types at runtime
+- runtime typing: e.g. consistent way to identify types at runtime
 - containers and iteration
   - full comprehensions support (powerfully create new containers from other containers)
   - common container tools: merge, compact, flatten, compactFlatten...

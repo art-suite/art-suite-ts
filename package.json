@@ -23,7 +23,8 @@
     "clean": "npx art-monorepo clean",
     "sync": "art-monorepo sync",
     "sync:install": "art-monorepo sync;npm install",
-    "test": "npx art-monorepo test",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "versions": "npx art-monorepo versions"
   }
 }

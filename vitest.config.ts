@@ -5,7 +5,17 @@ export default defineConfig({
     exclude: [
       '**/dist/**',
       '**/coverage/**',
-      '**/node_modules/**'
-    ]
+      '**/node_modules/**',
+      '**/vitest.config.ts'
+    ],
+    coverage: {
+      exclude: [
+        '**/dist/**',
+        '**/coverage/**',
+        '**/node_modules/**',
+        '**/vitest.config.ts',
+        '**/src/index.ts'
+      ]
+    }
   }
 })

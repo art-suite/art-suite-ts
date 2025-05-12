@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../art-core-ts-json/src/JsonLib.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/test/"]
 }
