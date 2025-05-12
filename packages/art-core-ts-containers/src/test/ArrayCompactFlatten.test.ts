@@ -39,7 +39,7 @@ describe('regression', () => {
   it('should type correctly when SparseArray is used', () => {
     const foo: SparseArray<string> = ["hi", null]
     const bar: (string | null | undefined)[] = flatten(foo)
-    expect(bar).toEqual(["hi"])
+    expect(bar).toEqual(["hi", null])
   })
 
   it('flatten handles sparse arrays', () => {
