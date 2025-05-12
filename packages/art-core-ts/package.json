@@ -2,7 +2,7 @@
   "author": "Shane Delamore",
   "dependencies": {
     "@art-suite/art-core-ts-comprehensions": "^0.1.1",
-    "@art-suite/art-core-ts-containers": "^0.1.4",
+    "@art-suite/art-core-ts-containers": "^0.1.5",
     "@art-suite/art-core-ts-json": "^0.1.1",
     "@art-suite/art-core-ts-string-case": "^0.1.2",
     "@art-suite/art-core-ts-time": "^0.1.2",
@@ -43,5 +43,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.1.4"
+  "version": "0.1.5"
 }

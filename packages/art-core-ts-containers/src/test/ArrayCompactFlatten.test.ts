@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { compact, flatten, compactFlatten, NestedArray } from '../CompactFlatten'
+import { compact, flatten, compactFlatten, NestedArray, SparseArray } from '../CompactFlatten'
 
 describe('compact', () => {
   it('removes null and undefined values', () => {
@@ -28,6 +28,18 @@ describe('regression', () => {
     const exampleArrayTwo: Foo[] = [{ name: 'bye' }]
     const bar: Foo[] = flatten([exampleArrayOne, exampleArrayTwo])
     expect(bar).toEqual([...exampleArrayOne, ...exampleArrayTwo])
+  })
+
+  it('should type correctly when NestedArray is used', () => {
+    const foo: NestedArray<string> = [[[[[[["hi"]]]]]]]
+    const bar: string[] = flatten(foo)
+    expect(bar).toEqual(["hi"])
+  })
+
+  it('should type correctly when SparseArray is used', () => {
+    const foo: SparseArray<string> = ["hi", null]
+    const bar: (string | null | undefined)[] = flatten(foo)
+    expect(bar).toEqual(["hi"])
   })
 
   it('flatten handles sparse arrays', () => {

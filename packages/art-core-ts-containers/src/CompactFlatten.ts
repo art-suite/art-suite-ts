@@ -1,18 +1,17 @@
 type NotPresent = null | undefined;
 
 // Modified type definitions to better support heterogeneous arrays
-export type SparseItem<T> = T | NotPresent;
-export type SparseArray<T> = Array<SparseItem<T>>;
+export type SparseArray<T> = Array<T | NotPresent>;
 export type NestedArray<T> = Array<T | NestedArray<T>>;
-export type SparseNestedArray<T> = NestedArray<SparseItem<T>>;
-export type SparseNestedArrayOrSingleton<T> = SparseNestedArray<T>;
 
 export type FlattenedElementType<
   T,
   Seen extends any[] = []
-> = Seen['length'] extends 50 // prevents typescript from blowing up on deeply nested arrays
-  ? T : T extends ReadonlyArray<infer U>
-  ? FlattenedElementType<U, [any, ...Seen]> : T
+> = Seen['length'] extends 50
+  ? (T extends ReadonlyArray<any> ? never : T)
+  : T extends ReadonlyArray<infer U>
+  ? FlattenedElementType<U, [any, ...Seen]>
+  : T;
 
 type CompactedElementType<T extends readonly unknown[]> = Exclude<T[number], null | undefined>;
 type CompactFlattenedElementType<T> = CompactedElementType<FlattenedElementType<T>[]>
@@ -72,7 +71,7 @@ export const compactFlatten = <T extends readonly any[]>(array: T | NotPresent, 
   if (!into) {
     let needsFlatten = false
     let needsFilter = false
-    for (const item of array as Array<SparseNestedArrayOrSingleton<T>>) {
+    for (const item of array as any) {
       if (Array.isArray(item)) { needsFlatten = true; break }
       if (item == null) { needsFilter = true; break }
     }
@@ -80,7 +79,7 @@ export const compactFlatten = <T extends readonly any[]>(array: T | NotPresent, 
   }
 
   if (!into) into = []
-  for (const item of array as Array<SparseNestedArrayOrSingleton<T>>) {
+  for (const item of array as any) {
     if (item == null) continue
     if (Array.isArray(item)) {
       compactFlatten(item as any, into)
