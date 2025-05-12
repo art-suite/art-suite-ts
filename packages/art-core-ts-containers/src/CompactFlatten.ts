@@ -33,7 +33,9 @@ export const compact = <T extends readonly any[]>(array: T | NotPresent): Compac
 type ExampleTuple = [number, string, { name: string }]
 type ExampleNestedTuple = [number, string, ExampleTuple[]]
 
-export type FlattenedArrayItemType<T> = T extends readonly (infer U)[]
+export type FlattenedArrayItemType<T> = T extends NestedArray<infer U>
+  ? U[]
+  : T extends readonly (infer U)[]
   ? FlattenedArrayItemType<U>
   : T;
 

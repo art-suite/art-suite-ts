@@ -9,9 +9,9 @@
   },
   "exports": {
     ".": {
-      "default": "./dist/index.js",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
@@ -36,5 +36,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

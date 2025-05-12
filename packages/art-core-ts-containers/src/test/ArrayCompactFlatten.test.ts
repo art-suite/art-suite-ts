@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { compact, flatten, compactFlatten } from '../CompactFlatten'
+import { compact, flatten, compactFlatten, NestedArray } from '../CompactFlatten'
 
 describe('compact', () => {
   it('removes null and undefined values', () => {
@@ -21,6 +21,12 @@ describe('compact', () => {
 })
 
 describe('flatten', () => {
+  it('flattens the type correctly', () => {
+    const foo: NestedArray<string> = [[[[[[["hi"]]]]]]]
+    const bar = flatten(foo)
+    expect(bar).toEqual(["hi"])
+  })
+
   it('flattens nested arrays', () => {
     expect(flatten([1, 2, 3, [4, 5]])).toEqual([1, 2, 3, 4, 5])
   })
@@ -44,6 +50,12 @@ describe('flatten', () => {
 })
 
 describe('compactFlatten', () => {
+  it('compactFlattens the type correctly', () => {
+    const foo: NestedArray<string | null | undefined> = [[[[[[["hi", null, undefined]]]]]]]
+    const bar = compactFlatten(foo)
+    expect(bar).toEqual(["hi"])
+  })
+
   it('compacts and flattens arrays', () => {
     const structure = [0, [false], 1, 2, null, 3, [4, undefined, 5]]
     expect(compactFlatten(structure)).toEqual([0, false, 1, 2, 3, 4, 5])
