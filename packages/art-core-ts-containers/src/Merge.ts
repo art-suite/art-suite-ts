@@ -1,4 +1,3 @@
-import { compactFlatten } from "./CompactFlatten";
 type ExcludeUndefined<T> = T extends undefined ? never : T;
 
 export type MergeTwo<A extends object, B extends object> = {
