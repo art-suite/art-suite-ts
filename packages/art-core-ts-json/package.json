@@ -2,7 +2,7 @@
   "author": "Shane Delamore",
   "dependencies": {
     "@art-suite/art-core-ts-comprehensions": "^0.1.1",
-    "@art-suite/art-core-ts-containers": "^0.1.3",
+    "@art-suite/art-core-ts-containers": "^0.1.4",
     "@art-suite/art-core-ts-types": "^0.1.1"
   },
   "description": "A TypeScript JSON utility library",
