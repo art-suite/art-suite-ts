@@ -82,7 +82,15 @@ export type DeepStripNullish<T> =
  */
 export const deepStripNulls = <T>(data: T): DeepStripNulls<T> => {
   if (data === null) return undefined as DeepStripNulls<T>;
-  if (Array.isArray(data)) return data.map(deepStripNulls) as DeepStripNulls<T>;
+  if (Array.isArray(data)) {
+    const result = []
+    for (const item of data) {
+      if (item === null) continue;
+      const stripped = deepStripNulls(item);
+      if (stripped != undefined) result.push(stripped);
+    }
+    return result as DeepStripNulls<T>;
+  }
   if (typeof data === 'object') {
     if (data instanceof Date || data instanceof RegExp) return data as DeepStripNulls<T>;
     const result: Record<string, any> = {};
@@ -107,7 +115,15 @@ export const deepStripNulls = <T>(data: T): DeepStripNulls<T> => {
  */
 export const deepStripNullish = <T>(data: T): DeepStripNullish<T> => {
   if (data == null) return undefined as DeepStripNullish<T>;
-  if (Array.isArray(data)) return data.map(deepStripNullish) as DeepStripNullish<T>;
+  if (Array.isArray(data)) {
+    const result = []
+    for (const item of data) {
+      if (item === null) continue;
+      const stripped = deepStripNullish(item);
+      if (stripped != undefined) result.push(stripped);
+    }
+    return result as DeepStripNullish<T>;
+  }
   if (typeof data === 'object') {
     if (data instanceof Date || data instanceof RegExp) return data as DeepStripNullish<T>;
     const result: Record<string, any> = {};
@@ -158,8 +174,8 @@ export type StripNullish<T> =
  * - Preserves types of primitives, functions, Dates, RegExps.
  * - Preserves tuple structure and specific element types (after stripping null).
  */
-export const stripNulls = <T extends object>(data: T): StripNulls<T> => {
-  if (data == null) return data;
+export const stripNulls = <T>(data: T): StripNulls<T> => {
+  if (data == null) return data as StripNulls<T>;
 
   if (Array.isArray(data)) return data.filter(item => item !== null) as StripNulls<T>;
 
@@ -183,8 +199,8 @@ export const stripNulls = <T extends object>(data: T): StripNulls<T> => {
  * - Preserves types of primitives, functions, Dates, RegExps.
  * - Preserves tuple structure and specific element types (after stripping nullish values).
  */
-export const stripNullish = <T extends object>(data: T): StripNullish<T> => {
-  if (data == null) return data;
+export const stripNullish = <T>(data: T): StripNullish<T> => {
+  if (data == null) return data as StripNullish<T>;
 
   if (Array.isArray(data)) return data.filter(item => item != null) as StripNullish<T>;
 
