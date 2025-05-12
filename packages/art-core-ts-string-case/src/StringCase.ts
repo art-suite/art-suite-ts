@@ -30,3 +30,8 @@ export const snakeCase = (str: string, joiner = '_') => getLowerCaseCodeWords(st
 export const upperSnakeCase = (str: string, joiner = '_') => getUpperCaseCodeWords(str).join(joiner)
 export const dashCase = (str: string, joiner = '-') => getLowerCaseCodeWords(str).join(joiner)
 export const capitalizedDashCase = (str: string, joiner = '-') => getCapitalizedCodeWords(str).join(joiner)
+
+export const pascalCase = upperCamelCase
+export const kebabCase = dashCase
+export const constantCase = upperSnakeCase
+export const camelCase = lowerCamelCase
