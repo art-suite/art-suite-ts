@@ -1,5 +1,5 @@
 export * from "./CompactFlatten"
 export * from "./Merge"
-export * from "./ObjectKeys"
+export * from "./ObjectLib"
 export * from "./StripNulls"
 export * from "./ArrayLib"

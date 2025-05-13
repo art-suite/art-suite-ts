@@ -1,5 +1,8 @@
 {
   "author": "Shane Delamore",
+  "dependencies": {
+    "type-fest": "^4.41.0"
+  },
   "description": "A TypeScript string utility library",
   "devDependencies": {
     "@types/node": "^20.11.24",
@@ -36,5 +39,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.2.2"
+  "version": "0.3.0"
 }
