@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isJsonObject, isJsonArray, isJsonScalerValue, isJsonString, isJsonNumber, isJsonBoolean } from '../JsonTypeFunctions'
+import { isJsonObject, isJsonArray, isJsonPrimitive, isJsonString, isJsonNumber, isJsonBoolean } from '../JsonTypeFunctions'
 import { JsonValue } from '../JsonTypes'
 
 describe('isJsonObject', () => {
@@ -37,18 +37,18 @@ describe('isJsonArray', () => {
   })
 })
 
-describe('isJsonScalerValue', () => {
+describe('isJsonPrimitive', () => {
   it('returns true for scalar values', () => {
-    expect(isJsonScalerValue('string')).toBe(true)
-    expect(isJsonScalerValue(123)).toBe(true)
-    expect(isJsonScalerValue(true)).toBe(true)
-    expect(isJsonScalerValue(null)).toBe(true)
+    expect(isJsonPrimitive('string')).toBe(true)
+    expect(isJsonPrimitive(123)).toBe(true)
+    expect(isJsonPrimitive(true)).toBe(true)
+    expect(isJsonPrimitive(null)).toBe(true)
   })
 
   it('returns false for non-scalar values', () => {
-    expect(isJsonScalerValue({})).toBe(false)
-    expect(isJsonScalerValue([])).toBe(false)
-    expect(isJsonScalerValue(undefined)).toBe(false)
+    expect(isJsonPrimitive({})).toBe(false)
+    expect(isJsonPrimitive([])).toBe(false)
+    expect(isJsonPrimitive(undefined)).toBe(false)
   })
 })
 

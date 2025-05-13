@@ -1,8 +1,8 @@
 // import { lowerCamelCase } from '../ArtStandardLib'
 import { object } from '@art-suite/art-core-ts-comprehensions'
 import { isPlainObject, isDate, isObject, isFunction } from '@art-suite/art-core-ts-types'
-import { JsonObject, JsonValue, JsonScalerValue, JsonPropsObject } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonScalerValue, isJsonArray } from './JsonTypeFunctions'
+import { JsonObject, JsonValue, JsonPrimitive, JsonPropsObject } from './JsonTypes'
+import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonPrimitive, isJsonArray } from './JsonTypeFunctions'
 
 
 /**
@@ -48,6 +48,6 @@ export const toJsonObjectOrNull = (value: any, normalizeKeys: boolean = false): 
  * Either way, you get a plain object in response.
  */
 export const toJsonPropsObject = (value: any): JsonPropsObject => {
-  if (isJsonObject(value)) return object(value, { when: isJsonScalerValue, with: (v: JsonValue) => v as JsonScalerValue });
+  if (isJsonObject(value)) return object(value, { when: isJsonPrimitive, with: (v: JsonValue) => v as JsonPrimitive });
   return {};
 }

@@ -1,7 +1,7 @@
 {
   "author": "Shane Delamore",
   "dependencies": {
-    "@art-suite/art-core-ts-types": "^0.1.1"
+    "@art-suite/art-core-ts-types": "^0.1.2"
   },
   "description": "A TypeScript string utility library",
   "devDependencies": {
@@ -11,15 +11,17 @@
   },
   "exports": {
     ".": {
+      "default": "./dist/index.js",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "keywords": [
+    
+  ],
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@art-suite/art-core-ts-comprehensions",
@@ -38,5 +40,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

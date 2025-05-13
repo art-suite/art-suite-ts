@@ -1,5 +1,5 @@
 import { JsonObject, JsonArray, JsonValue } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonScalerValue, isJsonArray } from './JsonTypeFunctions'
+import { isJsonString, isJsonObject, isJsonPrimitive, isJsonArray } from './JsonTypeFunctions'
 import { objectHasKeys } from '@art-suite/art-core-ts-containers'
 import { array } from '@art-suite/art-core-ts-comprehensions'
 
@@ -21,7 +21,7 @@ export const jsonArrayToJs = (json: JsonArray, indent = ''): string => {
 
 export const jsonToJs = (value: JsonValue, indent = ''): string => {
   if (isJsonString(value)) return JSON.stringify(value);
-  if (isJsonScalerValue(value)) return String(value);
+  if (isJsonPrimitive(value)) return String(value);
   if (isJsonArray(value)) return jsonArrayToJs(value, indent);
   if (isJsonObject(value)) return jsonObjectToJs(value, indent);
   return JSON.stringify(String(value));

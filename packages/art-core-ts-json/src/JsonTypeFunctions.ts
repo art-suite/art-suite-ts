@@ -1,4 +1,4 @@
-import { JsonObject, JsonArray, JsonValue, JsonScalerValue } from './JsonTypes'
+import { JsonObject, JsonArray, JsonValue, JsonPrimitive } from './JsonTypes'
 
 // Note, isJsonObject is shallow; it doesn't guarantee the elements are JsonValues
 export const isJsonObject = (value: any): value is JsonObject =>
@@ -7,7 +7,7 @@ export const isJsonObject = (value: any): value is JsonObject =>
 // Note, isJsonArray is shallow; it doesn't guarantee the elements are JsonValues
 export const isJsonArray = (value: JsonValue | undefined | null): value is JsonArray => Array.isArray(value);
 
-export const isJsonScalerValue = (value: JsonValue | undefined | null): value is JsonScalerValue =>
+export const isJsonPrimitive = (value: JsonValue | undefined | null): value is JsonPrimitive =>
   isJsonString(value) || isJsonNumber(value) || isJsonBoolean(value) || value === null;
 
 export const isJsonString = (value: JsonValue | undefined | null): value is string => typeof value === 'string';
