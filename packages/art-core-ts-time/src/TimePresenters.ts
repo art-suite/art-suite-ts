@@ -1,11 +1,12 @@
 import { toSeconds, toDate, formatDate } from './DateLib.js'
 import { secondsPer } from './TimeConstants.js'
+import { AllDateTypes } from './DateLib.js'
 
 type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd' | 'mo' | 'y'
 type TimeOptions = {
   verbose?: boolean
   precision?: number
-  now?: Date
+  now?: AllDateTypes
 }
 
 const longTimeNames: Record<TimeUnit, string> = {
@@ -24,7 +25,7 @@ const pluralize = (n: number, word: string): string =>
 const humanDurationStringHelper = (number: number, unit: TimeUnit, verbose?: boolean): string =>
   verbose ? `${number} ${pluralize(number, longTimeNames[unit])}` : `${number}${unit}`
 
-export const dateAgeInSeconds = (date: Date, now = new Date()): number =>
+export const dateAgeInSeconds = (date: AllDateTypes, now: AllDateTypes = new Date()): number =>
   toSeconds(now) - toSeconds(date)
 
 export const humanDurationString = (seconds: number, { verbose, precision = 1 }: TimeOptions = {}): string => {
@@ -56,19 +57,19 @@ export const humanDurationString = (seconds: number, { verbose, precision = 1 }:
   return humanDurationStringHelper(number, unit, verbose)
 }
 
-export const humanTimeDeltaString = (date1: Date, date2: Date, options: TimeOptions = {}): string =>
+export const humanTimeDeltaString = (date1: AllDateTypes, date2: AllDateTypes, options: TimeOptions = {}): string =>
   humanDurationString(
     dateAgeInSeconds(date1, date2),
     options
   )
 
-export const niceFullDateString = (date: Date): string =>
+export const niceFullDateString = (date: AllDateTypes): string =>
   formatDate(date, "h:mma MMMM d, yyyy").replace(/AM|PM/, m => m.toLowerCase())
 
-export const niceMonthYear = (date: Date): string =>
+export const niceMonthYear = (date: AllDateTypes): string =>
   formatDate(date, "MMMM yyyy")
 
-export const niceDateString = (date: Date, now: Date = new Date()): string => {
+export const niceDateString = (date: AllDateTypes, now: AllDateTypes = new Date()): string => {
   now = toDate(now)
   date = toDate(date)
 
@@ -85,10 +86,10 @@ export const niceDateString = (date: Date, now: Date = new Date()): string => {
   return formatDate(date, "MMMM d")
 }
 
-export const niceTimeDetailsString = (date: Date, now: Date = new Date()): string =>
+export const niceTimeDetailsString = (date: AllDateTypes, now: AllDateTypes = new Date()): string =>
   `${formatDate(date, "h:mma").replace(/AM|PM/, m => m.toLowerCase())} ${niceDateString(date, now)}`
 
-export const timeAgo = (date: Date, { verbose, precision = 1, now = toDate() }: TimeOptions = {}): string => {
+export const timeAgo = (date: AllDateTypes, { verbose, precision = 1, now = toDate() }: TimeOptions = {}): string => {
   const ageInSeconds = dateAgeInSeconds(date, now)
 
   if (ageInSeconds < 0) {

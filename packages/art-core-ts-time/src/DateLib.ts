@@ -10,7 +10,7 @@ const isDate = (v: any): v is Date => v instanceof Date
 
 const DEFAULT_FORMAT = 'yyyy-MM-dd\'T\'HH:mm:ssXXX'
 
-type AllDateTypes = Date | string | number | null | undefined
+export type AllDateTypes = Date | string | number | null | undefined
 
 export const formatDate = (value?: AllDateTypes, format?: string, utc?: boolean): string => {
   if (isString(value) && !isString(format)) {
