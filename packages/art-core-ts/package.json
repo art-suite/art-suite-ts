@@ -5,7 +5,7 @@
     "@art-suite/art-core-ts-containers": "^0.3.0",
     "@art-suite/art-core-ts-json": "^0.2.3",
     "@art-suite/art-core-ts-string-case": "^0.1.4",
-    "@art-suite/art-core-ts-time": "^0.1.4",
+    "@art-suite/art-core-ts-time": "^0.1.5",
     "@art-suite/art-core-ts-types": "^0.1.3"
   },
   "description": "The full Art-Core-TS library",
@@ -16,15 +16,17 @@
   },
   "exports": {
     ".": {
+      "default": "./dist/index.js",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "keywords": [
+    
+  ],
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@art-suite/art-core-ts",
