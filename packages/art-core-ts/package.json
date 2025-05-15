@@ -24,9 +24,7 @@
   "files": [
     "dist"
   ],
-  "keywords": [
-    
-  ],
+  "keywords": [],
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@art-suite/art-core-ts",
@@ -45,5 +43,5 @@
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.2.7"
+  "version": "0.2.8"
 }
