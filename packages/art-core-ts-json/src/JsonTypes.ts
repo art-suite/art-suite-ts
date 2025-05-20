@@ -1,4 +1,4 @@
-import { JsonValue, JsonPrimitive, JsonObject, JsonArray } from "type-fest";
+import type { JsonValue, JsonPrimitive, JsonObject, JsonArray } from "type-fest";
 export { JsonValue, JsonPrimitive, JsonObject, JsonArray }
 export interface ToJsonValue {
   toJsonValue: () => JsonValue;
