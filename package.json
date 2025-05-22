@@ -45,7 +45,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "build": "npx art-monorepo build --sync",
+    "build:basics": "cd packages/art-core-ts-types && npm run build",
+    "build": "npm run build:basics && npx art-monorepo build --sync",
     "sync": "art-monorepo sync;./fix-package-json packages/**/package.json",
     "clean": "npx art-monorepo clean",
     "versions": "npx art-monorepo versions",
