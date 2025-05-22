@@ -18,6 +18,8 @@ This package combines several specialized libraries, each focusing on a specific
 
 - [@art-suite/art-core-ts-time](https://npmjs.com/@art-suite/art-core-ts-time) - Seamless, simple utilities for working with dates, times, and durations. Provides a unified set of utilities for effortless conversion between standard date/time representations, easy formatting, and common calculations like "start of day" or "first of month".
 
+- [@art-suite/art-core-ts-communication-status](https://npmjs.com/@art-suite/art-core-ts-communication-status) - A simple, consistent library for handling communication status in client-server applications. It reduces the complex space of HTTP status codes and other communication states into a small set of actionable categories that make client-side code simpler and more robust.
+
 - [@art-suite/art-core-ts-comprehensions](https://npmjs.com/@art-suite/art-core-ts-comprehensions) - A powerful and flexible comprehension library that provides a unified interface for working with arrays, objects, and other iterables. Each comprehension function can accept any input container as the source and returns the appropriate type (object, array, or found value).
 
 ## Installation

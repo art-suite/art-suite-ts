@@ -82,8 +82,8 @@ describe('validateOptionalJsonString', () => {
   })
 
   it('accepts null and undefined', () => {
-    expect(validateOptionalJsonString(null)).toBe(undefined)
-    expect(validateOptionalJsonString(undefined as unknown as JsonValue)).toBe(undefined)
+    expect(validateOptionalJsonString(null)).toBe(null)
+    expect(validateOptionalJsonString(undefined as unknown as JsonValue)).toBe(null)
   })
 
   it('rejects invalid values', () => {
@@ -100,8 +100,8 @@ describe('validateOptionalJsonObject', () => {
   })
 
   it('accepts null and undefined', () => {
-    expect(validateOptionalJsonObject(null)).toBe(undefined)
-    expect(validateOptionalJsonObject(undefined as unknown as JsonValue)).toBe(undefined)
+    expect(validateOptionalJsonObject(null)).toBe(null)
+    expect(validateOptionalJsonObject(undefined as unknown as JsonValue)).toBe(null)
   })
 
   it('rejects invalid values', () => {
@@ -118,8 +118,8 @@ describe('validateOptionalJsonBoolean', () => {
   })
 
   it('accepts null and undefined', () => {
-    expect(validateOptionalJsonBoolean(null)).toBe(undefined)
-    expect(validateOptionalJsonBoolean(undefined as unknown as JsonValue)).toBe(undefined)
+    expect(validateOptionalJsonBoolean(null)).toBe(null)
+    expect(validateOptionalJsonBoolean(undefined as unknown as JsonValue)).toBe(null)
   })
 
   it('rejects invalid values', () => {
@@ -137,8 +137,8 @@ describe('validateOptionalJsonNumber', () => {
   })
 
   it('accepts null and undefined', () => {
-    expect(validateOptionalJsonNumber(null)).toBe(undefined)
-    expect(validateOptionalJsonNumber(undefined as unknown as JsonValue)).toBe(undefined)
+    expect(validateOptionalJsonNumber(null)).toBe(null)
+    expect(validateOptionalJsonNumber(undefined as unknown as JsonValue)).toBe(null)
   })
 
   it('rejects invalid values', () => {
