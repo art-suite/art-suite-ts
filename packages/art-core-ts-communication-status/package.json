@@ -1,0 +1,40 @@
+{
+  "name": "@art-suite/art-core-ts-communication-status",
+  "version": "0.1.0",
+  "description": "A TypeScript string utility library",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/art-suite/art-suite-ts"
+  },
+  "license": "MIT",
+  "author": "Shane Delamore",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
+    "build:clean": "npm run clean && npm run build",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3",
+    "vitest": "^3.1.3"
+  }
+}
