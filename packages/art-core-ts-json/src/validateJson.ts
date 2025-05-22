@@ -1,5 +1,5 @@
 import { JsonArray, JsonObject, JsonValue } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonBoolean, isJsonArray } from './JsonTypeFunctions'
+import { isJsonString, isJsonObject, isJsonBoolean, isJsonArray } from '../coverage/JsonTypeFunctions'
 
 // validation functions that throw errors if the value is not valid; and return the value if it is valid
 

@@ -26,7 +26,7 @@ import {
   getCommunicationStatus,
   getHttpStatus,
   type CommunicationStatus
-} from '../CommuicationStatus'
+} from '../CommunicationStatus'
 
 describe('CommunicationStatus', () => {
   describe('status constants', () => {

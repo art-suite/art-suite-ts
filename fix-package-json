@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const { parse, stringify } = require('comment-json')
+const sortPackageJson = require('sort-package-json').default
+
+const prioritizeTypesAndDefaultKeys = (exports) => {
+  if (typeof exports !== 'object' || exports === null || Array.isArray(exports)) return exports
+
+  const reordered = {}
+  const keys = Object.keys(exports)
+
+  if (keys.includes('types')) reordered.types = prioritizeTypesAndDefaultKeys(exports.types)
+
+  for (const key of keys) {
+    if (key === 'types' || key === 'default') continue
+    reordered[key] = prioritizeTypesAndDefaultKeys(exports[key])
+  }
+
+  if (keys.includes('default')) reordered.default = prioritizeTypesAndDefaultKeys(exports.default)
+
+  return reordered
+}
+
+const processPackageJson = (inputPath) => {
+  const fullPath = path.resolve(process.cwd(), inputPath)
+  const raw = fs.readFileSync(fullPath, 'utf8')
+  const parsed = parse(raw)
+
+  if (parsed.exports) {
+    parsed.exports = prioritizeTypesAndDefaultKeys(parsed.exports)
+  }
+
+  const sorted = sortPackageJson(parsed)
+  const result = stringify(sorted, null, 2) + '\n'
+
+  if (raw !== result) {
+    fs.writeFileSync(fullPath, result)
+    console.log(`✓ Fixed ${inputPath}`)
+  } else {
+    // console.log(`✓ No changes needed for ${inputPath}`)
+  }
+}
+
+const main = () => {
+  const files = process.argv.slice(2)
+  if (files.length === 0) {
+    console.error('Usage: node fix-package-json.js path/to/package.json [...more]')
+    process.exit(1)
+  }
+
+  for (const file of files) {
+    try {
+      processPackageJson(file)
+    } catch (error) {
+      console.error(`✗ Failed to process ${file}: ${error.message}`)
+    }
+  }
+}
+
+main()

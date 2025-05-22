@@ -2,7 +2,7 @@
 import { object } from '@art-suite/art-core-ts-comprehensions'
 import { isPlainObject, isDate, isObject, isFunction } from '@art-suite/art-core-ts-types'
 import { JsonObject, JsonValue, JsonPrimitive, JsonPropsObject } from './JsonTypes'
-import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonPrimitive, isJsonArray } from './JsonTypeFunctions'
+import { isJsonString, isJsonObject, isJsonBoolean, isJsonNumber, isJsonPrimitive, isJsonArray } from '../coverage/JsonTypeFunctions'
 
 
 /**
