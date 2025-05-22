@@ -46,7 +46,7 @@ describe('toMilliseconds', () => {
   })
 
   it('should throw on invalid input', () => {
-    expect(() => toMilliseconds({})).toThrow('invalid timestamp value')
+    expect(() => toMilliseconds({} as any)).toThrow('invalid timestamp value')
   })
 
   it('with string that is just a number', () => {
