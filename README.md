@@ -16,6 +16,7 @@ JavaScript/TypeScript is missing a lot of fundamental, consistent tooling that o
   - Convert between string, integer and Date representations of dates seamlessly
   - Time presenters: format-date, "time ago", "time duration"
 - [art-core-ts-comprehensions](./packages/art-core-ts-comprehensions) - Unified interface for working with arrays, objects, and other iterables
+- [art-core-ts-communication-status](./packages/art-core-ts-communication-status) - A simple, consistent library for handling communication status in client-server applications.
 
 ## Convenience Package
 
