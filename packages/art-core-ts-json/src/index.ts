@@ -1,6 +1,6 @@
 export * from "./toJsonValue"
 export * from "./asJson"
-export * from "../coverage/JsonTypeFunctions"
+export * from "./JsonTypeFunctions"
 export * from "./JsonTypes"
 export * from "./jsonToJs"
 export * from "./validateJson"

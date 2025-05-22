@@ -1,5 +1,5 @@
 import { JsonObject, JsonValue } from './JsonTypes'
-import { isJsonObject } from '../coverage/JsonTypeFunctions'
+import { isJsonObject } from './JsonTypeFunctions'
 
 /**
  * Returns the value if it looks like a JSON object (does not check any property values) otherwise returns an empty object.
