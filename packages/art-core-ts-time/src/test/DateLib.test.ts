@@ -86,8 +86,8 @@ describe('formatDate', () => {
   })
 
   it('with no argument', () => {
-    const result = formatDate()
-    expect(result).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/)
+    const result = formatDate(undefined)
+    expect(result).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/)
   })
 
   it('with just format', () => {
