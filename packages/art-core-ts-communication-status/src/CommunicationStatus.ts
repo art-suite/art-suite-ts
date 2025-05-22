@@ -383,7 +383,7 @@ interface CommunicationStatusDetails {
  * @param httpStatus - The HTTP status code to get the communication status for
  * @returns The communication status for the given HTTP status code
  */
-export const getCommunicationStatus = (httpStatus?: number): CommunicationStatusDetails => {
+export const getCommunicationStatusDetails = (httpStatus?: number): CommunicationStatusDetails => {
   if (!httpStatus) return { status: networkFailure, message: "network failure" }
 
   let status: CommunicationStatus | undefined
@@ -423,6 +423,9 @@ export const getCommunicationStatus = (httpStatus?: number): CommunicationStatus
     message: `${status} (${httpStatus})`
   }
 }
+
+export const getCommunicationStatus = (httpStatus?: number): CommunicationStatus =>
+  getCommunicationStatusDetails(httpStatus).status
 
 export const getHttpStatus = (status: CommunicationStatus): number => {
   const httpStatus = communicationStatuses[status]?.httpStatus
