@@ -81,12 +81,12 @@ export const isNotNullish = (value: any): boolean => !isNullish(value)
  * @param v
  * @returns
  */
-export const present = (v: any): boolean => {
+export const present = <T>(v: T): v is NonNullable<T> => {
   if (v == null) return false
-  if (isFunction(v.getPresent)) {
-    return v.getPresent()
-  } else if (isFunction(v.present)) {
-    return v.present()
+  if (isFunction((v as any).getPresent)) {
+    return (v as any).getPresent()
+  } else if (isFunction((v as any).present)) {
+    return (v as any).present()
   } else if (isString(v)) {
     return stringIsPresent(v)
   } else return true
