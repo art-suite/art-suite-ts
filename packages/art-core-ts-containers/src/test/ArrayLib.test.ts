@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { insertIntoArray, arrayWithInsertedAt, arrayWith } from '../ArrayLib'
+import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek } from '../ArrayLib'
 
 describe('ArrayLib', () => {
   describe('insertIntoArray', () => {
@@ -68,6 +68,24 @@ describe('ArrayLib', () => {
       const arr1 = [1, 2]
       const result = arrayWith(arr1, 3, 4)
       expect(result).toEqual([1, 2, 3, 4])
+    })
+  })
+
+  describe('peek', () => {
+    it('returns undefined for empty array', () => {
+      expect(peek([])).toBeUndefined()
+    })
+
+    it('returns undefined for undefined array', () => {
+      expect(peek(undefined)).toBeUndefined()
+    })
+
+    it('returns undefined for null array', () => {
+      expect(peek(null)).toBeUndefined()
+    })
+
+    it('returns last element for non-empty array', () => {
+      expect(peek([1, 2, 3])).toBe(3)
     })
   })
 })

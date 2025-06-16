@@ -40,3 +40,10 @@ export const arrayWithInsertedAt = <T>(inputArray: T[], index: number, item: T):
  * @returns A new array with the additional items appended
  */
 export const arrayWith = <T>(inputArray: T[], ...items: T[]): T[] => [...inputArray, ...items]
+
+/**
+ * Returns the last element of an array, or undefined if the array is empty or undefined.
+ * @param array - The array to peek into
+ * @returns The last element of the array, or undefined if the array is empty or undefined
+ */
+export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.[array.length - 1]
