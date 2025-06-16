@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
@@ -38,7 +38,7 @@
     "@art-suite/art-core-ts-containers": "^0.4.0",
     "@art-suite/art-core-ts-json": "^0.3.0",
     "@art-suite/art-core-ts-string-case": "^0.1.5",
-    "@art-suite/art-core-ts-string-lib": "^0.1.0",
+    "@art-suite/art-core-ts-string-lib": "^0.2.0",
     "@art-suite/art-core-ts-time": "^0.1.7",
     "@art-suite/art-core-ts-types": "^0.2.0"
   }
