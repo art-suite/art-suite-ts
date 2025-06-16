@@ -1,83 +1,62 @@
-# @art-suite/art-core-ts-string-case
+# @art-suite/art-core-ts-string-lib
 
-Effortless, lossless conversion between all common string case formats in programming.
+Essential string utilities for TypeScript, including number formatting and robust pluralization.
 
 ## Why This Module?
 
-**The Why:**
-There are several common ways to represent words without spaces in programming—camelCase, snake_case, dash-case, and more. Converting between them is a frequent need, but handling edge cases (especially acronyms) is tricky and error-prone. There is no clear standard for how to represent acronyms as "code words," and most libraries lose information when converting between formats.
+String manipulation is a core part of any application, but common tasks like formatting numbers with commas or pluralizing words are often re-implemented or handled inconsistently. This module provides focused, type-safe helpers for these needs, with a simple, ergonomic API.
 
-**The How:**
-This library makes one key assumption: acronyms are treated as words. For example, "HTML" is treated as the word "Html" for the purpose of code words. This enables lossless, round-trip conversion between all supported formats—so you can always convert back and forth without losing word boundaries or acronym information.
-
-**The What:**
-A comprehensive set of functions for converting between camelCase, PascalCase, snake_case, UPPER_SNAKE_CASE, dash-case, Capitalized-Dash-Case, and more, all with robust handling of acronyms.
+- **Commaize:** Format numbers or numeric strings with thousands separators.
+- **Pluralize:** Intelligently pluralize words based on count, with support for custom plural forms and edge cases. Built on top of the popular [`pluralize`](https://www.npmjs.com/package/pluralize) npm package, but presented in a more convenient, TypeScript-friendly API.
 
 ## Example Installation and Use (Required)
 
 Install with npm:
 
 ```sh
-npm install @art-suite/art-core-ts-string-case
+npm install @art-suite/art-core-ts-string-lib
 ```
 
 Basic usage:
 
 ```ts
-import {
-  getCodeWords,
-  lowerCamelCase,
-  upperCamelCase,
-  snakeCase,
-  upperSnakeCase,
-  dashCase,
-  capitalizedDashCase,
-  pascalCase,
-  kebabCase,
-  constantCase,
-  camelCase,
-} from "@art-suite/art-core-ts-string-case";
+import { commaize, pluralize } from "@art-suite/art-core-ts-string-lib";
 
-getCodeWords("toHTML"); // ["to", "Html"]
-lowerCamelCase("to HTML"); // "toHtml"
-upperCamelCase("to HTML"); // "ToHtml"
-snakeCase("to HTML"); // "to_html"
-upperSnakeCase("to HTML"); // "TO_HTML"
-dashCase("to HTML"); // "to-html"
-capitalizedDashCase("to HTML"); // "To-Html"
+// Format numbers with commas
+commaize(1234567); // "1,234,567"
+commaize("987654321"); // "987,654,321"
 
-// Aliases
-pascalCase("to HTML"); // "ToHtml"
-kebabCase("to HTML"); // "to-html"
-constantCase("to HTML"); // "TO_HTML"
-camelCase("to HTML"); // "toHtml"
-
-// All converters accept an optional second parameter: the joiner string
-upperCamelCase("to HTML", " "); // "To Html"
-snakeCase("to HTML", "--"); // "to--html"
+// Pluralize words based on count
+pluralize("cat"); // "cats"
+pluralize("cat", 1); // "1 cat"
+pluralize("cat", 2); // "2 cats"
+pluralize(3, "child", "children"); // "3 children"
+pluralize("person", 2); // "2 people"
 ```
 
 ## Functional Overview
 
-### Code Word Extraction
+### `commaize(x: number | string): string`
 
-- `getCodeWords(str)` — Extracts an array of code words from any string, treating acronyms as words (e.g., "toHTML" → `["to", "Html"]`).
+Adds commas as thousands separators to a number or numeric string.
 
-### Case Conversion Functions
+- `commaize(1234567)` → `"1,234,567"`
+- `commaize("1000000")` → `"1,000,000"`
 
-All converters accept an optional second parameter, `joiner`, which is the string inserted between each word (default varies by converter).
+### `pluralize(...)`
 
-- `lowerCamelCase(str, joiner?)` — Converts to lowerCamelCase.
-- `upperCamelCase(str, joiner?)` — Converts to UpperCamelCase (PascalCase).
-- `snakeCase(str, joiner?)` — Converts to snake_case.
-- `upperSnakeCase(str, joiner?)` — Converts to UPPER_SNAKE_CASE.
-- `dashCase(str, joiner?)` — Converts to dash-case.
-- `capitalizedDashCase(str, joiner?)` — Converts to Capitalized-Dash-Case.
-- `pascalCase(str, joiner?)` — Alias for `upperCamelCase`.
-- `kebabCase(str, joiner?)` — Alias for `dashCase`.
-- `constantCase(str, joiner?)` — Alias for `upperSnakeCase`.
-- `camelCase(str, joiner?)` — Alias for `lowerCamelCase`.
+Pluralizes a word based on count, with flexible call signatures:
 
-### Word Case Utilities
+- `pluralize(singleForm: string)` — Returns the plural form: `pluralize("cat")` → `"cats"`
+- `pluralize(singleForm: string, count: number)` — Returns `"count word(s)"`: `pluralize("cat", 2)` → `"2 cats"`
+- `pluralize(count: number, singleForm: string)` — Same as above: `pluralize(1, "dog")` → `"1 dog"`
+- `pluralize(singleForm: string, count: number, pluralForm: string)` — Custom plural: `pluralize("child", 2, "children")` → `"2 children"`
+- `pluralize(count: number, singleForm: string, pluralForm: string)` — Same as above.
 
-- `lowerCase(str)`
+Handles edge cases and preserves punctuation (e.g., `"bus!"` → `"buses!"`).
+
+> **Note:** This utility leverages the [`pluralize`](https://www.npmjs.com/package/pluralize) npm package under the hood, but wraps it in a more convenient, TypeScript-friendly API and handles additional edge cases. In particular, the `pluralize(number, noun)` signature is closer to normal English and more ergonomic than the default npm pluralize API.
+
+## API Documentation Reference
+
+For detailed information on all exported functions and their parameters, please refer to the TypeScript typings and JSDoc comments within the source code.
