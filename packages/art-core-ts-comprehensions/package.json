@@ -33,6 +33,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-types": "^0.1.4"
+    "@art-suite/art-core-ts-types": "^0.1.5"
   }
 }
