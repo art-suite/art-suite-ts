@@ -1,3 +1,4 @@
+export type PlainObject<T = any> = Record<string, T>;
 type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array
 
 /*
@@ -37,7 +38,9 @@ export const isObject = (v: any): v is Record<string, any> => v != null && typeo
  * @param v
  * @returns
  */
-export const isPlainObject = (v: any): v is Record<string, any> => isObject(v) && null == Object.getPrototypeOf(Object.getPrototypeOf(v))
+export const isPlainObject = (v: any): v is PlainObject => isObject(v) && null == Object.getPrototypeOf(Object.getPrototypeOf(v))
+
+export const asPlainObject = (v: any): PlainObject => isPlainObject(v) ? v : {}
 
 export const isFunction = (obj: any): obj is Function => typeof obj === "function"
 export const isNumber = (obj: any): obj is number => typeof obj === "number"

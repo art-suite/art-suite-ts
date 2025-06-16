@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@art-suite/art-core-ts-comprehensions": "^0.1.4",
-    "@art-suite/art-core-ts-containers": "^0.3.1",
+    "@art-suite/art-core-ts-containers": "^0.3.2",
     "@art-suite/art-core-ts-types": "^0.1.4",
     "type-fest": "^4.41.0"
   }

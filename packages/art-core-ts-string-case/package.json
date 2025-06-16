@@ -1,7 +1,7 @@
 {
   "name": "@art-suite/art-core-ts-string-case",
   "version": "0.1.5",
-  "description": "A TypeScript string utility library",
+  "description": "A TypeScript string library for converting strings to different 'code word' cases: camelCase, snake_case, kebab-case, PascalCase, etc.",
   "keywords": [],
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-containers": "^0.3.1",
+    "@art-suite/art-core-ts-containers": "^0.3.2",
     "@art-suite/art-core-ts-types": "^0.1.4"
   }
 }
