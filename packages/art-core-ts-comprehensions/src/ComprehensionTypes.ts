@@ -149,6 +149,24 @@ export interface ArrayFunction {
 
 // ### object ###
 export interface ObjectFunction {
+  // ArrayInput + withKey only (values = original InV)
+  <InV, OutK extends string | number | symbol>(
+    source: ArrayInput<InV>,
+    options: BaseComprehensionOptions<InV, number> & {
+      withKey: ObjectKeyFn<InV, number, OutK>
+      into?: PlainObject<InV>
+    }
+  ): PlainObject<InV>
+
+  // ArrayInput + key only (alias)
+  <InV, OutK extends string | number | symbol>(
+    source: ArrayInput<InV>,
+    options: BaseComprehensionOptions<InV, number> & {
+      key: ObjectKeyFn<InV, number, OutK>
+      into?: PlainObject<InV>
+    }
+  ): PlainObject<InV>
+
   // ArrayInput + when+with
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
     source: ArrayInput<InV>,
@@ -173,7 +191,7 @@ export interface ObjectFunction {
     withFn: ArrayWithFn<InV, OutV>
   ): PlainObject<OutV>
 
-  // ArrayInput + options without with
+  // ArrayInput + options without with/key/withKey
   <InV>(
     source: ArrayInput<InV>,
     options?: Omit<ObjectResultOptions<InV, number, InV>, 'with' | 'key' | 'withKey'>
@@ -191,6 +209,8 @@ export interface ObjectFunction {
     into: PlainObject<OutV>,
     options: ObjectResultOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
   ): PlainObject<OutV>
+
+  // --- ObjectInput overloads ---
 
   // ObjectInput + when+with
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
@@ -216,7 +236,7 @@ export interface ObjectFunction {
     withFn: ObjectWithFn<InV, OutV>
   ): PlainObject<OutV>
 
-  // ObjectInput + options without with
+  // ObjectInput + options without with/key/withKey
   <InV>(
     source: ObjectInput<InV>,
     options?: Omit<ObjectResultOptions<InV, string, InV>, 'with' | 'key' | 'withKey'>

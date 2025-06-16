@@ -40,3 +40,14 @@ const ea2: Record<string, number> = each(a, { into: {}, when: (v) => v > 1 })
 const ea3: undefined = each(a, { with: (v) => `${v}` })
 const ea4: undefined = each(a, (v) => `${v}`)
 const ea5: undefined = each(a, { when: (v) => v > 1, with: (v) => `${v} * 2` })
+
+// regressions
+const spaces: {
+  id: string;
+  propertyId: string;
+  createdAt: Date;
+  name: string;
+  updatedAt: Date;
+  levelId: string;
+}[] = [{ id: '1', propertyId: '1', createdAt: new Date(), name: '1', updatedAt: new Date(), levelId: '1' }]
+const spacesBySpaceId = object(spaces, { withKey: ({ id }) => id })
