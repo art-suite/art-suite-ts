@@ -146,21 +146,22 @@ export interface ArrayFunction {
   (source: NotPresent, withFnOrOptions?: any, into?: any): []
 }
 // ### object ###
+// ### object ###
+// ### object ###
 export interface ObjectFunction {
-  // ArrayInput + withKey only (values = original InV), allowing optional keys
-  <InV, OutK extends string | number | symbol | undefined>(
+  <InV>(
     source: ArrayInput<InV>,
     options: BaseComprehensionOptions<InV, number> & {
-      withKey: (value: InV, key: number) => OutK
+      withKey: ObjectKeyFn<InV, number, any>
       into?: PlainObject<InV>
     }
   ): PlainObject<InV>
 
-  // ArrayInput + key only (alias), allowing optional keys
-  <InV, OutK extends string | number | symbol | undefined>(
+  // ArrayInput + key only (alias), allow any key return
+  <InV>(
     source: ArrayInput<InV>,
     options: BaseComprehensionOptions<InV, number> & {
-      key: (value: InV, key: number) => OutK
+      key: ObjectKeyFn<InV, number, any>
       into?: PlainObject<InV>
     }
   ): PlainObject<InV>
@@ -207,6 +208,7 @@ export interface ObjectFunction {
     into: PlainObject<OutV>,
     options: ObjectResultOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
   ): PlainObject<OutV>
+
 
   // --- ObjectInput + withKey only (values = original InV) ---
   <InV, OutK extends string | number | symbol>(
@@ -271,7 +273,6 @@ export interface ObjectFunction {
 
   // IterableInput and NotPresent overloads unchanged…
 }
-
 export interface FindFunction {
   // ArrayInput + when+with
   <InV, OutV>(

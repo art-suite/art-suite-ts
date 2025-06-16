@@ -55,9 +55,19 @@ const spacesBySpaceId = object(spaces, { withKey: ({ id }) => id })
 let canConnectTo: Record<string, boolean> = { "foo": true }
 let canConnectTo2: Record<string, boolean> = object(canConnectTo, { withKey: (v, k) => `${k} Ok` })
 
+type MessageChannel = 'sms' | 'email' | 'push'
 type NormalizedUser = {
   name: string,
-  phoneNumber?: string
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  cost: number;
+  costDetails: any | null;
+  messageCount: number;
+  lastMessageAt: Date | null;
+  phoneNumber: string | null;
+  deletedAt: Date | null;
+  messageChannel: MessageChannel | null
 }
-const users: NormalizedUser[] = [{ name: 'John' }, { name: 'Jane' }]
+const users: NormalizedUser[] = [{ name: 'John', messageChannel: null, id: '1', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }, { name: 'Jane', messageChannel: 'email', id: '2', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }]
 const usersByPhoneNumber = object(users, { withKey: ({ phoneNumber }) => phoneNumber })
