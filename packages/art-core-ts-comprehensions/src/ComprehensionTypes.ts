@@ -147,20 +147,20 @@ export interface ArrayFunction {
 }
 // ### object ###
 export interface ObjectFunction {
-  // ArrayInput + withKey only (values = original InV)
-  <InV, OutK extends string | number | symbol>(
+  // ArrayInput + withKey only (values = original InV), allowing optional keys
+  <InV, OutK extends string | number | symbol | undefined>(
     source: ArrayInput<InV>,
     options: BaseComprehensionOptions<InV, number> & {
-      withKey: ObjectKeyFn<InV, number, OutK>
+      withKey: (value: InV, key: number) => OutK
       into?: PlainObject<InV>
     }
   ): PlainObject<InV>
 
-  // ArrayInput + key only (alias)
-  <InV, OutK extends string | number | symbol>(
+  // ArrayInput + key only (alias), allowing optional keys
+  <InV, OutK extends string | number | symbol | undefined>(
     source: ArrayInput<InV>,
     options: BaseComprehensionOptions<InV, number> & {
-      key: ObjectKeyFn<InV, number, OutK>
+      key: (value: InV, key: number) => OutK
       into?: PlainObject<InV>
     }
   ): PlainObject<InV>

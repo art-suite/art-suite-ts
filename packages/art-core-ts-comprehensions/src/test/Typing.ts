@@ -54,3 +54,10 @@ const spacesBySpaceId = object(spaces, { withKey: ({ id }) => id })
 
 let canConnectTo: Record<string, boolean> = { "foo": true }
 let canConnectTo2: Record<string, boolean> = object(canConnectTo, { withKey: (v, k) => `${k} Ok` })
+
+type NormalizedUser = {
+  name: string,
+  phoneNumber?: string
+}
+const users: NormalizedUser[] = [{ name: 'John' }, { name: 'Jane' }]
+const usersByPhoneNumber = object(users, { withKey: ({ phoneNumber }) => phoneNumber })
