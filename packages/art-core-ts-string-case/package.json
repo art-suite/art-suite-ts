@@ -33,7 +33,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-containers": "^0.4.0",
+    "@art-suite/art-core-ts-containers": "^0.4.1",
     "@art-suite/art-core-ts-types": "^0.2.0"
   }
 }
