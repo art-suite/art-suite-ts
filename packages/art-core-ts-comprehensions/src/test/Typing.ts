@@ -51,3 +51,6 @@ const spaces: {
   levelId: string;
 }[] = [{ id: '1', propertyId: '1', createdAt: new Date(), name: '1', updatedAt: new Date(), levelId: '1' }]
 const spacesBySpaceId = object(spaces, { withKey: ({ id }) => id })
+
+let canConnectTo: Record<string, boolean> = { "foo": true }
+let canConnectTo2: Record<string, boolean> = object(canConnectTo, { withKey: (v, k) => `${k} Ok` })
