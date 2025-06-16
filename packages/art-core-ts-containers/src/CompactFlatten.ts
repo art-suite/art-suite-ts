@@ -3,7 +3,7 @@ type NotPresent = null | undefined;
 // Modified type definitions to better support heterogeneous arrays
 export type SparseArray<T> = Array<T | NotPresent>;
 export type NestedArray<T> = Array<T | NestedArray<T>>;
-export type NestedArrayWithNullAndUndefined<T> = Array<T | NestedArrayWithNullAndUndefined<T> | null | undefined>;
+export type SparseNestedArray<T> = Array<T | SparseNestedArray<T> | NotPresent>;
 
 export type FlattenedElementType<
   T,
