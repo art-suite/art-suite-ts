@@ -1,33 +1,37 @@
+type Primitive =
+  | Function
+  | Date
+  | RegExp
+  | string
+  | number
+  | boolean
+  | bigint
+  | symbol;
+
 /**
- * Recursively strips `null` from all properties of an object and elements of an array/tuple.
- * - If a value is `null`, its type becomes `never`.
- * - If an object property's value type becomes `never`, the property is omitted.
- * - For arrays/tuples, if an element's type becomes `never`, it remains `never` in that position.
- * - Preserves types of primitives, functions, Dates, RegExps.
- * - Preserves tuple structure and specific element types (after stripping null).
- */
+* Recursively strips `null` from all properties of an object and elements of an array/tuple.
+* - If a value is `null`, its type becomes `never`.
+* - If an object property's value type becomes `never`, the property is omitted.
+* - For arrays/tuples, if an element's type becomes `never`, it remains `never` in that position.
+* - Preserves types of primitives, functions, Dates, RegExps.
+* - Preserves tuple structure and specific element types (after stripping null).
+*/
 export type DeepStripNulls<T> =
-  T extends null ? never : // Base case: null becomes never
+  // Null → never
+  T extends null ? never :
 
-  // Keep functions, Dates, RegExps, and basic primitives as they are
-  T extends Function | Date | RegExp | string | number | boolean | bigint | symbol ? T :
+  // Primitives pass through
+  T extends Primitive ? T :
 
-  // Handle arrays and tuples (including readonly ones)
-  T extends readonly any[] ?
-  // Map over each element in the array/tuple
-  // The `-readonly` modifier makes the resulting array/tuple mutable.
-  // If you need to preserve readonly, this part would need adjustment.
-  { -readonly [K in keyof T]: DeepStripNulls<T[K]> } :
+  // Arrays (incl. readonly) → map element type
+  T extends readonly (infer U)[]
+  ? Array<DeepStripNulls<Exclude<U, null>>> :
 
-  // Handle objects
-  T extends object ?
-  // Map over object properties.
-  // `as DeepStripNulls<T[P]> extends never ? never : P`
-  // This part filters out keys (P) if their transformed value type becomes `never`.
-  { [P in keyof T as DeepStripNulls<T[P]> extends never ? never : P]: DeepStripNulls<T[P]> } :
-
-  // Fallback for types not explicitly handled (e.g., `undefined` just passes through)
-  T;
+  // Objects → filter-out keys whose value is null and recurse
+  T extends object
+  ? { [K in keyof T as Exclude<T[K], null> extends never ? never : K]:
+    DeepStripNulls<Exclude<T[K], null>> }
+  : T;
 
 /**
  * Recursively strips `null` and `undefined` from all properties of an object and elements of an array/tuple.
