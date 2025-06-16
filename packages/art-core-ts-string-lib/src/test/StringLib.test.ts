@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { commaize, pluralize } from '../index.ts'
+import { commaize, pluralize, randomString, cryptoRandomString } from '../index.ts'
 
 describe('commaize', () => {
   it('should commaize a number', () => {
@@ -47,5 +47,36 @@ describe('pluralize', () => {
     expect(pluralize('person_-', 1)).toBe('1 person_-')
     expect(pluralize('person_-', 2)).toBe('2 people_-')
     expect(pluralize('person_-', 0)).toBe('0 people_-')
+  })
+
+})
+
+describe('randomString', () => {
+  it('should generate a random string', () => {
+    expect(randomString()).toBeDefined()
+  })
+  it('should generate a random string with a custom length', () => {
+    const s = randomString(10)
+    expect(s.length).toBe(10)
+  })
+  it('should generate a random string with a custom characters', () => {
+    const s = randomString(10, 'abcdefghijklmnopqrstuvwxyz')
+    expect(s.length).toBe(10)
+    expect(s).toMatch(/^[a-z]+$/)
+  })
+  it('should generate a random string with a custom random numbers', () => {
+    const s = randomString(10, 'abcdefghijklmnopqrstuvwxyz', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    expect(s.length).toBe(10)
+    expect(s).toEqual('bcdefghijk')
+  })
+
+})
+describe('cryptoRandomString', () => {
+  it('should generate a random string', () => {
+    expect(cryptoRandomString()).toBeDefined()
+  })
+  it('should generate a random string with a custom length', () => {
+    const s = cryptoRandomString(10)
+    expect(s.length).toBe(10)
   })
 })
