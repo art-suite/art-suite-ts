@@ -10,7 +10,8 @@ export const objectHasKeys = (obj: Record<string, any>): boolean => {
   return false
 }
 
-export const objectKeyCount = (obj: Record<string, any>): number => {
+export const objectKeyCount = (obj: Record<string, any> | null | undefined): number => {
+  if (!obj) return 0
   let count = 0
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
