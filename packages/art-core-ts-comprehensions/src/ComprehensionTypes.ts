@@ -1,12 +1,12 @@
 // Common helper types
-type NotPresent = null | undefined;
-type PlainObject<V = any> = Record<string, V>;
+export type NotPresent = null | undefined;
+export type PlainObject<V = any> = Record<string, V>;
 
 // Input source types
-type ArrayInput<InV> = InV[] | NotPresent;
-type ObjectInput<InV> = PlainObject<InV> | NotPresent;
+export type ArrayInput<InV> = InV[] | NotPresent;
+export type ObjectInput<InV> = PlainObject<InV> | NotPresent;
 // Basic Iterable input - specific key type (NumK for numeric, StrK for string) depends on usage context
-type IterableInput<InV> = Iterable<InV> | NotPresent;
+export type IterableInput<InV> = Iterable<InV> | NotPresent;
 
 
 // Callbacks
@@ -582,3 +582,6 @@ export interface EachFunction {
     intoArg?: IntoV
   ): IntoV
 }
+
+export type AnyContainer<T> = ArrayInput<T> | ObjectInput<T> | IterableInput<T>
+export type FullySupportedContainer<T> = ArrayInput<T> | ObjectInput<T>

@@ -1,11 +1,11 @@
 import { isPlainObject, isFunction, exists } from '@art-suite/art-core-ts-types'
-import { EachFunction, ArrayFunction, ObjectFunction, ReduceFunction, FindFunction } from './ComprehensionTypes'
+import { EachFunction, ArrayFunction, ObjectFunction, ReduceFunction, FindFunction, AnyContainer, ArrayInput, ObjectInput, NotPresent } from './ComprehensionTypes'
 
 const isMap = (source: any): source is Map<any, any> => source instanceof Map;
 const isSet = (source: any): source is Set<any> => source instanceof Set;
 
-const isArrayIterable = (source: any): source is any[] => source != null && source.length >= 0;
-const isOfIterable = (o: any): boolean => isFunction(o[Symbol.iterator] || o.next);
+export const isArrayIterable = (source: any): source is any[] => source != null && source.length >= 0;
+export const isOfIterable = (o: any): boolean => isFunction(o[Symbol.iterator] || o.next);
 
 const returnFirst = (a: any) => a;
 const returnSecond = (a: any, b: any) => b;
@@ -241,3 +241,26 @@ export const reduce: ReduceFunction = ((source: any, a: any, b: any) => invokeNo
  * @returns The found value, or undefined if not found.
  */
 export const find: FindFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedFind, source, a, b)) as FindFunction;
+
+
+export const isComprehensionIterable = (source: any): source is AnyContainer<any> => {
+  return isArrayIterable(source) || isPlainObject(source) || isMap(source) || isSet(source) || isOfIterable(source)
+}
+
+/**
+ * Returns true if the source is a fully supported comprehension iterable.
+ *
+ * Fully supported means we can both generate as well as iterate over the source.
+ *
+ * This is different from isComprehensionIterable, which only checks if we can iterate over the source.
+ *
+ * This is useful for cases where we need to know if we can both generate and iterate over the source,
+ * such as when we are using the source in a comprehension.
+ *
+ * Currently, this is only true for arrays and objects. TODO: add Map and Set support.
+ * @param source - The source to check.
+ * @returns True if the source is a fully supported comprehension iterable, false otherwise.
+ */
+export const isFullySupportedComprehensionIterable = (source: any): source is AnyContainer<any> => {
+  return isArrayIterable(source) || isPlainObject(source)
+}

@@ -5,7 +5,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/art-suite/art-suite-ts.git"
+    "url": "https://github.com/art-suite/art-suite-ts"
   },
   "license": "MIT",
   "author": "Shane Delamore",
