@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { stripNulls, deepStripNulls } from "../index"
+import { stripNulls, deepStripNulls, deepStripNullish, stripNullish } from "../index"
 
 describe("stripNulls", () => {
   it("should shallowly strip nulls from objects", () => {
@@ -122,5 +122,89 @@ describe("deepStripNulls", () => {
       }
     }
     expect(deepStripNulls(input)).toEqual(expected)
+  })
+})
+
+// deepStripNullish
+describe("deepStripNullish", () => {
+  it("should deeply strip nulls and undefined from objects", () => {
+    const input = {
+      a: 1,
+      b: null,
+      c: {
+        d: null,
+        e: 2,
+        f: {
+          g: null,
+          h: undefined
+        }
+      }
+    }
+    const expected = {
+      a: 1,
+      c: {
+        e: 2,
+        f: {
+        }
+      }
+    }
+    expect(deepStripNullish(input)).toEqual(expected)
+  })
+
+  //now with arrays
+  it("should deeply strip nulls and undefined from arrays", () => {
+    const input = [1, null, 2, [null, 3], { a: null, b: { c: null, d: 1 } }, 3]
+    const expected = [1, 2, [3], { b: { d: 1 } }, 3]
+    expect(deepStripNullish(input)).toEqual(expected)
+  })
+
+})
+
+// stripNullish is NOT deep, it's shallow
+describe("stripNullish", () => {
+  it("should strip nulls and undefined from objects", () => {
+    const input = {
+      a: 1,
+      b: null,
+      c: {
+        d: null,
+        e: 2,
+        f: {
+          g: null,
+          h: undefined
+        }
+      }
+    }
+    const expected = {
+      a: 1,
+      c: {
+        d: null,
+        e: 2,
+        f: {
+          g: null,
+          h: undefined
+        }
+      }
+    }
+    expect(stripNullish(input)).toEqual(expected)
+  })
+
+  //now with arrays
+  it("should strip nulls and undefined from arrays", () => {
+    const input = [1, null, 2, [null, 3], { a: null, b: { c: null, d: 1 } }, 3]
+    const expected = [1, 2, [null, 3], { a: null, b: { c: null, d: 1 } }, 3]
+    expect(stripNullish(input)).toEqual(expected)
+  })
+
+  // now any other type just returns the input
+  it("should return the input for any other type", () => {
+    expect(stripNullish(1)).toBe(1)
+    expect(stripNullish("string")).toBe("string")
+    expect(stripNullish(true)).toBe(true)
+
+    const date = new Date()
+    const regex = /test/
+    expect(stripNullish(date)).toBe(date)
+    expect(stripNullish(regex)).toBe(regex)
   })
 })
