@@ -22,7 +22,7 @@
   "name": "@art-suite/boilerplate",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/art-suite/art-suite-ts.git"
+    "url": "https://github.com/art-suite/art-suite-ts"
   },
   "scripts": {
     "build": "tsc",

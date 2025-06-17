@@ -1,11 +1,11 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "0.8.7",
+  "version": "0.9.0",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/art-suite/art-suite-ts.git"
+    "url": "https://github.com/art-suite/art-suite-ts"
   },
   "license": "MIT",
   "author": "Shane Delamore",
@@ -33,8 +33,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-communication-status": "^0.2.1",
-    "@art-suite/art-core-ts-comprehensions": "^0.1.10",
+    "@art-suite/art-core-ts-async": "^0.1.1",
+    "@art-suite/art-core-ts-communication-status": "^0.3.0",
+    "@art-suite/art-core-ts-comprehensions": "^0.2.0",
     "@art-suite/art-core-ts-containers": "^0.4.2",
     "@art-suite/art-core-ts-json": "^0.3.1",
     "@art-suite/art-core-ts-string-case": "^0.1.6",
