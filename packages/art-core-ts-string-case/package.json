@@ -1,11 +1,11 @@
 {
   "name": "@art-suite/art-core-ts-string-case",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A TypeScript string library for converting strings to different 'code word' cases: camelCase, snake_case, kebab-case, PascalCase, etc.",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/art-suite/art-suite-ts"
+    "url": "git+https://github.com/art-suite/art-suite-ts.git"
   },
   "license": "MIT",
   "author": "Shane Delamore",
@@ -33,7 +33,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-containers": "^0.4.1",
-    "@art-suite/art-core-ts-types": "^0.2.1"
+    "@art-suite/art-core-ts-containers": "^0.4.2",
+    "@art-suite/art-core-ts-types": "^0.2.2"
   }
 }

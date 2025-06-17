@@ -1,11 +1,11 @@
 {
   "name": "@art-suite/art-core-ts-time",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A TypeScript string utility library",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/art-suite/art-suite-ts"
+    "url": "git+https://github.com/art-suite/art-suite-ts.git"
   },
   "license": "MIT",
   "author": "Shane Delamore",

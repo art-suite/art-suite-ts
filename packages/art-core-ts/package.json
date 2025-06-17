@@ -1,11 +1,11 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/art-suite/art-suite-ts"
+    "url": "git+https://github.com/art-suite/art-suite-ts.git"
   },
   "license": "MIT",
   "author": "Shane Delamore",
@@ -33,13 +33,13 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-communication-status": "^0.2.0",
-    "@art-suite/art-core-ts-comprehensions": "^0.1.9",
-    "@art-suite/art-core-ts-containers": "^0.4.1",
-    "@art-suite/art-core-ts-json": "^0.3.0",
-    "@art-suite/art-core-ts-string-case": "^0.1.5",
-    "@art-suite/art-core-ts-string-lib": "^0.2.0",
-    "@art-suite/art-core-ts-time": "^0.1.7",
-    "@art-suite/art-core-ts-types": "^0.2.1"
+    "@art-suite/art-core-ts-communication-status": "^0.2.1",
+    "@art-suite/art-core-ts-comprehensions": "^0.1.10",
+    "@art-suite/art-core-ts-containers": "^0.4.2",
+    "@art-suite/art-core-ts-json": "^0.3.1",
+    "@art-suite/art-core-ts-string-case": "^0.1.6",
+    "@art-suite/art-core-ts-string-lib": "^0.2.1",
+    "@art-suite/art-core-ts-time": "^0.1.8",
+    "@art-suite/art-core-ts-types": "^0.2.2"
   }
 }
