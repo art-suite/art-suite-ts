@@ -85,7 +85,7 @@ switch (status) {
   - `networkFailure` — Network connectivity issues
   - `aborted` — Request was cancelled
   - `pending` — Request is in progress
-  - `timeout` - Request timed out
+  - `timeoutFailure` - Request timed out
 
 ### Type Guards
 

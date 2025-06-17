@@ -9,7 +9,7 @@ import {
   aborted,
   pending,
   failure,
-  timeout,
+  timeoutFailure,
   isSuccess,
   isFailure,
   isClientFailure,
@@ -41,7 +41,7 @@ describe('CommunicationStatus', () => {
       expect(aborted).toBe('aborted')
       expect(pending).toBe('pending')
       expect(failure).toBe('failure')
-      expect(timeout).toBe('timeout')
+      expect(timeoutFailure).toBe('timeoutFailure')
     })
   })
 
@@ -58,7 +58,7 @@ describe('CommunicationStatus', () => {
       expect(isFailure(serverFailure)).toBe(true)
       expect(isFailure(networkFailure)).toBe(true)
       expect(isFailure(aborted)).toBe(true)
-      expect(isFailure(timeout)).toBe(true)
+      expect(isFailure(timeoutFailure)).toBe(true)
       expect(isFailure(pending)).toBe(false)
     })
 
@@ -114,14 +114,14 @@ describe('CommunicationStatus', () => {
     })
 
     it('isTimeout', () => {
-      expect(isTimeout(timeout)).toBe(true)
+      expect(isTimeout(timeoutFailure)).toBe(true)
       expect(isTimeout(failure)).toBe(false)
       expect(isTimeout(success)).toBe(false)
     })
 
     it('isRetryableFailure', () => {
       expect(isRetryableFailure(networkFailure)).toBe(true)
-      expect(isRetryableFailure(timeout)).toBe(true)
+      expect(isRetryableFailure(timeoutFailure)).toBe(true)
       expect(isRetryableFailure(aborted)).toBe(true)
       expect(isRetryableFailure(serverFailure)).toBe(false)
       expect(isRetryableFailure(clientFailure)).toBe(false)

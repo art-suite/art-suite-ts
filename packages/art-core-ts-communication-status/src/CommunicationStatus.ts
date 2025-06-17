@@ -19,14 +19,14 @@ const communicationStatuses: CommunicationStatuses = {
   aborted: { failure: true },
   pending: {},
   failure: { httpStatus: 500, failure: true },
-  timeout: { failure: true }
+  timeoutFailure: { failure: true }
 }
 
-export type CommunicationStatus = "success" | "missing" | "clientFailure" | "clientFailureNotAuthorized" | "serverFailure" | "networkFailure" | "aborted" | "pending" | "failure" | "timeout"
+export type CommunicationStatus = "success" | "missing" | "clientFailure" | "clientFailureNotAuthorized" | "serverFailure" | "networkFailure" | "aborted" | "pending" | "failure" | "timeoutFailure"
 /**
  * RegEx returns true for all valid communication statuses
  */
-export const statusRegex = /^(success|missing|clientFailure|clientFailureNotAuthorized|serverFailure|networkFailure|aborted|pending|failure|timeout)$/
+export const statusRegex = /^(success|missing|clientFailure|clientFailureNotAuthorized|serverFailure|networkFailure|aborted|pending|failure|timeoutFailure)$/
 
 // Export status constants
 /**
@@ -191,10 +191,10 @@ export const failure: CommunicationStatus = "failure"
  * - try again (automatically or via user action)
  *
  * Client Developer Can:
- * - fix the client to not timeout the request
- * - implement proper timeout handling
+ * - fix the client to not timeoutFailure the request
+ * - implement proper timeoutFailure handling
  */
-export const timeout: CommunicationStatus = "timeout"
+export const timeoutFailure: CommunicationStatus = "timeoutFailure"
 
 // Core status check functions
 /** Returns true for HTTP 2xx responses */
@@ -341,12 +341,12 @@ export const isPending = (status: CommunicationStatus) => status === pending
  * - try again (automatically or via user action)
  *
  * Client Developer Can:
- * - extend the timeout duration
+ * - extend the timeoutFailure duration
  *
  * Server Developer Can:
  * - improve server performance and reliability
  */
-export const isTimeout = (status: CommunicationStatus) => status === timeout
+export const isTimeout = (status: CommunicationStatus) => status === timeoutFailure
 
 /**
  * Returns true if client can safely retry the request
@@ -354,7 +354,7 @@ export const isTimeout = (status: CommunicationStatus) => status === timeout
  * A a clearly-retryable failure:
  *
  * - network failure
- * - timeout
+ * - timeoutFailure
  * - aborted
  *
  * Note: some serverFailures will succeed on retry, but HTTP doesn't return clear indications which ones. To be safe, the client should not retry serverFailures indiscriminately.
