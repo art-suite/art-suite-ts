@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { objectHasKeys, objectKeyCount, objectWithout } from '../ObjectLib'
+import { objectHasKeys, objectKeyCount, objectWithout } from '../index'
 
 describe('objectHasKey', () => {
   it('returns true for object with own properties', () => {

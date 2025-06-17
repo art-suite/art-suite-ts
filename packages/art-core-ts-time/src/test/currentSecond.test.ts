@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { currentSecond } from '@art-suite/art-core-ts-time'
+import { currentSecond } from '../index'
 
 describe('currentSecond', () => {
   it('should return the current second', () => {

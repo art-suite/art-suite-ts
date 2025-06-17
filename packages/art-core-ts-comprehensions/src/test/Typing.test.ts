@@ -1,3 +1,4 @@
+import { expect, test } from "vitest"
 import { array, each, find, object, reduce } from "../Comprehensions"
 
 const a = [1, 2, 3]
@@ -71,3 +72,7 @@ type NormalizedUser = {
 }
 const users: NormalizedUser[] = [{ name: 'John', messageChannel: null, id: '1', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }, { name: 'Jane', messageChannel: 'email', id: '2', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }]
 const usersByPhoneNumber = object(users, { withKey: ({ phoneNumber }) => phoneNumber })
+
+test('placeholder - the real test is does this file compile?', () => {
+  expect(true).toBe(true)
+})

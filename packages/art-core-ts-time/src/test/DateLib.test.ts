@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { toSeconds, toMilliseconds, toDate, formatDate, firstOfHour, firstOfDay, firstOfWeek, firstOfMonth, firstOfYear, firstOfDayLocale, firstOfWeekLocale, firstOfMonthLocale, firstOfYearLocale } from '@art-suite/art-core-ts-time'
+import { toSeconds, toMilliseconds, toDate, formatDate, firstOfHour, firstOfDay, firstOfWeek, firstOfMonth, firstOfYear, firstOfDayLocale, firstOfWeekLocale, firstOfMonthLocale, firstOfYearLocale } from '../index'
 
 describe('toSeconds', () => {
   it('should convert Date to seconds', () => {

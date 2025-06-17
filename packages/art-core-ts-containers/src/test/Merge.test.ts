@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { merge, mergeInto } from '../Merge'
+import { merge, mergeInto } from '../index'
 
 describe('merge', () => {
   it('merges multiple objects in order', () => {

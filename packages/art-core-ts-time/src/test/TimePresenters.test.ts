@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { humanDurationString, timeAgo, humanTimeDeltaString, niceDateString, niceFullDateString, niceTimeDetailsString, niceMonthYear, secondsPer } from '@art-suite/art-core-ts-time'
+import { humanDurationString, timeAgo, humanTimeDeltaString, niceDateString, niceFullDateString, niceTimeDetailsString, niceMonthYear, secondsPer } from '../index'
 
 const now = new Date('2024-07-01T12:35:00')
 

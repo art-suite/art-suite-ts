@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { stripNulls, deepStripNulls } from "@art-suite/art-core-ts-containers"
+import { stripNulls, deepStripNulls } from "../index"
 
 describe("stripNulls", () => {
   it("should shallowly strip nulls from objects", () => {
