@@ -8,7 +8,7 @@ import { isJsonObject } from './JsonTypeFunctions'
  *
  * Either way, you get a plain object in response.
  */
-export const asJsonObject = (value: JsonValue): JsonObject => {
+export const asJsonObject = (value: any): JsonObject => {
   if (isJsonObject(value)) return value;
   return {};
 }
