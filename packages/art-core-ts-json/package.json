@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-json",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A TypeScript JSON utility library",
   "keywords": [],
   "repository": {
@@ -33,9 +33,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-comprehensions": "^0.3.0",
-    "@art-suite/art-core-ts-containers": "^0.4.2",
-    "@art-suite/art-core-ts-types": "^0.3.0",
+    "@art-suite/art-core-ts-comprehensions": "^0.3.1",
+    "@art-suite/art-core-ts-containers": "^0.4.3",
+    "@art-suite/art-core-ts-types": "^0.3.1",
     "type-fest": "^4.41.0"
   }
 }
