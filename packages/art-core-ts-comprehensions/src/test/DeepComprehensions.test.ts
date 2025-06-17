@@ -1,4 +1,4 @@
-import { deepEach, deepMap, map } from '../DeepComprehensions'
+import { deepEach, deepMap, map } from '../index'
 import { expect } from 'chai'
 import { describe, it } from 'vitest'
 

@@ -34,6 +34,58 @@ npm install @art-suite/art-core-ts-comprehensions
 - **`inject(source, callback, initialValue)`**: Alias for `reduce` with a more intuitive name for certain use cases.
 - **`find(source, callback)`**: Returns the first item in the source that satisfies the callback.
 
+## Deep Comprehensions
+
+The `DeepComprehensions` module provides advanced utilities for mapping and iterating over deeply nested arrays and objects. These functions are especially useful when you need to process data structures with arbitrary nesting.
+
+> **Note:** These functions can now be imported directly from the package:
+>
+> ```javascript
+> import {
+>   map,
+>   deepEach,
+>   deepMap,
+> } from "@art-suite/art-core-ts-comprehensions";
+> ```
+
+### Exports
+
+- **`map(source, callbackOrOptions)`**: Shallowly maps over an array or object, returning a new container of the same type with mapped values. Does not recurse into nested containers.
+- **`deepEach(source, callbackOrOptions)`**: Iterates over all values in a deeply nested array or object structure, calling the callback for each non-container value. Supports an optional `when` filter.
+- **`deepMap(source, callbackOrOptions)`**: Recursively maps over all values in a deeply nested array or object, returning a new structure with the same shape but with mapped values. Supports an optional `when` filter.
+
+### Usage Examples
+
+```javascript
+import { deepMap, deepEach, map } from "@art-suite/art-core-ts-comprehensions";
+
+const nested = {
+  a: 1,
+  b: 2,
+  c: [1, 2, 3],
+};
+
+// Deeply map all values, incrementing each by 1
+const incremented = deepMap(nested, (value) => value + 1);
+// Result: { a: 2, b: 3, c: [2, 3, 4] }
+
+// Deeply map, but only for keys not equal to 'c'
+const filtered = deepMap(nested, {
+  with: (value) => value + 1,
+  when: (value, key) => key !== "c",
+});
+// Result: { a: 2, b: 3 }
+
+// Deeply iterate and sum all values
+let sum = 0;
+deepEach(nested, (value) => (sum += value));
+// sum === 9
+
+// Shallow map (does not recurse into arrays/objects)
+const shallow = map(nested, (value) => value + 10);
+// Result: { a: 11, b: 12, c: "1,2,310" } // Note: [1,2,3] + 10 coerces to string
+```
+
 ## Usage Examples
 
 ### Basic Array Operations
@@ -147,6 +199,29 @@ Each operation accepts a callback function that receives:
 - `object`: Returns a new object
 - `reduce`/`inject`: Returns the accumulated value
 - `find`: Returns the first matching item or undefined
+
+## Supported Container Types
+
+This library distinguishes between containers you can **iterate over** and containers you can **generate**:
+
+### Containers You Can Iterate Over
+
+You can use comprehension functions (like `each`, `reduce`, `find`, etc. as well as `object` and `array`) to iterate over any of the following:
+
+- Arrays
+- Objects
+- Sets
+- Maps
+- Array-like objects (objects with a `length` property and indexed elements)
+- Any object that implements the iterable protocol (has a `[Symbol.iterator]` method)
+
+### Containers You Can Generate
+
+Currently, only **arrays** and **plain objects** can be generated as output containers by the comprehension functions (such as `array`, `object`, `deepMap`, etc.).
+
+> **Note:** Support for generating Maps and Sets may be added in the future.
+
+This means that while you can iterate over many different types of containers, when you use a function that returns a new container (like `array`, `object`, or `deepMap`), the result will always be a new array or a new plain object, depending on the function used and the input type.
 
 ## License
 
