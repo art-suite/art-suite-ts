@@ -38,7 +38,13 @@ export const isObject = (v: any): v is Record<string, any> => v != null && typeo
  * @param v
  * @returns
  */
-export const isPlainObject = (v: any): v is PlainObject => isObject(v) && null == Object.getPrototypeOf(Object.getPrototypeOf(v))
+export const isPlainObject = (v: any): v is PlainObject => {
+  if (!isObject(v)) return false
+  if (v.constructor === Object) return true // fast pass, but could fail if v was created in a different context with a different instance of Object
+  const prototype = Object.getPrototypeOf(v)
+  if (prototype === null) return true
+  return null == Object.getPrototypeOf(prototype)
+}
 
 export const asPlainObject = (v: any): PlainObject => isPlainObject(v) ? v : {}
 

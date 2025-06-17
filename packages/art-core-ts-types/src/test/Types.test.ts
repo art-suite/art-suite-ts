@@ -59,6 +59,17 @@ describe('Type checking functions', () => {
       expect(isPlainObject(new Date())).toBe(false)
       expect(isPlainObject(new Error())).toBe(false)
     })
+
+    // null and undefined are not plain objects
+    it('returns false for null and undefined', () => {
+      expect(isPlainObject(null)).toBe(false)
+      expect(isPlainObject(undefined)).toBe(false)
+    })
+
+    // test Object.create(null)
+    it('returns true for Object.create(null)', () => {
+      expect(isPlainObject(Object.create(null))).toBe(true)
+    })
   })
 
   describe('isFunction', () => {
