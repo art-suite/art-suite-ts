@@ -39,34 +39,25 @@ const normalizeDeepOptions = (options: DeepSecondParameter): DeepOptionsFullSupp
   if (isFunction(options)) {
     return { with: options, when: defaultWhenFunction }
   }
-  return { with: options.with || defaultWithFunction, when: options.when || defaultWhenFunction }
+  return { with: options.with ?? defaultWithFunction, when: options.when ?? defaultWhenFunction }
 }
 
-const deepEachR = (obj: AnyContainer<any>, options: DeepOptionsFullSupport) => {
+const deepEachR = (obj: AnyContainer<any>, options: DeepOptionsFullSupport) =>
   each(obj, {
     when: options.when,
-    with: (value: any, key: any) => {
-      if (isComprehensionIterable(value)) {
-        deepEachR(value, options)
-      } else {
-        if (options.when(value, key)) {
-          options.with(value, key)
-        }
-      }
-    }
+    with: (value: any, key: any) =>
+      isComprehensionIterable(value)
+        ? deepEachR(value, options)
+        : options.with(value, key)
   })
-}
 
-const deepMapR = (obj: AnyContainer<any>, options: DeepOptionsFullSupport) => {
-  return mapInternal(obj, {
-    when: options.when, with: (value: any, key: any) => {
-      if (isFullySupportedComprehensionIterable(value)) {
-        return deepMapR(value, options)
-      }
-      return options.with(value, key)
-    }
+const deepMapR = (obj: AnyContainer<any>, options: DeepOptionsFullSupport) =>
+  mapInternal(obj, {
+    when: options.when, with: (value: any, key: any) =>
+      isFullySupportedComprehensionIterable(value)
+        ? deepMapR(value, options)
+        : options.with(value, key)
   })
-}
 
 const mapInternal = (source: ArrayInput<any> | ObjectInput<any> | NotPresent, options: DeepOptionsFullSupport) => {
   if (isArrayIterable(source)) return array(source, options)

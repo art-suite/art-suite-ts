@@ -1,5 +1,6 @@
 import { deepEach, deepMap, map } from '../index'
 import { expect } from 'chai'
+import { isPromise } from 'util/types'
 import { describe, it } from 'vitest'
 
 describe('DeepComprehensions', () => {
@@ -73,5 +74,16 @@ describe('map', () => {
       b: 12,
       c: "1,2,310" // the result of [1, 2, 3] + 10
     })
+  })
+})
+
+describe('regression tests', () => {
+  it("deepAll is failing over in async, deepEach should work with { a: 1, b: '2', c: [3, 4] }", () => {
+    const obj = { a: 1, b: '2', c: [3, 4] }
+    const promises: any[] = []
+    deepEach(obj as any, async (value) => {
+      if (isPromise(value)) promises.push(value)
+    })
+    expect(promises).to.deep.equal([])
   })
 })
