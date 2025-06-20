@@ -3,10 +3,10 @@ export type NotPresent = null | undefined;
 export type PlainObject<V = any> = Record<string, V>;
 
 // Input source types
-export type ArrayInput<InV> = InV[];
-export type ObjectInput<InV> = PlainObject<InV>;
+export type ArrayInput<InV> = InV[] | NotPresent;
+export type ObjectInput<InV> = PlainObject<InV> | NotPresent;
 // Basic Iterable input - specific key type (NumK for numeric, StrK for string) depends on usage context
-export type IterableInput<InV, InK> = Iterable<[InK, InV]>;
+export type IterableInput<InV, InK> = Iterable<[InK, InV]> | NotPresent;
 
 
 // Callbacks
