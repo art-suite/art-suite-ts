@@ -7,7 +7,8 @@ The biggest difference between this library and other comprehensions is each com
 - `object` returns an object
 - `array` returns an array
 - `find` returns the found value
-- `inject`
+- `reduce` returns the reduced value
+- `each` returns the `returning` value or undefined
 
 ## Features
 
@@ -27,12 +28,16 @@ npm install @art-suite/art-core-ts-comprehensions
 
 ### Core Functions
 
-- **`each(source, callback)`**: Iterates over a source, executing the callback for each item. Returns the source unchanged.
-- **`array(source, callback)`**: Creates a new array by applying the callback to each item in the source.
-- **`object(source, callback)`**: Creates a new object by applying the callback to each item in the source.
-- **`reduce(source, callback, initialValue)`**: Reduces the source to a single value using the callback.
-- **`inject(source, callback, initialValue)`**: Alias for `reduce` with a more intuitive name for certain use cases.
-- **`find(source, callback)`**: Returns the first item in the source that satisfies the callback.
+All comprehension functions take 0, 1, or 2 arguments:
+
+- **arg 1**: the container to iterate over
+- **arg 2**: withFunction or Options object
+
+- **`each(source, withOrOptions?)`**: Iterates over a source, executing the withFunction for each item. Returns the `returning` value if provided, otherwise `undefined`.
+- **`array(source, withOrOptions?)`**: Creates a new array by applying the withFunction to each item in the source.
+- **`object(source, withOrOptions?)`**: Creates a new object by applying the withFunction to each item in the source.
+- **`reduce(source, withOrOptions?)`**: Reduces the source to a single value using the withFunction.
+- **`find(source, withOrOptions?)`**: Returns the first item in the source that satisfies the withFunction.
 
 ## Deep Comprehensions
 
@@ -50,9 +55,9 @@ The `DeepComprehensions` module provides advanced utilities for mapping and iter
 
 ### Exports
 
-- **`map(source, callbackOrOptions)`**: Shallowly maps over an array or object, returning a new container of the same type with mapped values. Does not recurse into nested containers.
-- **`deepEach(source, callbackOrOptions)`**: Iterates over all values in a deeply nested array or object structure, calling the callback for each non-container value. Supports an optional `when` filter.
-- **`deepMap(source, callbackOrOptions)`**: Recursively maps over all values in a deeply nested array or object, returning a new structure with the same shape but with mapped values. Supports an optional `when` filter.
+- **`map(source, withOrOptions?)`**: Shallowly maps over an array or object, returning a new container of the same type with mapped values. Does not recurse into nested containers.
+- **`deepEach(source, withOrOptions?)`**: Iterates over all values in a deeply nested array or object structure, calling the withFunction for each non-container value. Supports an optional `when` filter.
+- **`deepMap(source, withOrOptions?)`**: Recursively maps over all values in a deeply nested array or object, returning a new structure with the same shape but with mapped values. Supports an optional `when` filter.
 
 ### Usage Examples
 
@@ -99,13 +104,27 @@ const numbers = [1, 2, 3, 4, 5];
 const doubled = array(numbers, (x) => x * 2);
 // Result: [2, 4, 6, 8, 10]
 
+// Filter and transform
+const evenDoubled = array(numbers, {
+  with: (x) => x * 2,
+  when: (x) => x % 2 === 0,
+});
+// Result: [4, 8]
+
 // ForEach operation
 each(numbers, (x) => console.log(x));
 // Logs each number
 
-// Find operation
-const firstEven = find(numbers, (x) => x % 2 === 0);
+// Find operation with when option
+const firstEven = find(numbers, { when: (x) => x % 2 === 0 });
 // Result: 2
+
+// Find and transform
+const firstEvenDoubled = find(numbers, {
+  when: (x) => x % 2 === 0,
+  with: (x) => x * 2,
+});
+// Result: 4
 ```
 
 ### Object Operations
@@ -123,25 +142,64 @@ const data = {
 const doubled = object(data, (value, key) => value * 2);
 // Result: { a: 2, b: 4, c: 6 }
 
+// Transform keys with withKey option
+const keyTransformed = object(data, { withKey: (value) => value * 11 });
+// Result: { 11: 1, 22: 2, 33: 3 }
+
 // Iterate over object
 each(data, (value, key) => console.log(`${key}: ${value}`));
 // Logs each key-value pair
+
+// Each with returning value
+const result = each(data, {
+  returning: "done",
+  with: (value, key) => console.log(`${key}: ${value}`),
+});
+// Logs each key-value pair, result === "done"
 ```
 
 ### Reduce Operations
 
 ```javascript
-import { reduce, inject } from "@art-suite/art-core-ts-comprehensions";
+import { reduce } from "@art-suite/art-core-ts-comprehensions";
 
 const numbers = [1, 2, 3, 4, 5];
 
-// Sum all numbers
-const sum = reduce(numbers, (acc, x) => acc + x, 0);
+// Sum all numbers (uses first element as initial value)
+const sum = reduce(numbers, (acc, x) => acc + x);
 // Result: 15
 
-// Alternative syntax using inject
-const product = inject(numbers, (acc, x) => acc * x, 1);
+// Sum with inject option
+const sumWithInitial = reduce(numbers, {
+  with: (acc, x) => acc + x,
+  inject: 10,
+});
+// Result: 25
+
+// Multiply with inject option
+const product = reduce(numbers, {
+  with: (acc, x) => acc * x,
+  inject: 1,
+});
 // Result: 120
+
+// Filter and reduce
+const evenSum = reduce(numbers, {
+  with: (acc, x) => acc + x,
+  when: (x) => x % 2 === 0,
+});
+// Result: 6 (sum of even numbers only)
+
+// Reduce with inject
+reduce([1, 2, 3], { with: (acc, x) => acc + x, inject: 10 });
+// Result: 16
+
+// Each with returning
+const result = each([1, 2, 3], {
+  returning: "done",
+  with: (x) => console.log(x),
+});
+// Result: "done"
 ```
 
 ### Working with Different Data Structures
@@ -166,6 +224,137 @@ const map = new Map([
 ]);
 const result3 = object(map, (value, key) => value * 2);
 // Result: { a: 2, b: 4 }
+
+// Stop iteration early with stopWhen
+const result4 = array([1, 2, 3, 4], {
+  with: (x) => x * 2,
+  stopWhen: (x) => x === 3,
+});
+// Result: [2, 4] (stops when value equals 3)
+
+// Use into option to append to existing array
+const existingArray = [100, 200];
+const result5 = array([1, 2, 3], { with: (x) => x * 10, into: existingArray });
+// Result: [100, 200, 10, 20, 30]
+
+// Use into option to merge into existing object
+const existingObject = { x: 999 };
+const result6 = object([1, 2, 3], {
+  with: (x) => x * 10,
+  into: existingObject,
+});
+// Result: { x: 999, 1: 10, 2: 20, 3: 30 }
+```
+
+## Options Reference
+
+All comprehension functions accept an options object as the second parameter. Here's a complete reference of all available options and which functions support them:
+
+### Common Options (All Functions)
+
+These options are supported by all comprehension functions:
+
+- **`with`**: Function to transform each value
+
+  - **Signature**: `(value, key) => transformedValue` (for `array`, `object`, `find`, `each`)
+  - **Signature**: `(accumulator, value, key) => newAccumulator` (for `reduce`)
+  - **Default**: If not provided, returns the original value unchanged
+  - **Used by**: `array`, `object`, `reduce`, `find`, `each`
+
+- **`when`**: Function to filter elements (predicate)
+
+  - **Signature**: `(value, key) => boolean`
+  - **Behavior**: Only processes elements where this returns `true`
+  - **Used by**: `array`, `object`, `reduce`, `find`, `each`
+
+- **`stopWhen`**: Function to stop iteration early
+  - **Signature**: `(value, key) => boolean`
+  - **Behavior**: Stops iteration when this returns `true`
+  - **Used by**: `array`, `object`, `each`
+
+### Function-Specific Options
+
+#### `array(source, withOrOptions?)`
+
+- **`into`**: Array to push results into
+  - **Type**: `Array`
+  - **Default**: Creates a new array
+  - **Behavior**: Results are pushed into this array instead of creating a new one
+
+#### `object(source, withOrOptions?)`
+
+- **`into`**: Object to assign results into
+  - **Type**: `Object`
+  - **Default**: Creates a new object
+  - **Behavior**: Results are assigned to this object instead of creating a new one
+- **`withKey`**: Function to determine output keys
+  - **Signature**: `(value, key) => newKey`
+  - **Default**: Uses original keys (for objects) or values (for arrays/iterables)
+  - **Behavior**: The returned value becomes the key in the output object
+
+#### `reduce(source, withOrOptions?)`
+
+- **`inject`**: Initial value for the reduction
+  - **Type**: Any value
+  - **Default**: Uses the first element as initial value
+  - **Behavior**: This value becomes the starting accumulator
+
+#### `each(source, withOrOptions?)`
+
+- **`returning`**: Value to return
+  - **Type**: Any value
+  - **Default**: `undefined`
+  - **Behavior**: This value is returned (not modified by `each` itself)
+
+#### `find(source, withOrOptions?)`
+
+- No function-specific options beyond the common ones
+
+### Option Combinations and Behavior
+
+- **`with` + `when`**: Transform only filtered elements
+- **`with` + `stopWhen`**: Transform until stopping condition is met
+- **`when` + `stopWhen`**: Filter until stopping condition is met
+- **`with` + `when` + `stopWhen`**: Transform filtered elements until stopping condition is met
+
+### Examples of Option Usage
+
+```javascript
+// Basic with function
+array([1, 2, 3], { with: (x) => x * 2 });
+// Result: [2, 4, 6]
+
+// Filter with when
+array([1, 2, 3, 4], { when: (x) => x % 2 === 0 });
+// Result: [2, 4]
+
+// Transform and filter
+array([1, 2, 3, 4], { with: (x) => x * 2, when: (x) => x % 2 === 0 });
+// Result: [4, 8]
+
+// Stop early
+array([1, 2, 3, 4], { with: (x) => x * 2, stopWhen: (x) => x === 3 });
+// Result: [2, 4]
+
+// Use into option
+const existing = [100];
+array([1, 2, 3], { with: (x) => x * 10, into: existing });
+// Result: [100, 10, 20, 30]
+
+// Object with custom keys
+object([1, 2, 3], { withKey: (x) => `key_${x}`, with: (x) => x * 10 });
+// Result: { key_1: 10, key_2: 20, key_3: 30 }
+
+// Reduce with inject
+reduce([1, 2, 3], { with: (acc, x) => acc + x, inject: 10 });
+// Result: 16
+
+// Each with returning
+const result = each([1, 2, 3], {
+  returning: "done",
+  with: (x) => console.log(x),
+});
+// Result: "done"
 ```
 
 ## Key Concepts
@@ -183,21 +372,23 @@ The library works with various source types:
 - Any object with a `map` method
 - Any object with a `reduce` method
 
-### Callback Functions
+### With Functions
 
-Each operation accepts a callback function that receives:
+Each operation accepts a withFunction that receives:
 
 - The current value
 - The current key/index
 - The source object
 - The current iteration index
 
+**Note**: For `reduce`, the withFunction signature is `(accumulator, value, key)` instead of `(value, key)`.
+
 ### Return Values
 
-- `each`: Returns the source unchanged
+- `each`: Returns the `returning` value if provided, otherwise `undefined`
 - `array`: Returns a new array
 - `object`: Returns a new object
-- `reduce`/`inject`: Returns the accumulated value
+- `reduce`: Returns the accumulated value
 - `find`: Returns the first matching item or undefined
 
 ## Supported Container Types

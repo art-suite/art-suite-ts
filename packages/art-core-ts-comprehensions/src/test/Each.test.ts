@@ -11,14 +11,6 @@ describe("Each comprehensions", () => {
       expect(each(null)).toBeUndefined()
     })
 
-    it("returns null when into is null", () => {
-      expect(each(null, { into: null })).toBeNull()
-    })
-
-    it("returns null when inject is null", () => {
-      expect(each(null, { inject: null })).toBeNull()
-    })
-
     it("returns null when returning is null", () => {
       expect(each(null, { returning: null })).toBeNull()
     })

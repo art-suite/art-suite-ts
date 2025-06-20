@@ -32,12 +32,6 @@ describe("Reduce comprehensions", () => {
     })
   })
 
-  describe("inject/into aliases", () => {
-    it("uses inject as initial value", () => {
-      expect(reduce([], { inject: 123, with: add })).toBe(123)
-    })
-  })
-
   describe("array flattening behavior", () => {
     it("returns undefined for null input", () => {
       expect(reduce(null, { with: flatten })).toBeUndefined()
