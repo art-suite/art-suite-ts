@@ -37,7 +37,7 @@ const r4: string = reduce(a, { when: (v) => v > 1, with: (v) => `${v} * 2` })
 
 // each
 const ea1: undefined = each(a, { when: (v) => v > 1 })
-const ea2: Record<string, number> = each(a, { into: {}, when: (v) => v > 1 })
+const ea2: Record<string, number> = each(a, { returning: {}, when: (v) => v > 1 })
 const ea3: undefined = each(a, { with: (v) => `${v}` })
 const ea4: undefined = each(a, (v) => `${v}`)
 const ea5: undefined = each(a, { when: (v) => v > 1, with: (v) => `${v} * 2` })
