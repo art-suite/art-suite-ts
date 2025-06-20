@@ -63,7 +63,7 @@ interface ReduceComprehensionOptions<AccV, InV, InK> extends BaseComprehensionOp
 // For each()
 interface EachComprehensionOptions<InV, InK, OutV = any> extends BaseComprehensionOptions<InV, InK, OutV> {
   returning?: OutV;
-  with?: WithFn<InV, InK, OutV>
+  with?: WithFn<InV, InK, any>
 }
 
 // ### array ###
