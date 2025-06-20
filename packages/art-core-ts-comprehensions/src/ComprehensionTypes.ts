@@ -85,7 +85,7 @@ export interface ArrayFunction {
   ): OutV[]
 
   // Variant 4: `options` without `with`
-  z<InV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
+  <InV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
 
   // Variant 5: `options` with `into` and no `with`
   <InV, OutV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
@@ -127,27 +127,27 @@ export interface ArrayFunction {
   // Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV>(source: IterableInput<InV>): InV[]
+  <InV, InK>(source: IterableInput<InV, InK>): InV[]
 
   // Variant 2: has `with` function
-  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, any, OutV>): OutV[]
+  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): OutV[]
 
   // Variant 3: Combined `when`/`with` overload must come first for correct contextual typing
-  <InV, OutV>(
-    source: IterableInput<InV>,
-    options: ArrayComprehensionOptions<InV, any, OutV> & { into?: OutV[]; with: WithFn<InV, any, OutV> }
+  <InV, OutV, InK>(
+    source: IterableInput<InV, InK>,
+    options: ArrayComprehensionOptions<InV, InK, OutV> & { into?: OutV[]; with: WithFn<InV, InK, OutV> }
   ): OutV[]
 
   // Variant 4: `options` without `with`
-  <InV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
+  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, InV>, 'with'>): InV[]
 
   // Variant 5: `options` with `into` and no `with`
-  <InV, OutV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, InK, OutV>(source: IterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 6: Full `options` with explicit `with` (for other combinations)
-  <InV, OutV>(
-    source: IterableInput<InV>,
-    options: ArrayComprehensionOptions<InV, any, OutV> & { into?: OutV[]; with: WithFn<InV, any, OutV> }
+  <InV, OutV, InK>(
+    source: IterableInput<InV, InK>,
+    options: ArrayComprehensionOptions<InV, InK, OutV> & { into?: OutV[]; with: WithFn<InV, InK, OutV> }
   ): OutV[]
 
   (source: NotPresent, withFnOrOptions?: any, into?: any): []
@@ -213,27 +213,27 @@ export interface ObjectFunction {
   // Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV>(source: IterableInput<InV>): PlainObject<InV>
+  <InV, InK>(source: IterableInput<InV, InK>): PlainObject<InV>
 
   // Variant 2: has `with` function
-  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, any, OutV>): PlainObject<OutV>
+  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): PlainObject<OutV>
 
   // Variant 3: Combined `when`/`with` overload must come first for correct contextual typing
-  <InV, OutV>(
-    source: IterableInput<InV>,
-    options: ObjectComprehensionOptions<InV, any, OutV> & { into?: PlainObject<OutV>; with: WithFn<InV, any, OutV> }
+  <InV, OutV, InK>(
+    source: IterableInput<InV, InK>,
+    options: ObjectComprehensionOptions<InV, InK, OutV> & { into?: PlainObject<OutV>; with: WithFn<InV, InK, OutV> }
   ): PlainObject<OutV>
 
   // Variant 4: `options` without `with`
-  <InV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, InV>, 'with'>): PlainObject<InV>
+  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, InV>, 'with'>): PlainObject<InV>
 
   // Variant 5: `options` with `into` and no `with`
-  <InV, OutV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, OutV>, 'into' | 'with'> & { into: PlainObject<OutV> }): PlainObject<OutV>
+  <InV, InK, OutV>(source: IterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: PlainObject<OutV> }): PlainObject<OutV>
 
   // Variant 6: Full `options` with explicit `with` (for other combinations)
-  <InV, OutV>(
-    source: IterableInput<InV>,
-    options: ObjectComprehensionOptions<InV, any, OutV> & { into?: PlainObject<OutV>; with: IterableWithFn<InV, any, OutV> }
+  <InV, OutV, InK>(
+    source: IterableInput<InV, InK>,
+    options: ObjectComprehensionOptions<InV, InK, OutV> & { into?: PlainObject<OutV>; with: IterableWithFn<InV, InK, OutV> }
   ): PlainObject<OutV>
 
   (source: NotPresent, withFnOrOptions?: any, into?: any): PlainObject<never>
