@@ -96,9 +96,12 @@ type NormalizedUser = {
   deletedAt: Date | null;
   messageChannel: MessageChannel | null
 }
+const singleUser: NormalizedUser = { name: 'John', messageChannel: null, id: '1', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }
 const users: NormalizedUser[] = [{ name: 'John', messageChannel: null, id: '1', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }, { name: 'Jane', messageChannel: 'email', id: '2', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }]
 const usersArray1: (string | null)[] = array(users, { with: ({ phoneNumber }) => phoneNumber })
 const usersArray2: (string | null)[] = array(users, { with: ({ phoneNumber }) => phoneNumber, when: ({ phoneNumber }) => phoneNumber !== null })
+const usersKeysArray1: string[] = array(singleUser, { with: (v, k) => k })
+const usersKeysArray2: string[] = array(singleUser, { when: (v, k) => singleUser[k] })
 const usersFind1: NormalizedUser | undefined = find(users, { when: ({ phoneNumber }) => phoneNumber })
 const usersFind2: string | undefined = find(users, { with: ({ phoneNumber }) => phoneNumber })
 const usersObject1: Record<string, NormalizedUser> = object(users)

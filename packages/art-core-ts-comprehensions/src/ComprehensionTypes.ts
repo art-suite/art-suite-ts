@@ -29,7 +29,7 @@ interface BaseComprehensionOptions<InV, InK, OutV> {
  *  - If `with` is omitted, `OutV = InV`.
  *  - If `with` is provided, `OutV` is inferred from the callback.
  */
-export type ArrayComprehensionOptions<InV, InK, OutV = InV> =
+export type ArrayComprehensionOptions<InV, InK, OutV> =
   BaseComprehensionOptions<InV, InK, OutV> & {
     with?: WithFn<InV, InK, OutV>
     into?: OutV[]
@@ -78,10 +78,10 @@ export interface ArrayFunction {
   <InV, OutV>(source: ArrayInput<InV>, withFn: WithFn<InV, number, OutV>): OutV[]
 
   // Variant 3: `options` without `with`
-  <InV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
+  <InV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, number, InV>, 'with'>): InV[]
 
   // Variant 4: `options` with `into` and no `with`
-  <InV, OutV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, OutV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, number, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 5: Full `options` with explicit `with` (for other combinations)
   <InV, OutV>(
@@ -99,10 +99,10 @@ export interface ArrayFunction {
   <InV, OutV>(source: ObjectInput<InV>, withFn: WithFn<InV, string, OutV>): OutV[]
 
   // Variant 3: `options` without `with`
-  <InV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
+  <InV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, string, InV>, 'with'>): InV[]
 
   // Variant 4: `options` with `into` and no `with`
-  <InV, OutV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, OutV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, string, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 5: Full `options` with explicit `with` (for other combinations)
   <InV, OutV>(
