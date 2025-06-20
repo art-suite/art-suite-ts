@@ -11,6 +11,17 @@ describe("Reduce comprehensions", () => {
     it("multiplies array values", () => {
       expect(reduce([1, 2, 3, 4], mul)).toBe(24)
     })
+    it("multiplies array values - inject 0 should make the whole thing 0", () => {
+      expect(reduce([1, 2, 3, 4], { inject: 0, with: mul })).toBe(0)
+    })
+
+    it("sum with no inject", () => {
+      expect(reduce([1, 2, 3, 4], add)).toBe(10)
+    })
+
+    it("sum with inject", () => {
+      expect(reduce([1, 2, 3, 4], { inject: 10, with: add })).toBe(20)
+    })
 
     it("multiplies object values", () => {
       expect(reduce({ a: 3, b: 4 }, mul)).toBe(12)
@@ -24,10 +35,6 @@ describe("Reduce comprehensions", () => {
   describe("inject/into aliases", () => {
     it("uses inject as initial value", () => {
       expect(reduce([], { inject: 123, with: add })).toBe(123)
-    })
-
-    it("uses into as initial value", () => {
-      expect(reduce([], { into: 123, with: add })).toBe(123)
     })
   })
 
@@ -51,19 +58,19 @@ describe("Reduce comprehensions", () => {
 
   describe("array flattening with initial value", () => {
     it("returns initial value for null input", () => {
-      expect(reduce(null, { with: flatten, into: [] as number[] })).toEqual([])
+      expect(reduce(null, { with: flatten, inject: [] as number[] })).toEqual([])
     })
 
     it("returns initial value for empty array", () => {
-      expect(reduce([], { with: flatten, into: [] as number[] })).toEqual([])
+      expect(reduce([], { with: flatten, inject: [] as number[] })).toEqual([])
     })
 
     it("returns single element for single-element array", () => {
-      expect(reduce([1], { with: flatten, into: [] as number[] })).toBe(1)
+      expect(reduce([1], { with: flatten, inject: [] as number[] })).toBe(1)
     })
 
     it("returns last element for multi-element array", () => {
-      expect(reduce([1, 2], { with: flatten, into: [] as number[] })).toBe(2)
+      expect(reduce([1, 2], { with: flatten, inject: [] as number[] })).toBe(2)
     })
   })
 })

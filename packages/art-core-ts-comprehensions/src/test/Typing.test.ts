@@ -65,10 +65,12 @@ const spaces: {
   levelId: string;
 }[] = [{ id: '1', propertyId: '1', createdAt: new Date(), name: '1', updatedAt: new Date(), levelId: '1' }]
 const spacesArray: string[] = array(spaces, { with: ({ id }) => id })
+const spacesFind: string | undefined = find(spaces, { with: ({ id }) => id })
 const spacesBySpaceId: Record<string, typeof spaces[number]> = object(spaces, { withKey: ({ id }) => id })
 
 const canConnectTo: Record<string, boolean> = { "foo": true }
 const canConnectToArray: string[] = array(canConnectTo, { with: (v, k) => `${k} Ok` })
+const canConnectToObjectFind: string | undefined = find(canConnectTo, { with: (v, k) => `${k} Ok` })
 const canConnectToObject: Record<string, boolean> = object(canConnectTo, { withKey: (v, k) => `${k} Ok` })
 
 type MessageChannel = 'sms' | 'email' | 'push'
@@ -88,6 +90,8 @@ type NormalizedUser = {
 const users: NormalizedUser[] = [{ name: 'John', messageChannel: null, id: '1', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }, { name: 'Jane', messageChannel: 'email', id: '2', createdAt: new Date(), updatedAt: new Date(), cost: 100, costDetails: null, messageCount: 1, lastMessageAt: new Date(), phoneNumber: null, deletedAt: null }]
 const usersArray1: (string | null)[] = array(users, { with: ({ phoneNumber }) => phoneNumber })
 const usersArray2: (string | null)[] = array(users, { with: ({ phoneNumber }) => phoneNumber, when: ({ phoneNumber }) => phoneNumber !== null })
+const usersFind1: NormalizedUser | undefined = find(users, { when: ({ phoneNumber }) => phoneNumber })
+const usersFind2: string | undefined = find(users, { with: ({ phoneNumber }) => phoneNumber })
 const usersObject1: Record<string, NormalizedUser> = object(users)
 const usersObject2: Record<string, NormalizedUser> = object(users, a => ({ ...a, phoneNumber: a.phoneNumber ?? null }))
 const usersObject3: Record<string, NormalizedUser> = object(users, { with: a => ({ ...a, phoneNumber: a.phoneNumber ?? null }) })
@@ -98,6 +102,7 @@ const anObjectInput = { a: 1, b: 2, c: 3, d: 4 }
 const anObjectArray1: number[] = array(anObjectInput)
 const anObjectArray2: number[] = array(anObjectInput, v => v * 11)
 const anObjectArray3: number[] = array(anObjectInput, { with: v => v * 11 })
+const anObjectFind1: number | undefined = find(anObjectInput, { when: (v, k) => k === 'a' })
 const anObjectObject1: Record<string, number> = object(anObjectInput)
 const anObjectObject2: Record<string, number> = object(anObjectInput, v => v * 11)
 const anObjectObject3: Record<string, number> = object(anObjectInput, { with: v => v * 11 })
@@ -116,6 +121,9 @@ const myMapObject1: Record<string, number> = object(myMap)
 const myMapObject2: Record<string, number> = object(myMap, v => v * 11)
 const myMapObject3: Record<string, number> = object(myMap, { with: v => v * 11 })
 const myMapObject4: Record<string, number> = object(myMap, { withKey: v => v * 11 })
+
+// uncomment to see if typescript gives a reasonable error message
+// const noMatch = array([], { whom: v => v * 11 })
 
 test('placeholder - the real test is does this file compile?', () => {
   expect(true).toBe(true)

@@ -112,11 +112,12 @@ const normalizedObjectIteration: NormalizedIterationFunction = (source: any, opt
 
 const normalizedReduceIteration: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
   let { into, with: withFunction } = options;
-  let first = true;
+  let first = into === undefined;
   _each(source, (v: any, k: any) => {
     if (first) { first = false; into = v; }
-    else
+    else {
       into = withFunction(into, v, k)
+    }
   }, options);
   return into;
 };
@@ -133,8 +134,12 @@ const normalizedFindIteration: NormalizedIterationFunction = (source: any, optio
           found = withFunction(v, k);
           return true; // signal to stop iteration
         }
+        return false;
       }
-      : (v, k) => (found = withFunction(v, k)) // stops iteration if truish
+      : (v, k) => {
+        found = withFunction(v, k) // stops iteration if withFunction returns an value that "exists" (is not undefined, non null)
+        return found != null;
+      }
   );
   return found;
 };
