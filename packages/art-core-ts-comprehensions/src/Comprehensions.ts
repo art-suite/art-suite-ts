@@ -40,8 +40,8 @@ const iterate = (source: any, body: CoreIterationFunction): void => {
     if (isArrayIterable(source)) for (let key = 0, { length } = source; key < length; key++) { if (body(source[key], key)) break; }
     else if (isPlainObject(source)) for (const key in source) { if (body(source[key], key)) break; }
     else if (isMap(source)) for (const [key, value] of source.entries()) { if (body(value, key)) break; }
-    else if (isSet(source)) for (const value of source) { if (body(value, value)) break; }
-    else if (isOfIterable(source)) for (const value of source) { if (body(value, value)) break; }
+    // else if (isSet(source)) for (const value of source) { if (body(value, value)) break; }
+    else if (isOfIterable(source)) { let count = 0; for (const value of source) { if (body(value, count++)) break; } }
     else throw new Error(`Unsupported source type: ${typeof source}`);
 };
 

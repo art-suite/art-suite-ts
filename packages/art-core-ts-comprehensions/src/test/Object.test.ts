@@ -65,7 +65,7 @@ describe("Object comprehensions", () => {
 
   describe("fromSets", () => {
     it("converts set to object", () => {
-      expect(object(new Set([1, 2]))).toEqual({ 1: 1, 2: 2 })
+      expect(object(new Set([1, 2]))).toEqual({ 0: 1, 1: 2 })
     })
   })
 

@@ -51,3 +51,32 @@ describe("Find comprehensions", () => {
     })
   })
 })
+
+
+describe("regression tests", () => {
+  it("finds match in user list", () => {
+    const TO_FIND = {
+      "phoneNumber": "+12063334446",
+      "id": "b6370023-3826-4a79-848b-ee54f7121c94",
+      "createdAt": "2025-06-13T09:42:30.459Z"
+    }
+    const data = [{
+      "phoneNumber": "+12063334444",
+      "id": "9bcfe044-344c-4416-aa02-5044506b2892",
+      "createdAt": "2025-06-17T13:57:54.293Z"
+    },
+    {
+      "phoneNumber": "+12063334445",
+      "id": "6896856a-92c5-45cf-8cff-03dfc5499e66",
+      "createdAt": "2025-06-19T13:40:23.657Z"
+    },
+      TO_FIND,
+    {
+      "phoneNumber": "+12063334447",
+      "id": "617f0d48-9599-4fa2-adec-2b15595a2ba8",
+      "createdAt": "2025-06-13T08:27:19.697Z"
+    }
+    ]
+    expect(find(data, { when: v => v.phoneNumber === TO_FIND.phoneNumber })).toBe(TO_FIND)
+  })
+})

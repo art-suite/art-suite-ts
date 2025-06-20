@@ -6,8 +6,8 @@ export type PlainObject<V = any> = Record<string, V>;
 export type ArrayInput<InV> = InV[] | NotPresent;
 export type ObjectInput<InV> = PlainObject<InV> | NotPresent;
 // Basic Iterable input - specific key type (NumK for numeric, StrK for string) depends on usage context
-export type IterableInput<InV, InK> = Iterable<[InK, InV]> | NotPresent;
-
+export type MapIterableInput<InV, InK> = Map<InK, InV> | NotPresent;
+export type IterableInput<InV> = Iterable<InV> | NotPresent;
 
 // Callbacks
 type WithFn<InV, InK, OutV> = (value: InV, key: InK) => OutV;
@@ -111,24 +111,45 @@ export interface ArrayFunction {
   ): OutV[]
 
   //******************************************
-  // Iterable variants
+  // Key Value Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV, InK>(source: IterableInput<InV, InK>): InV[]
+  <InV, InK>(source: MapIterableInput<InV, InK>): InV[]
 
   // Variant 2: has `with` function
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): OutV[]
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): OutV[]
 
   // Variant 3: `options` without `with`
-  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, InV>, 'with'>): InV[]
+  <InV, InK>(source: MapIterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, InV>, 'with'>): InV[]
 
   // Variant 4: `options` with `into` and no `with`
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, options: Omit<ArrayComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 5: Full `options` with explicit `with` (for other combinations)
   <InV, OutV, InK>(
-    source: IterableInput<InV, InK>,
+    source: MapIterableInput<InV, InK>,
     options: ArrayComprehensionOptions<InV, InK, OutV> & { into?: OutV[]; with: WithFn<InV, InK, OutV> }
+  ): OutV[]
+
+  //******************************************
+  // Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV>(source: IterableInput<InV>): InV[]
+
+  // Variant 2: has `with` function
+  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, number, OutV>): OutV[]
+
+  // Variant 3: `options` without `with`
+  <InV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, number, InV>, 'with'>): InV[]
+
+  // Variant 4: `options` with `into` and no `with`
+  <InV, OutV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, number, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+
+  // Variant 5: Full `options` with explicit `with` (for other combinations)
+  <InV, OutV>(
+    source: IterableInput<InV>,
+    options: ArrayComprehensionOptions<InV, number, OutV> & { into?: OutV[]; with: WithFn<InV, number, OutV> }
   ): OutV[]
 
   //**********************************************
@@ -140,7 +161,7 @@ export interface ArrayFunction {
   // TypeScript no-match - make it more clear that if the source is valid, it's the second param that is wrong
   //**********************************************
   (
-    source: ArrayInput<any> | ObjectInput<any> | IterableInput<any, any>,
+    source: ArrayInput<any> | ObjectInput<any> | MapIterableInput<any, any> | IterableInput<any>,
     withFnOrOptions: WithFn<any, any, any> | ArrayComprehensionOptions<any, any, any>
   ): never
 }
@@ -190,24 +211,45 @@ export interface ObjectFunction {
   ): PlainObject<OutV>
 
   //******************************************
-  // Iterable variants
+  // Key Value Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV, InK>(source: IterableInput<InV, InK>): PlainObject<InV>
+  <InV, InK>(source: MapIterableInput<InV, InK>): PlainObject<InV>
 
   // Variant 2: has `with` function
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): PlainObject<OutV>
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): PlainObject<OutV>
 
   // Variant 3: `options` without `with`
-  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, InV>, 'with'>): PlainObject<InV>
+  <InV, InK>(source: MapIterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, InV>, 'with'>): PlainObject<InV>
 
   // Variant 4: `options` with `into` and no `with`
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: PlainObject<OutV> }): PlainObject<OutV>
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, options: Omit<ObjectComprehensionOptions<InV, InK, OutV>, 'into' | 'with'> & { into: PlainObject<OutV> }): PlainObject<OutV>
 
   // Variant 5: Full `options` with explicit `with` (for other combinations)
   <InV, OutV, InK>(
-    source: IterableInput<InV, InK>,
+    source: MapIterableInput<InV, InK>,
     options: ObjectComprehensionOptions<InV, InK, OutV> & { into?: PlainObject<OutV>; with: WithFn<InV, InK, OutV> }
+  ): PlainObject<OutV>
+
+  //******************************************
+  // Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV>(source: IterableInput<InV>): PlainObject<InV>
+
+  // Variant 2: has `with` function
+  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, number, OutV>): PlainObject<OutV>
+
+  // Variant 3: `options` without `with`
+  <InV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, number, InV>, 'with'>): PlainObject<InV>
+
+  // Variant 4: `options` with `into` and no `with`
+  <InV, OutV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, number, OutV>, 'into' | 'with'> & { into: PlainObject<OutV> }): PlainObject<OutV>
+
+  // Variant 5: Full `options` with explicit `with` (for other combinations)
+  <InV, OutV>(
+    source: IterableInput<InV>,
+    options: ObjectComprehensionOptions<InV, number, OutV> & { into?: PlainObject<OutV>; with: WithFn<InV, number, OutV> }
   ): PlainObject<OutV>
 
   //**********************************************
@@ -219,7 +261,7 @@ export interface ObjectFunction {
   // TypeScript no-match - make it more clear that if the source is valid, it's the second param that is wrong
   //**********************************************
   (
-    source: ArrayInput<any> | ObjectInput<any> | IterableInput<any, any>,
+    source: ArrayInput<any> | ObjectInput<any> | MapIterableInput<any, any> | IterableInput<any>,
     withFnOrOptions: WithFn<any, any, any> | ObjectComprehensionOptions<any, any, any>
   ): never
 }
@@ -265,21 +307,39 @@ export interface FindFunction {
   ): FindResultIfWithFunction<OutV>
 
   //******************************************
-  // Iterable variants
+  // Key Value Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV, InK>(source: IterableInput<InV, InK>): InV | undefined
+  <InV, InK>(source: MapIterableInput<InV, InK>): InV | undefined
 
   // Variant 2: has `with` function
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV | boolean>): FindResultIfWithFunction<OutV>
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV | boolean>): FindResultIfWithFunction<OutV>
 
   // Variant 3: `options` without `with`
-  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<FindComprehensionOptions<InV, InK, InV>, 'with'>): InV | undefined
+  <InV, InK>(source: MapIterableInput<InV, InK>, options: Omit<FindComprehensionOptions<InV, InK, InV>, 'with'>): InV | undefined
 
   // Variant 4: Full `options` with explicit `with` (for other combinations)
   <InV, OutV, InK>(
-    source: IterableInput<InV, InK>,
+    source: MapIterableInput<InV, InK>,
     options: FindComprehensionOptions<InV, InK, OutV> & { with: WithFn<InV, InK, OutV | boolean> }
+  ): FindResultIfWithFunction<OutV>
+
+  //******************************************
+  // Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV>(source: IterableInput<InV>): InV | undefined
+
+  // Variant 2: has `with` function
+  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, number, OutV | boolean>): FindResultIfWithFunction<OutV>
+
+  // Variant 3: `options` without `with`
+  <InV>(source: IterableInput<InV>, options: Omit<FindComprehensionOptions<InV, number, InV>, 'with'>): InV | undefined
+
+  // Variant 4: Full `options` with explicit `with` (for other combinations)
+  <InV, OutV>(
+    source: IterableInput<InV>,
+    options: FindComprehensionOptions<InV, number, OutV> & { with: WithFn<InV, number, OutV | boolean> }
   ): FindResultIfWithFunction<OutV>
 
   //**********************************************
@@ -291,7 +351,7 @@ export interface FindFunction {
   // TypeScript no-match - make it more clear that if the source is valid, it's the second param that is wrong
   //**********************************************
   (
-    source: ArrayInput<any> | ObjectInput<any> | IterableInput<any, any>,
+    source: ArrayInput<any> | ObjectInput<any> | MapIterableInput<any, any> | IterableInput<any>,
     withFnOrOptions: WithFn<any, any, any> | FindComprehensionOptions<any, any, any>
   ): never
 }
@@ -340,24 +400,45 @@ export interface ReduceFunction {
   ): AccV
 
   //******************************************
-  // Iterable variants
+  // Key Value Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV, InK>(source: IterableInput<InV, InK>): InV
+  <InV, InK>(source: MapIterableInput<InV, InK>): InV
 
   // Variant 2: has `with` function
-  <InV, InK, AccV>(source: IterableInput<InV, InK>, withFn: ReduceWithFn<AccV, InV, InK>): AccV
+  <InV, InK, AccV>(source: MapIterableInput<InV, InK>, withFn: ReduceWithFn<AccV, InV, InK>): AccV
 
   // Variant 3: `options` without `with`
-  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<ReduceComprehensionOptions<InV, InV, InK>, 'with'>): InV
+  <InV, InK>(source: MapIterableInput<InV, InK>, options: Omit<ReduceComprehensionOptions<InV, InV, InK>, 'with'>): InV
 
   // Variant 4: `options` with `inject` and no `with`
-  <InV, InK, AccV>(source: IterableInput<InV, InK>, options: Omit<ReduceComprehensionOptions<AccV, InV, InK>, 'inject' | 'with'> & { inject: AccV }): AccV
+  <InV, InK, AccV>(source: MapIterableInput<InV, InK>, options: Omit<ReduceComprehensionOptions<AccV, InV, InK>, 'inject' | 'with'> & { inject: AccV }): AccV
 
   // Variant 5: Full `options` with explicit `with` (for other combinations)
   <InV, AccV, InK>(
-    source: IterableInput<InV, InK>,
+    source: MapIterableInput<InV, InK>,
     options: ReduceComprehensionOptions<AccV, InV, InK> & { inject?: AccV; with: ReduceWithFn<AccV, InV, InK> }
+  ): AccV
+
+  //******************************************
+  // Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV>(source: IterableInput<InV>): InV
+
+  // Variant 2: has `with` function
+  <InV, AccV>(source: IterableInput<InV>, withFn: ReduceWithFn<AccV, InV, number>): AccV
+
+  // Variant 3: `options` without `with`
+  <InV>(source: IterableInput<InV>, options: Omit<ReduceComprehensionOptions<InV, InV, number>, 'with'>): InV
+
+  // Variant 4: `options` with `inject` and no `with`
+  <InV, AccV>(source: IterableInput<InV>, options: Omit<ReduceComprehensionOptions<AccV, InV, number>, 'inject' | 'with'> & { inject: AccV }): AccV
+
+  // Variant 5: Full `options` with explicit `with` (for other combinations)
+  <InV, AccV>(
+    source: IterableInput<InV>,
+    options: ReduceComprehensionOptions<AccV, InV, number> & { inject?: AccV; with: ReduceWithFn<AccV, InV, number> }
   ): AccV
 
   //**********************************************
@@ -369,7 +450,7 @@ export interface ReduceFunction {
   // TypeScript no-match - make it more clear that if the source is valid, it's the second param that is wrong
   //**********************************************
   (
-    source: ArrayInput<any> | ObjectInput<any> | IterableInput<any, any>,
+    source: ArrayInput<any> | ObjectInput<any> | MapIterableInput<any, any> | IterableInput<any>,
     withFnOrOptions: ReduceWithFn<any, any, any> | ReduceComprehensionOptions<any, any, any>
   ): never
 }
@@ -409,19 +490,34 @@ export interface EachFunction {
   <InV, OutV>(source: ObjectInput<InV>, options: Omit<EachComprehensionOptions<InV, string, OutV>, 'returning'> & { returning: OutV }): OutV
 
   //******************************************
+  // Key Value Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV, InK>(source: MapIterableInput<InV, InK>): undefined
+
+  // Variant 2: has `with` function
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): undefined
+
+  // Variant 3: `options` without `with`
+  <InV, InK>(source: MapIterableInput<InV, InK>, options: Omit<EachComprehensionOptions<InV, InK, any>, 'with' | 'returning'>): undefined
+
+  // Variant 4: `options` with `returning` and no `with`
+  <InV, InK, OutV>(source: MapIterableInput<InV, InK>, options: Omit<EachComprehensionOptions<InV, InK, OutV>, 'returning'> & { returning: OutV }): OutV
+
+  //******************************************
   // Iterable variants
   //******************************************
   // Variant 1: only `iterable` source
-  <InV, InK>(source: IterableInput<InV, InK>): undefined
+  <InV>(source: IterableInput<InV>): undefined
 
   // Variant 2: has `with` function
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, withFn: WithFn<InV, InK, OutV>): undefined
+  <InV, OutV>(source: IterableInput<InV>, withFn: WithFn<InV, number, OutV>): undefined
 
   // Variant 3: `options` without `with`
-  <InV, InK>(source: IterableInput<InV, InK>, options: Omit<EachComprehensionOptions<InV, InK, any>, 'with' | 'returning'>): undefined
+  <InV>(source: IterableInput<InV>, options: Omit<EachComprehensionOptions<InV, number, any>, 'with' | 'returning'>): undefined
 
   // Variant 4: `options` with `returning` and no `with`
-  <InV, InK, OutV>(source: IterableInput<InV, InK>, options: Omit<EachComprehensionOptions<InV, InK, OutV>, 'returning'> & { returning: OutV }): OutV
+  <InV, OutV>(source: IterableInput<InV>, options: Omit<EachComprehensionOptions<InV, number, OutV>, 'returning'> & { returning: OutV }): OutV
 
   //**********************************************
   // NotPresent variants - returns undefined
@@ -432,10 +528,10 @@ export interface EachFunction {
   // TypeScript no-match - make it more clear that if the source is valid, it's the second param that is wrong
   //**********************************************
   (
-    source: ArrayInput<any> | ObjectInput<any> | IterableInput<any, any>,
+    source: ArrayInput<any> | ObjectInput<any> | MapIterableInput<any, any> | IterableInput<any>,
     withFnOrOptions: WithFn<any, any, any> | EachComprehensionOptions<any, any, any>
   ): never
 }
 
-export type AnyContainer<T> = ArrayInput<T> | ObjectInput<T> | IterableInput<T, any>
+export type AnyContainer<T> = ArrayInput<T> | ObjectInput<T> | MapIterableInput<T, any> | IterableInput<T>
 export type FullySupportedContainer<T> = ArrayInput<T> | ObjectInput<T>

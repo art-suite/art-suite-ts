@@ -56,6 +56,15 @@ const simpleObject4: Record<string, number> = object(simple, { when: (v) => v > 
 const simpleObject5: Record<string, number> = object(simple, { when: (v) => v })
 const simpleObject6: Record<string, number> = object(simple, { withKey: (v) => `a${v}` })
 
+// nothings
+const arrayNothing2: any[] = array(undefined)
+const arrayNothing3: any[] = array([])
+type ObjectCouldBeNothing = { a: 1 } | undefined
+const anyAny: any = [1]
+const couldBeNothing: ObjectCouldBeNothing = anyAny
+const objectNothing2: any = object(couldBeNothing)
+const objectNothing3: any = object([])
+
 const spaces: {
   id: string;
   propertyId: string;
@@ -121,6 +130,13 @@ const myMapObject1: Record<string, number> = object(myMap)
 const myMapObject2: Record<string, number> = object(myMap, v => v * 11)
 const myMapObject3: Record<string, number> = object(myMap, { with: v => v * 11 })
 const myMapObject4: Record<string, number> = object(myMap, { withKey: v => v * 11 })
+
+// sets
+const setFind = find(new Set([1, 2]))
+const setArray = array(new Set([1, 2]))
+const setObject = object(new Set([1, 2]))
+const setReduce = reduce(new Set([1, 2]))
+const setEach = each(new Set([1, 2]))
 
 // uncomment to see if typescript gives a reasonable error message
 // const noMatch = array([], { whom: v => v * 11 })
