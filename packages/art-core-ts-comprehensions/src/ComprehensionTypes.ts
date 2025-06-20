@@ -127,15 +127,15 @@ export interface ArrayFunction {
   ): OutV[]
 
   // Variant 4: `options` without `with`
-  <InV>(source: ObjectInput<InV>, options: Omit<ObjectComprehensionOptions<InV, string, InV>, 'with'>): InV[]
+  <InV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
 
   // Variant 5: `options` with `into` and no `with`
-  <InV, OutV>(source: ObjectInput<InV>, options: Omit<ObjectComprehensionOptions<InV, string, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, OutV>(source: ObjectInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 6: Full `options` with explicit `with` (for other combinations)
   <InV, OutV>(
     source: ObjectInput<InV>,
-    options: ObjectComprehensionOptions<InV, string, OutV> & { into?: OutV[]; with: ObjectWithFn<InV, OutV> }
+    options: ArrayComprehensionOptions<InV, OutV> & { into?: OutV[]; with: ObjectWithFn<InV, OutV> }
   ): OutV[]
 
   //******************************************
@@ -154,15 +154,15 @@ export interface ArrayFunction {
   ): OutV[]
 
   // Variant 4: `options` without `with`
-  <InV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, InV>, 'with'>): InV[]
+  <InV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
 
   // Variant 5: `options` with `into` and no `with`
-  <InV, OutV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+  <InV, OutV>(source: IterableInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
   // Variant 6: Full `options` with explicit `with` (for other combinations)
   <InV, OutV>(
     source: IterableInput<InV>,
-    options: ObjectComprehensionOptions<InV, any, OutV> & { into?: OutV[]; with: IterableWithFn<InV, any, OutV> }
+    options: ArrayComprehensionOptions<InV, OutV> & { into?: OutV[]; with: IterableWithFn<InV, any, OutV> }
   ): OutV[]
 
   (source: NotPresent, withFnOrOptions?: any, into?: any): []
