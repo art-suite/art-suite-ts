@@ -16,12 +16,26 @@ export const isOfIterable = (o: any): boolean => {
   return isFunction(o[Symbol.iterator] || o.next)
 }
 
-const returnFirst = (a: any) => a;
-const returnSecond = (a: any, b: any) => b;
+const returnFirstArg = (a: any) => a;
+const returnSecondArg = (a: any, b: any) => b;
 
 const emptyOptions = {};
 
-const iterate = (source: any, body: (value: any, key: any) => boolean) => {
+type CoreIterationFunction = (value: any, key: any) => boolean; // returns true to stop iteration
+
+/**
+ * Tight function to abstract away all possible iteration methods based on the source container type.
+ *
+ * Iterates over the source collection, calling the given function for each element.
+ *
+ * Stops when the body function returns true.
+ * Does NOT return anything. If you need a return value, must set it as a side-effect of the body function.
+ *
+ * @param source - The collection to iterate (array, object, Map, Set, etc.)
+ * @param body - The function to call for each element.
+ * @returns void
+ */
+const iterate = (source: any, body: CoreIterationFunction): void => {
   if (exists(source))
     if (isArrayIterable(source)) for (let key = 0, { length } = source; key < length; key++) { if (body(source[key], key)) break; }
     else if (isPlainObject(source)) for (const key in source) { if (body(source[key], key)) break; }
@@ -38,80 +52,89 @@ const iterate = (source: any, body: (value: any, key: any) => boolean) => {
   2. If stopWhen is false, "when" and "with" are processed
   3. If there is no "when" or "when" returns true, "with" is called.
 */
-const normalizeBody = (_with: (value: any, key: any) => any, options: any): (value: any, key: any) => boolean => {
+const normalizeBody = (withFunction: (value: any, key: any) => any, options: AcceptedComprehensionOptions): (value: any, key: any) => boolean => {
   let { when, stopWhen } = options;
   if (when && stopWhen) {
     return (v: any, k: any) => {
       if (stopWhen(v, k)) return true;
-      if (when(v, k)) _with(v, k);
+      if (when(v, k)) withFunction(v, k);
       return false;
     }
   }
   if (when) {
     return (v: any, k: any) => {
-      if (when(v, k)) _with(v, k);
+      if (when(v, k)) withFunction(v, k);
       return false;
     }
   }
   if (stopWhen) {
     return (v: any, k: any) => {
       if (stopWhen(v, k)) return true;
-      _with(v, k);
+      withFunction(v, k);
       return false;
     }
   }
-  return (v: any, k: any) => { _with(v, k); return false; };
+  return (v: any, k: any) => { withFunction(v, k); return false; };
 };
 
-let normalizeKeyFunction = (source: any, options: any) =>
-  options.key ||
-  options.withKey ||
-  (isArrayIterable(source) ? returnFirst : returnSecond);
 
-const _each = (source: any, _with: (value: any, key: any) => any, options: any) => {
-  iterate(source, normalizeBody(_with, options));
+let normalizeKeyFunction = (source: any, options: AcceptedComprehensionOptions) =>
+  options.withKey || (isArrayIterable(source) ? returnFirstArg : returnSecondArg)
+
+const _each = (source: any, withFunction: (value: any, key: any) => any, options: AcceptedComprehensionOptions) => {
+  iterate(source, normalizeBody(withFunction, options));
 };
 
-const normalizedEach = (source: any, into: any, _with: (value: any, key: any) => any, options: any) => {
-  _each(source, _with, options);
-  return into;
+//************************************************************************
+// NORMALIZED COMPREHENSION FUNCTIONS
+//************************************************************************
+type NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => any;
+
+const normalizedEach: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
+  _each(source, options.with, options);
+  return options.into;
 };
 
-let normalizedArray = (source: any, into: any, _with: (value: any, key: any) => any, options: any) => {
+const normalizedArrayIteration: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
+  let { into, with: withFunction } = options;
   if (into == null) into = [];
-  _each(source, (v: any, k: any) => into.push(_with(v, k)), options);
+  _each(source, (v: any, k: any) => into.push(withFunction(v, k)), options);
   return into;
 };
 
-let normalizedObject = (source: any, into: any, _with: (value: any, key: any) => any, options: any) => {
-  let key = normalizeKeyFunction(source, options);
+const normalizedObjectIteration: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
+  let { into, with: withFunction } = options;
   if (into == null) into = {};
-  _each(source, (v, k) => (into[key(v, k)] = _with(v, k)), options);
+  let withKey = normalizeKeyFunction(source, options);
+  _each(source, (v, k) => (into[withKey(v, k)] = withFunction(v, k)), options);
   return into;
 };
 
-let normalizedReduce = (source: any, into: any, _with: (into: any, value: any, key: any) => any, options: any) => {
+const normalizedReduceIteration: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
+  let { into, with: withFunction } = options;
   let first = true;
   _each(source, (v: any, k: any) => {
     if (first) { first = false; into = v; }
     else
-      into = _with(into, v, k)
+      into = withFunction(into, v, k)
   }, options);
   return into;
 };
 
-let normalizedFind = function (source: any, found: any, _with: (value: any, key: any) => any, options: any) {
+const normalizedFindIteration: NormalizedIterationFunction = (source: any, options: NormalizedComprehensionOptions) => {
+  let { with: withFunction } = options;
   let { when } = options;
+  let found: any | undefined = undefined;
   iterate(
     source,
     when
       ? (v, k) => {
         if (when(v, k)) {
-          found = _with(v, k);
-          return true;
+          found = withFunction(v, k);
+          return true; // signal to stop iteration
         }
       }
-      : (v, k) => (found = _with(v, k))
+      : (v, k) => (found = withFunction(v, k)) // stops iteration if truish
   );
   return found;
 };
@@ -119,6 +142,58 @@ let normalizedFind = function (source: any, found: any, _with: (value: any, key:
 //####################
 // PRIVATE
 //####################
+
+// WithFunction has two signatures: value + key, or for reduce, accumulator + value + key
+type ValueKeyFunction = (value?: any, key?: any) => any;
+type AccumulatorValueKeyFunction = (accumulator?: any, value?: any, key?: any) => any;
+type WithFunction = ValueKeyFunction | AccumulatorValueKeyFunction;
+type WhenFunction = (value: any, key: any) => any;
+type WithKeyFunction = (value: any, key: any) => any;
+
+type AcceptedComprehensionOptions = {
+  into?: any;
+  inject?: any; // alias for into - used to make "reduce" calls make more sense
+  returning?: any; // alias for into - used to make "each" calls make more sense
+  with?: WithFunction;
+  when?: WhenFunction;
+  withKey?: WithKeyFunction;
+  stopWhen?: (value: any, key: any) => any;
+}
+
+type WithOrOptions = WithFunction | AcceptedComprehensionOptions;
+
+const isAcceptedComprehensionOptions = (o: any): o is AcceptedComprehensionOptions => isPlainObject(o)
+
+// the 'with' param will always exist when normalized
+type NormalizedComprehensionOptions = Omit<AcceptedComprehensionOptions, 'with' | 'inject' | 'returning'> & {
+  with: WithFunction;
+}
+
+/**
+ * Returns the first non-undefined value from into, inject, or returning
+ *
+ * @param into - The 'into' parameter.
+ * @param inject - The 'inject' parameter.
+ * @param returning - The 'returning' parameter.
+ * @returns The normalized 'into' parameter.
+ */
+const firstNotUndefined = (into: any, inject: any, returning: any) => {
+  if (into === undefined) into = inject
+  if (into === undefined) into = returning
+  return into
+}
+
+const normalizeIterationParams = (withOrOptions?: WithOrOptions): NormalizedComprehensionOptions => {
+  if (isAcceptedComprehensionOptions(withOrOptions)) {
+    const { with: withFunction, into, inject, returning, ...rest } = withOrOptions;
+    return { ...rest, into: firstNotUndefined(into, inject, returning), with: withFunction ?? returnFirstArg };
+  }
+  if (isFunction(withOrOptions)) {
+    return { with: withOrOptions };
+  }
+  return { with: returnFirstArg };
+};
+
 /*
 Normalizes input params for the 'iteration' function.
 Since this normalizes multiple params, and therefor would need to return
@@ -126,14 +201,12 @@ an new array or new object otherwise, we pass IN the iteration function
 and pass the params directly to it. This keeps the computed params on the
 stack and doesn't create new objects.
 
-IN signature 1: (iteration, source, into, _with) ->
-IN signature 2: (iteration, source, into, options) ->
-IN signature 3: (iteration, source, _with) ->
-IN signature 4: (iteration, source, options) ->
-IN signature 5: (iteration, source) ->
+IN signature 1: (iteration, source, withFunction) ->
+IN signature 2: (iteration, source, options) ->
+IN signature 3: (iteration, source) ->
 
 IN:
-iteration: (source, into, _with, options) -> out
+iteration: (source, into, withFunction, options) -> out
 
   The iteration function is invoked last with the computed args.
   Its results are returned.
@@ -141,35 +214,26 @@ iteration: (source, into, _with, options) -> out
   IN:
     source:     passed directly through from inputs
     into:       passed directly through from inputs OR from options.into
-    _with:  passed directly through from inputs OR from options.with
+    withFunction:  passed directly through from inputs OR from options.with
     options:    passed directly through from inputs OR {}
                 (guaranteed to be set and a plainObject)
 
 source: the source collection to be iterated over. Passed directly through.
 
 into:       passed through to 'iteration'
-_with:      passed through to 'iteration'
+withFunction:      passed through to 'iteration'
 options:    passed through to 'iteration' AND:
 
   into:     set 'into' from the options object
-  with:     set '_with' from the options object
+  with:     set 'withFunction' from the options object
 
 OUT: out
 */
-let invokeNormalizedIteration = function (iteration: (source: any, into: any, _with: (value: any, key: any) => any, options: any) => any, source: any, a: any, b: any) {
-  let into, options, _with;
-  options = b ? ((into = a), b) : a;
-  if (isPlainObject(options)) {
-    if (into === undefined) into = options.into
-    if (into === undefined) into = options.inject
-    if (into === undefined) into = options.returning
-    _with = options.with;
-  } else {
-    if (isFunction(options)) _with = options;
-    options = emptyOptions;
-  }
-  return iteration(source, into, _with || returnFirst, options);
-};
+const invokeNormalizedIteration = (
+  normalizedIterationFunction: NormalizedIterationFunction,
+  source: any,
+  withOrOptions: WithOrOptions
+) => normalizedIterationFunction(source, normalizeIterationParams(withOrOptions));
 
 /**
  * Iterates over the provided collection, calling the given function for each element.
@@ -183,11 +247,10 @@ let invokeNormalizedIteration = function (iteration: (source: any, into: any, _w
  * This allows you to use `each` for side effects while optionally threading a value through the iteration.
  *
  * @param source The collection to iterate (array, object, Map, Set, etc.)
- * @param a Optional: Either the `into` value or the function to call for each element.
- * @param b Optional: If present, options or the function to call for each element.
+ * @param withOrOptions Optional: Either the `into` value or the function to call for each element.
  * @returns The `into`/`inject`/`returning` value if provided, otherwise `undefined`.
  */
-export const each: EachFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedEach, source, a, b)) as EachFunction;
+export const each: EachFunction = ((source: any, withOrOptions: WithOrOptions) => invokeNormalizedIteration(normalizedEach, source, withOrOptions)) as EachFunction;
 
 /**
  * Builds a new array from the provided collection, optionally transforming or filtering elements.
@@ -198,11 +261,10 @@ export const each: EachFunction = ((source: any, a: any, b: any) => invokeNormal
  * - `into`: array to push results into (default: new array)
  *
  * @param source The collection to iterate (array, object, Map, Set, etc.)
- * @param a Optional: `with` function, or options object, or `into` array.
- * @param b Optional: options object if `a` is `into` array.
+ * @param withOrOptions Optional: `with` function, or options object, or `into` array.
  * @returns The resulting array.
  */
-export const array: ArrayFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedArray, source, a, b)) as ArrayFunction;
+export const array: ArrayFunction = ((source: any, withOrOptions: WithOrOptions) => invokeNormalizedIteration(normalizedArrayIteration, source, withOrOptions)) as ArrayFunction;
 
 /**
  * Builds a new object from the provided collection, optionally transforming keys/values or filtering elements.
@@ -214,11 +276,10 @@ export const array: ArrayFunction = ((source: any, a: any, b: any) => invokeNorm
  * - `into`: object to assign results into (default: new object)
  *
  * @param source The collection to iterate (array, object, Map, Set, etc.)
- * @param a Optional: `with` function, or options object, or `into` object.
- * @param b Optional: options object if `a` is `into` object.
+ * @param withOrOptions Optional: `with` function, or options object, or `into` object.
  * @returns The resulting object.
  */
-export const object: ObjectFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedObject, source, a, b)) as ObjectFunction;
+export const object: ObjectFunction = ((source: any, withOrOptions: WithOrOptions) => invokeNormalizedIteration(normalizedObjectIteration, source, withOrOptions)) as ObjectFunction;
 
 /**
  * Reduces the provided collection to a single value, similar to Array.prototype.reduce.
@@ -231,11 +292,10 @@ export const object: ObjectFunction = ((source: any, a: any, b: any) => invokeNo
  * - `into`/`inject`/`returning`: initial value for the reduction
  *
  * @param source The collection to reduce (array, object, Map, Set, etc.)
- * @param a Optional: initial value or reducer function or options object.
- * @param b Optional: options object if `a` is initial value.
+ * @param withOrOptions Optional: initial value or reducer function or options object.
  * @returns The reduced value.
  */
-export const reduce: ReduceFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedReduce, source, a, b)) as ReduceFunction;
+export const reduce: ReduceFunction = ((source: any, withOrOptions: WithOrOptions) => invokeNormalizedIteration(normalizedReduceIteration, source, withOrOptions)) as ReduceFunction;
 
 /**
  * Finds and returns the first value in the collection that matches the given criteria.
@@ -245,11 +305,10 @@ export const reduce: ReduceFunction = ((source: any, a: any, b: any) => invokeNo
  * - `when`: function to filter elements (predicate)
  *
  * @param source The collection to search (array, object, Map, Set, etc.)
- * @param a Optional: predicate or options object.
- * @param b Optional: options object if `a` is predicate.
+ * @param withOrOptions Optional: predicate or options object.
  * @returns The found value, or undefined if not found.
  */
-export const find: FindFunction = ((source: any, a: any, b: any) => invokeNormalizedIteration(normalizedFind, source, a, b)) as FindFunction;
+export const find: FindFunction = ((source: any, withOrOptions: WithOrOptions) => invokeNormalizedIteration(normalizedFindIteration, source, withOrOptions)) as FindFunction;
 
 
 /**

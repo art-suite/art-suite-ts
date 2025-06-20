@@ -28,8 +28,8 @@ describe("Object comprehensions", () => {
       expect(object({ a: 1, b: 2 }, (v, k) => k + v)).toEqual({ a: "a1", b: "b2" })
     })
 
-    it("transforms keys with key option", () => {
-      expect(object({ a: 1, b: 2, c: 3, d: 4 }, { key: v => v * 11 })).toEqual({ 11: 1, 22: 2, 33: 3, 44: 4 })
+    it("transforms keys with withKey option", () => {
+      expect(object({ a: 1, b: 2, c: 3, d: 4 }, { withKey: v => v * 11 })).toEqual({ 11: 1, 22: 2, 33: 3, 44: 4 })
     })
   })
 

@@ -34,7 +34,7 @@ interface BaseComprehensionOptions<InV, InK_Actual> {
  *  - If `with` is omitted, `OutV = InV`.
  *  - If `with` is provided, `OutV` is inferred from the callback.
  */
-export type ArrayResultOptions<InV, OutV = InV> =
+export type ArrayComprehensionOptions<InV, OutV = InV> =
   BaseComprehensionOptions<InV, number> & {
     into?: OutV[]
   } & (
@@ -46,7 +46,7 @@ export type ArrayResultOptions<InV, OutV = InV> =
  *  - If `with` is omitted, `OutV = InV`.
  *  - If `with` is provided, `OutV` is inferred from the callback.
  */
-export type ObjectResultOptions<
+export type ObjectComprehensionOptions<
   InV,
   InK,
   OutV = InV,
@@ -54,7 +54,6 @@ export type ObjectResultOptions<
 > =
   BaseComprehensionOptions<InV, InK> & {
     into?: PlainObject<OutV>
-    key?: ObjectKeyFn<InV, InK, OutK>
     withKey?: ObjectKeyFn<InV, InK, OutK>
   } & (
     { with?: undefined } |
@@ -67,7 +66,7 @@ export type ObjectResultOptions<
     }
   )
 // For find()
-interface FindOptions<InV, InK_Actual, OutV = InV> extends BaseComprehensionOptions<InV, InK_Actual> {
+interface FindComprehensionOptions<InV, InK_Actual, OutV = InV> extends BaseComprehensionOptions<InV, InK_Actual> {
   // `into` is not applicable for find's public API
   with?: InK_Actual extends number ? ArrayWithFn<InV, OutV> : InK_Actual extends string ? ObjectWithFn<InV, OutV> : IterableWithFn<InV, InK_Actual, OutV>;
 }
@@ -75,7 +74,7 @@ interface FindOptions<InV, InK_Actual, OutV = InV> extends BaseComprehensionOpti
 // For reduce() and inject()
 type ReduceWithFn<AccV, InV, InK_Actual> = (accumulator: AccV, value: InV, key: InK_Actual) => AccV;
 
-interface ReduceOptions<AccV, InV, InK_Actual> extends BaseComprehensionOptions<InV, InK_Actual> {
+interface ReduceComprehensionOptions<AccV, InV, InK_Actual> extends BaseComprehensionOptions<InV, InK_Actual> {
   into?: AccV; // initial accumulator for inject; also for reduce if explicit
   inject?: AccV; // alias for into
   returning?: AccV; // alias for into
@@ -83,70 +82,92 @@ interface ReduceOptions<AccV, InV, InK_Actual> extends BaseComprehensionOptions<
   map?: InK_Actual extends number ? ArrayWithFn<InV, any> : InK_Actual extends string ? ObjectWithFn<InV, any> : IterableWithFn<InV, InK_Actual, any>;
 }
 
-
 // ### array ###
 export interface ArrayFunction {
-  // 1. Combined `when`/`with` overload must come first for correct contextual typing
+  //******************************************
+  // Array-iterable variants
+  //******************************************
+  // Variant 1: only `array` source
+  <InV>(source: ArrayInput<InV>): InV[]
+
+  // Variant 2: has `with` function
+  <InV, OutV>(source: ArrayInput<InV>, withFn: ArrayWithFn<InV, OutV>): OutV[]
+
+  // Variant 3: Combined `when`/`with` overload must come first for correct contextual typing
   <InV, OutV>(
     source: ArrayInput<InV>,
     options: BaseComprehensionOptions<InV, number> & { into?: OutV[]; with: ArrayWithFn<InV, OutV> }
   ): OutV[]
 
-  // 2. `with` alone
-  <InV, OutV>(source: ArrayInput<InV>, withFn: ArrayWithFn<InV, OutV>): OutV[]
+  // Variant 4: `options` without `with`
+  <InV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, InV>, 'with'>): InV[]
 
-  // 3. `into` + `with`
-  <InV, OutV>(source: ArrayInput<InV>, into: OutV[], withFn: ArrayWithFn<InV, OutV>): OutV[]
+  // Variant 5: `options` with `into` and no `with`
+  <InV, OutV>(source: ArrayInput<InV>, options: Omit<ArrayComprehensionOptions<InV, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
 
-  // 4. `options` without `with`
-  <InV>(source: ArrayInput<InV>, options?: Omit<ArrayResultOptions<InV, InV>, 'with'>): InV[]
-
-  // 5. Full `options` with explicit `with` (for other combinations)
+  // Variant 6: Full `options` with explicit `with` (for other combinations)
   <InV, OutV>(
     source: ArrayInput<InV>,
-    options: ArrayResultOptions<InV, OutV> & { with: ArrayWithFn<InV, OutV> }
+    options: ArrayComprehensionOptions<InV, OutV> & { into?: OutV[]; with: ArrayWithFn<InV, OutV> }
   ): OutV[]
 
-  // ...the rest unchanged:
-
-  <InV, OutV>(
-    source: ArrayInput<InV>,
-    into: OutV[],
-    options: ArrayResultOptions<InV, OutV> & { with: ArrayWithFn<InV, OutV> }
-  ): OutV[]
-
+  //******************************************
+  // Object-iterable variants
+  //******************************************
+  // Variant 1: only `object` source
   <InV>(source: ObjectInput<InV>): InV[]
+
+  // Variant 2: source and with-function
   <InV, OutV>(source: ObjectInput<InV>, withFn: ObjectWithFn<InV, OutV>): OutV[]
+
+  // Variant 3: Combined `when`/`with` overload must come first for correct contextual typing
   <InV, OutV>(
     source: ObjectInput<InV>,
-    options: Omit<ObjectResultOptions<InV, string, OutV>, 'key' | 'withKey' | 'into'> & { into?: OutV[] }
-  ): OutV[]
-  <InV, OutV>(source: ObjectInput<InV>, into: OutV[], withFn: ObjectWithFn<InV, OutV>): OutV[]
-  <InV, OutV>(
-    source: ObjectInput<InV>,
-    into: OutV[],
-    options: Omit<ObjectResultOptions<InV, string, OutV>, 'key' | 'withKey' | 'into'>
+    options: BaseComprehensionOptions<InV, string> & { into?: OutV[]; with: ObjectWithFn<InV, OutV> }
   ): OutV[]
 
-  <InV>(source: IterableInput<InV>): InV[]
-  <KeyV, InV>(source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>): InV[]
-  <InV, OutV = InV>(
-    source: IterableInput<InV>,
-    withFnOrOptions:
-      | IterableWithFn<InV, InV, OutV>
-      | (Omit<ObjectResultOptions<InV, InV, OutV>, 'key' | 'withKey' | 'into'> & { into?: OutV[] })
+  // Variant 4: `options` without `with`
+  <InV>(source: ObjectInput<InV>, options: Omit<ObjectComprehensionOptions<InV, string, InV>, 'with'>): InV[]
+
+  // Variant 5: `options` with `into` and no `with`
+  <InV, OutV>(source: ObjectInput<InV>, options: Omit<ObjectComprehensionOptions<InV, string, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+
+  // Variant 6: Full `options` with explicit `with` (for other combinations)
+  <InV, OutV>(
+    source: ObjectInput<InV>,
+    options: ObjectComprehensionOptions<InV, string, OutV> & { into?: OutV[]; with: ObjectWithFn<InV, OutV> }
   ): OutV[]
-  <KeyV, InV, OutV = InV>(
-    source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
-    withFnOrOptions:
-      | IterableWithFn<InV, KeyV, OutV>
-      | (Omit<ObjectResultOptions<InV, KeyV, OutV>, 'key' | 'withKey' | 'into'> & { into?: OutV[] })
+
+  //******************************************
+  // Iterable variants
+  //******************************************
+  // Variant 1: only `iterable` source
+  <InV>(source: IterableInput<InV>): InV[]
+
+  // Variant 2: has `with` function
+  <InV, OutV>(source: IterableInput<InV>, withFn: IterableWithFn<InV, any, OutV>): OutV[]
+
+  // Variant 3: Combined `when`/`with` overload must come first for correct contextual typing
+  <InV, OutV>(
+    source: IterableInput<InV>,
+    options: BaseComprehensionOptions<InV, any> & { into?: OutV[]; with: IterableWithFn<InV, any, OutV> }
+  ): OutV[]
+
+  // Variant 4: `options` without `with`
+  <InV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, InV>, 'with'>): InV[]
+
+  // Variant 5: `options` with `into` and no `with`
+  <InV, OutV>(source: IterableInput<InV>, options: Omit<ObjectComprehensionOptions<InV, any, OutV>, 'into' | 'with'> & { into: OutV[] }): OutV[]
+
+  // Variant 6: Full `options` with explicit `with` (for other combinations)
+  <InV, OutV>(
+    source: IterableInput<InV>,
+    options: ObjectComprehensionOptions<InV, any, OutV> & { into?: OutV[]; with: IterableWithFn<InV, any, OutV> }
   ): OutV[]
 
   (source: NotPresent, withFnOrOptions?: any, into?: any): []
 }
-// ### object ###
-// ### object ###
+
 // ### object ###
 export interface ObjectFunction {
   <InV>(
@@ -193,20 +214,20 @@ export interface ObjectFunction {
   // ArrayInput + options without with/key/withKey
   <InV>(
     source: ArrayInput<InV>,
-    options?: Omit<ObjectResultOptions<InV, number, InV>, 'with' | 'key' | 'withKey'>
+    options?: Omit<ObjectComprehensionOptions<InV, number, InV>, 'with' | 'key' | 'withKey'>
   ): PlainObject<InV>
 
   // ArrayInput + full options with with
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
     source: ArrayInput<InV>,
-    options: ObjectResultOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
+    options: ObjectComprehensionOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
   ): PlainObject<OutV>
 
   // ArrayInput + into + full options
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
     source: ArrayInput<InV>,
     into: PlainObject<OutV>,
-    options: ObjectResultOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
+    options: ObjectComprehensionOptions<InV, number, OutV, OutK> & { with: ArrayWithFn<InV, OutV> }
   ): PlainObject<OutV>
 
 
@@ -255,20 +276,20 @@ export interface ObjectFunction {
   // ObjectInput + options without with/key/withKey
   <InV>(
     source: ObjectInput<InV>,
-    options?: Omit<ObjectResultOptions<InV, string, InV>, 'with' | 'key' | 'withKey'>
+    options?: Omit<ObjectComprehensionOptions<InV, string, InV>, 'with' | 'key' | 'withKey'>
   ): PlainObject<InV>
 
   // ObjectInput + full options with with
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
     source: ObjectInput<InV>,
-    options: ObjectResultOptions<InV, string, OutV, OutK> & { with: ObjectWithFn<InV, OutV> }
+    options: ObjectComprehensionOptions<InV, string, OutV, OutK> & { with: ObjectWithFn<InV, OutV> }
   ): PlainObject<OutV>
 
   // ObjectInput + into + full options
   <InV, OutV = InV, OutK extends string | number | symbol = string>(
     source: ObjectInput<InV>,
     into: PlainObject<OutV>,
-    options: ObjectResultOptions<InV, string, OutV, OutK> & { with: ObjectWithFn<InV, OutV> }
+    options: ObjectComprehensionOptions<InV, string, OutV, OutK> & { with: ObjectWithFn<InV, OutV> }
   ): PlainObject<OutV>
 
   // IterableInput and NotPresent overloads unchanged…
@@ -289,13 +310,13 @@ export interface FindFunction {
   // ArrayInput + options without with
   <InV>(
     source: ArrayInput<InV>,
-    options?: Omit<FindOptions<InV, number, InV>, 'with'>
+    options?: Omit<FindComprehensionOptions<InV, number, InV>, 'with'>
   ): InV | undefined
 
   // ArrayInput + full options
   <InV, OutV>(
     source: ArrayInput<InV>,
-    options: FindOptions<InV, number, OutV> & { with: ArrayWithFn<InV, OutV | boolean> }
+    options: FindComprehensionOptions<InV, number, OutV> & { with: ArrayWithFn<InV, OutV | boolean> }
   ): OutV | undefined
 
   // ObjectInput + when+with
@@ -313,13 +334,13 @@ export interface FindFunction {
   // ObjectInput + options without with
   <InV>(
     source: ObjectInput<InV>,
-    options?: Omit<FindOptions<InV, string, InV>, 'with'>
+    options?: Omit<FindComprehensionOptions<InV, string, InV>, 'with'>
   ): InV | undefined
 
   // ObjectInput + full options
   <InV, OutV>(
     source: ObjectInput<InV>,
-    options: FindOptions<InV, string, OutV> & { with: ObjectWithFn<InV, OutV | boolean> }
+    options: FindComprehensionOptions<InV, string, OutV> & { with: ObjectWithFn<InV, OutV | boolean> }
   ): OutV | undefined
 
   // IterableInput (Set-like) + when+with
@@ -337,13 +358,13 @@ export interface FindFunction {
   // IterableInput + options without with
   <InV>(
     source: IterableInput<InV>,
-    options?: Omit<FindOptions<InV, InV, InV>, 'with'>
+    options?: Omit<FindComprehensionOptions<InV, InV, InV>, 'with'>
   ): InV | undefined
 
   // IterableInput + full options
   <InV, OutV>(
     source: IterableInput<InV>,
-    options: FindOptions<InV, InV, OutV> & { with: IterableWithFn<InV, InV, OutV | boolean> }
+    options: FindComprehensionOptions<InV, InV, OutV> & { with: IterableWithFn<InV, InV, OutV | boolean> }
   ): OutV | undefined
 
   // IterableInput (Map-like) + when+with
@@ -361,13 +382,13 @@ export interface FindFunction {
   // IterableInput + options without with
   <KeyV, InV>(
     source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
-    options?: Omit<FindOptions<InV, KeyV, InV>, 'with'>
+    options?: Omit<FindComprehensionOptions<InV, KeyV, InV>, 'with'>
   ): InV | undefined
 
   // IterableInput + full options
   <KeyV, InV, OutV>(
     source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
-    options: FindOptions<InV, KeyV, OutV> & { with: IterableWithFn<InV, KeyV, OutV | boolean> }
+    options: FindComprehensionOptions<InV, KeyV, OutV> & { with: IterableWithFn<InV, KeyV, OutV | boolean> }
   ): OutV | undefined
 
   // NotPresent
@@ -397,13 +418,13 @@ export interface ReduceFunction {
   // 4. options without `with` or `inject` → returns last element
   <InV>(
     source: ArrayInput<InV>,
-    options?: Omit<ReduceOptions<InV, InV, number>, 'with' | 'into' | 'inject' | 'returning'>
+    options?: Omit<ReduceComprehensionOptions<InV, InV, number>, 'with' | 'into' | 'inject' | 'returning'>
   ): InV
 
   // 5. full options (must include `with`; `into`/`inject` type is return)
   <InV, AccV>(
     source: ArrayInput<InV>,
-    options: ReduceOptions<AccV, InV, number>
+    options: ReduceComprehensionOptions<AccV, InV, number>
   ): AccV
 
   // 6. ObjectInput + reducer + initialValue
@@ -428,13 +449,13 @@ export interface ReduceFunction {
   // 9. ObjectInput options without `with` or `inject`
   <InV>(
     source: ObjectInput<InV>,
-    options?: Omit<ReduceOptions<InV, InV, string>, 'with' | 'into' | 'inject' | 'returning'>
+    options?: Omit<ReduceComprehensionOptions<InV, InV, string>, 'with' | 'into' | 'inject' | 'returning'>
   ): InV
 
   // 10. ObjectInput full options
   <InV, AccV>(
     source: ObjectInput<InV>,
-    options: ReduceOptions<AccV, InV, string>
+    options: ReduceComprehensionOptions<AccV, InV, string>
   ): AccV
 
   // 11. IterableInput + reducer + initialValue
@@ -459,13 +480,13 @@ export interface ReduceFunction {
   // 14. IterableInput options without `with` or `inject`
   <InV, KeyV>(
     source: IterableInput<InV>,
-    options?: Omit<ReduceOptions<InV, InV, KeyV>, 'with' | 'into' | 'inject' | 'returning'>
+    options?: Omit<ReduceComprehensionOptions<InV, InV, KeyV>, 'with' | 'into' | 'inject' | 'returning'>
   ): InV
 
   // 15. IterableInput full options
   <InV, KeyV, AccV>(
     source: IterableInput<InV>,
-    options: ReduceOptions<AccV, InV, KeyV>
+    options: ReduceComprehensionOptions<AccV, InV, KeyV>
   ): AccV
 
   // 16. NotPresent → undefined
@@ -475,18 +496,11 @@ export interface ReduceFunction {
 // `each` returns its `into` argument if provided (via param or options), otherwise returns undefined.
 // The `into` is NOT modified by `each` itself, but the callbacks might modify it if it's an object/array.
 export interface EachFunction {
-  // ArrayInput + into via param
-  <InV, IntoV>(
-    source: ArrayInput<InV>,
-    into: IntoV,
-    withFnOrOptions?: ArrayWithFn<InV, any> | BaseComprehensionOptions<InV, number>
-  ): IntoV
-
   // ArrayInput + into via options
-  <InV, IntoV>(
+  <InV, OutV>(
     source: ArrayInput<InV>,
-    options: BaseComprehensionOptions<InV, number> & { into: IntoV }
-  ): IntoV
+    options: BaseComprehensionOptions<InV, number> & { into: OutV }
+  ): OutV
 
   // ArrayInput + options with `with` (no into) → undefined
   <InV>(
@@ -501,17 +515,17 @@ export interface EachFunction {
   ): undefined
 
   // ObjectInput + into via param
-  <InV, IntoV>(
+  <InV, OutV>(
     source: ObjectInput<InV>,
-    into: IntoV,
+    into: OutV,
     withFnOrOptions?: ObjectWithFn<InV, any> | BaseComprehensionOptions<InV, string>
-  ): IntoV
+  ): OutV
 
   // ObjectInput + into via options
-  <InV, IntoV>(
+  <InV, OutV>(
     source: ObjectInput<InV>,
-    options: BaseComprehensionOptions<InV, string> & { into: IntoV }
-  ): IntoV
+    options: BaseComprehensionOptions<InV, string> & { into: OutV }
+  ): OutV
 
   // ObjectInput + options with `with` (no into) → undefined
   <InV>(
@@ -525,18 +539,11 @@ export interface EachFunction {
     withFnOrOptions?: ObjectWithFn<InV, any> | BaseComprehensionOptions<InV, string>
   ): undefined
 
-  // IterableInput (Set-like) + into via param
-  <InV, IntoV>(
-    source: IterableInput<InV>,
-    into: IntoV,
-    withFnOrOptions?: IterableWithFn<InV, InV, any> | BaseComprehensionOptions<InV, InV>
-  ): IntoV
-
   // IterableInput (Set-like) + into via options
-  <InV, IntoV>(
+  <InV, OutV>(
     source: IterableInput<InV>,
-    options: BaseComprehensionOptions<InV, InV> & { into: IntoV }
-  ): IntoV
+    options: BaseComprehensionOptions<InV, InV> & { into: OutV }
+  ): OutV
 
   // IterableInput (Set-like) + options with `with` (no into) → undefined
   <InV>(
@@ -550,18 +557,11 @@ export interface EachFunction {
     withFnOrOptions?: IterableWithFn<InV, InV, any> | BaseComprehensionOptions<InV, InV>
   ): undefined
 
-  // IterableInput (Map-like) + into via param
-  <KeyV, InV, IntoV>(
-    source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
-    into: IntoV,
-    withFnOrOptions?: IterableWithFn<InV, KeyV, any> | BaseComprehensionOptions<InV, KeyV>
-  ): IntoV
-
   // IterableInput (Map-like) + into via options
-  <KeyV, InV, IntoV>(
+  <KeyV, InV, OutV>(
     source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
-    options: BaseComprehensionOptions<InV, KeyV> & { into: IntoV }
-  ): IntoV
+    options: BaseComprehensionOptions<InV, KeyV> & { into: OutV }
+  ): OutV
 
   // IterableInput (Map-like) + options with `with` (no into) → undefined
   <KeyV, InV>(
@@ -574,13 +574,6 @@ export interface EachFunction {
     source: IterableInput<[KeyV, InV]> | Map<KeyV, InV>,
     withFnOrOptions?: IterableWithFn<InV, KeyV, any> | BaseComprehensionOptions<InV, KeyV>
   ): undefined
-
-  // NotPresent
-  <IntoV = undefined>(
-    source: NotPresent,
-    withFnOrOptions?: any,
-    intoArg?: IntoV
-  ): IntoV
 }
 
 export type AnyContainer<T> = ArrayInput<T> | ObjectInput<T> | IterableInput<T>

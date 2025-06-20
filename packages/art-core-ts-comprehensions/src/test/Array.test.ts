@@ -3,6 +3,12 @@ import { x2, even } from "./testLib"
 import { array } from "../Comprehensions"
 
 describe("Array comprehensions", () => {
+  describe("super basic", () => {
+    it("handles null input", () => {
+      expect(array([1, 2], v => v * 2)).toEqual([2, 4])
+    })
+  })
+
   describe("basic operations", () => {
     it("handles null input", () => {
       expect(array(null)).toEqual([])
