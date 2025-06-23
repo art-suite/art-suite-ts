@@ -1,7 +1,7 @@
 {
-  "name": "@art-suite/art-core-ts",
-  "version": "0.13.0",
-  "description": "The full Art-Core-TS library",
+  "name": "@art-suite/art-core-ts-compare",
+  "version": "0.0.1",
+  "description": "A TypeScript comparison utility library",
   "keywords": [],
   "repository": {
     "type": "git",
@@ -33,15 +33,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-async": "^0.2.2",
-    "@art-suite/art-core-ts-communication-status": "^0.3.2",
-    "@art-suite/art-core-ts-comparison": "^0.0.1",
-    "@art-suite/art-core-ts-comprehensions": "^0.4.6",
-    "@art-suite/art-core-ts-containers": "^0.4.4",
-    "@art-suite/art-core-ts-json": "^0.4.1",
-    "@art-suite/art-core-ts-string-case": "^0.1.8",
-    "@art-suite/art-core-ts-string-lib": "^0.2.3",
-    "@art-suite/art-core-ts-time": "^0.1.10",
     "@art-suite/art-core-ts-types": "^0.3.2"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.1.4"
   }
 }
