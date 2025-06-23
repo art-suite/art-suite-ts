@@ -118,6 +118,19 @@ const comparePrimitives = (a: any, b: any): number => {
   return NaN
 }
 
+/**
+ * deep structural comparison
+ *
+ * @param a - The first value to compare
+ * @param b - The second value to compare
+ * @returns A number indicating the comparison result:
+ *   - **< 0**: `a` is less than `b`
+ *   - **== 0**: `a` is equal to `b` (deep structural equality)
+ *   - **> 0**: `a` is greater than `b`
+ *   - **NaN**: Values cannot be compared (incompatible types or custom comparison failed)
+ *
+ * For more details on comparison behavior, see the art-core-ts-compare README.
+ */
 export const compare = (a: any, b: any): number => {
   // Handle custom comparables first
   const customResult = compareCustomComparable(a, b)
