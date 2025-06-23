@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "0.12.3",
+  "version": "0.12.5",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
@@ -33,14 +33,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-async": "^0.2.1",
-    "@art-suite/art-core-ts-communication-status": "^0.3.1",
-    "@art-suite/art-core-ts-comprehensions": "^0.4.4",
-    "@art-suite/art-core-ts-containers": "^0.4.3",
-    "@art-suite/art-core-ts-json": "^0.4.0",
-    "@art-suite/art-core-ts-string-case": "^0.1.7",
-    "@art-suite/art-core-ts-string-lib": "^0.2.2",
-    "@art-suite/art-core-ts-time": "^0.1.9",
-    "@art-suite/art-core-ts-types": "^0.3.1"
+    "@art-suite/art-core-ts-async": "^0.2.2",
+    "@art-suite/art-core-ts-communication-status": "^0.3.2",
+    "@art-suite/art-core-ts-comprehensions": "^0.4.6",
+    "@art-suite/art-core-ts-containers": "^0.4.4",
+    "@art-suite/art-core-ts-json": "^0.4.1",
+    "@art-suite/art-core-ts-string-case": "^0.1.8",
+    "@art-suite/art-core-ts-string-lib": "^0.2.3",
+    "@art-suite/art-core-ts-time": "^0.1.10",
+    "@art-suite/art-core-ts-types": "^0.3.2"
   }
 }
