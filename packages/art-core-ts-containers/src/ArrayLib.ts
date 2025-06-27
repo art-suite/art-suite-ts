@@ -53,9 +53,9 @@ export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.
 /**
  * Returns true if the array has items, false otherwise. Useful tool if you don't know if the array is defined or not.
  * @param array - The array to check
- * @returns True if the array has items, false otherwise.
+ * @returns True if the array exists and has items, false otherwise.
  */
-export const arrayHasItems = <T>(array: T[] | undefined | null): boolean => array ? array.length > 0 : false
+export const arrayHasItems = <T>(array: T[] | undefined | null): array is T[] => array ? array.length > 0 : false
 
 /**
  * Returns the number of items in an array, or 0 if the array is undefined or null. Useful tool if you don't know if the array is defined or not.
