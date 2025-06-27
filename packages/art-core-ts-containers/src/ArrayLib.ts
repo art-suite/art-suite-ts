@@ -16,7 +16,7 @@
  * @param item - The item to insert
  * @returns The mutated input array
  */
-export const insertIntoArray = <T>(inputArray: T[] | undefined, index: number, item: T): T[] => {
+export const insertIntoArray = <T>(inputArray: T[] | undefined | null, index: number, item: T): T[] => {
   if (!inputArray) return [item]
   index = index < 0 ? inputArray.length + index + 1 : index
   inputArray.splice(index, 0, item)
@@ -30,7 +30,7 @@ export const insertIntoArray = <T>(inputArray: T[] | undefined, index: number, i
  * @param item - The item to insert
  * @returns A new array with the item inserted
  */
-export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined, index: number, item: T): T[] =>
+export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined | null, index: number, item: T): T[] =>
   inputArray ? insertIntoArray(inputArray.slice(), index, item) : [item]
 
 
@@ -40,7 +40,7 @@ export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined, index: numbe
  * @param items - The items to append to the array
  * @returns A new array with the additional items appended
  */
-export const arrayWith = <T>(inputArray: T[] | undefined, ...items: T[]): T[] =>
+export const arrayWith = <T>(inputArray: T[] | undefined | null, ...items: T[]): T[] =>
   inputArray ? [...inputArray, ...items] : items
 
 /**
