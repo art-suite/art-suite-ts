@@ -16,7 +16,8 @@
  * @param item - The item to insert
  * @returns The mutated input array
  */
-export const insertIntoArray = <T>(inputArray: T[], index: number, item: T): T[] => {
+export const insertIntoArray = <T>(inputArray: T[] | undefined, index: number, item: T): T[] => {
+  if (!inputArray) return [item]
   index = index < 0 ? inputArray.length + index + 1 : index
   inputArray.splice(index, 0, item)
   return inputArray
@@ -29,8 +30,8 @@ export const insertIntoArray = <T>(inputArray: T[], index: number, item: T): T[]
  * @param item - The item to insert
  * @returns A new array with the item inserted
  */
-export const arrayWithInsertedAt = <T>(inputArray: T[], index: number, item: T): T[] =>
-  insertIntoArray(inputArray.slice(), index, item)
+export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined, index: number, item: T): T[] =>
+  inputArray ? insertIntoArray(inputArray.slice(), index, item) : [item]
 
 
 /**
@@ -39,7 +40,8 @@ export const arrayWithInsertedAt = <T>(inputArray: T[], index: number, item: T):
  * @param items - The items to append to the array
  * @returns A new array with the additional items appended
  */
-export const arrayWith = <T>(inputArray: T[], ...items: T[]): T[] => [...inputArray, ...items]
+export const arrayWith = <T>(inputArray: T[] | undefined, ...items: T[]): T[] =>
+  inputArray ? [...inputArray, ...items] : items
 
 /**
  * Returns the last element of an array, or undefined if the array is empty or undefined.
