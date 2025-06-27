@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek } from '../ArrayLib'
+import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek, arrayHasItems } from '../ArrayLib'
 
 describe('ArrayLib', () => {
   describe('insertIntoArray', () => {
@@ -157,6 +157,44 @@ describe('ArrayLib', () => {
 
     it('returns undefined when last element is undefined', () => {
       expect(peek([1, 2, undefined])).toBeUndefined()
+    })
+  })
+
+  describe('arrayHasItems', () => {
+    it('returns false for empty array', () => {
+      expect(arrayHasItems([])).toBe(false)
+    })
+
+    it('returns false for undefined array', () => {
+      expect(arrayHasItems(undefined)).toBe(false)
+    })
+
+    it('returns false for null array', () => {
+      expect(arrayHasItems(null)).toBe(false)
+    })
+
+    it('returns true for array with one item', () => {
+      expect(arrayHasItems([42])).toBe(true)
+    })
+
+    it('returns true for array with multiple items', () => {
+      expect(arrayHasItems([1, 2, 3])).toBe(true)
+    })
+
+    it('returns true for array with undefined values', () => {
+      expect(arrayHasItems([undefined, null, 0])).toBe(true)
+    })
+
+    it('returns true for array with empty strings', () => {
+      expect(arrayHasItems(['', 'hello'])).toBe(true)
+    })
+
+    it('returns true for array with zero values', () => {
+      expect(arrayHasItems([0, 1, 2])).toBe(true)
+    })
+
+    it('returns true for array with false values', () => {
+      expect(arrayHasItems([false, true])).toBe(true)
     })
   })
 })

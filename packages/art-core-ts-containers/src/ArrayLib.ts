@@ -49,3 +49,5 @@ export const arrayWith = <T>(inputArray: T[] | undefined | null, ...items: T[]):
  * @returns The last element of the array, or undefined if the array is empty or undefined
  */
 export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.[array.length - 1]
+
+export const arrayHasItems = <T>(array: T[] | undefined | null): boolean => array ? array.length > 0 : false
