@@ -56,7 +56,8 @@
     "versions": "npx art-monorepo versions",
     "build:clean": "npx art-monorepo exec 'npm run clean' && npm run build",
     "sync:install": "art-monorepo sync;npm install",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "release:minor:core:update": "npm run sync && cd packages/art-core-ts && npm version minor && npm publish && git add . && git commit -m \"minor art-core-ts release\""
   },
   "version": "0.1.0"
 }
