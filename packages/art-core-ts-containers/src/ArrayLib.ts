@@ -50,4 +50,16 @@ export const arrayWith = <T>(inputArray: T[] | undefined | null, ...items: T[]):
  */
 export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.[array.length - 1]
 
+/**
+ * Returns true if the array has items, false otherwise. Useful tool if you don't know if the array is defined or not.
+ * @param array - The array to check
+ * @returns True if the array has items, false otherwise.
+ */
 export const arrayHasItems = <T>(array: T[] | undefined | null): boolean => array ? array.length > 0 : false
+
+/**
+ * Returns the number of items in an array, or 0 if the array is undefined or null. Useful tool if you don't know if the array is defined or not.
+ * @param array - The array to count items in
+ * @returns The number of items in the array, or 0 if the array is undefined or null
+ */
+export const arrayItemCount = <T>(array: T[] | undefined | null): number => array ? array.length : 0

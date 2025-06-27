@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek, arrayHasItems } from '../ArrayLib'
+import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek, arrayHasItems, arrayItemCount } from '../ArrayLib'
 
 describe('ArrayLib', () => {
   describe('insertIntoArray', () => {
@@ -195,6 +195,52 @@ describe('ArrayLib', () => {
 
     it('returns true for array with false values', () => {
       expect(arrayHasItems([false, true])).toBe(true)
+    })
+  })
+
+  describe('arrayItemCount', () => {
+    it('returns 0 for empty array', () => {
+      expect(arrayItemCount([])).toBe(0)
+    })
+
+    it('returns 0 for undefined array', () => {
+      expect(arrayItemCount(undefined)).toBe(0)
+    })
+
+    it('returns 0 for null array', () => {
+      expect(arrayItemCount(null)).toBe(0)
+    })
+
+    it('returns 1 for array with one item', () => {
+      expect(arrayItemCount([42])).toBe(1)
+    })
+
+    it('returns correct count for array with multiple items', () => {
+      expect(arrayItemCount([1, 2, 3])).toBe(3)
+    })
+
+    it('returns correct count for array with many items', () => {
+      expect(arrayItemCount([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toBe(10)
+    })
+
+    it('returns correct count for array with undefined values', () => {
+      expect(arrayItemCount([undefined, null, 0])).toBe(3)
+    })
+
+    it('returns correct count for array with empty strings', () => {
+      expect(arrayItemCount(['', 'hello', 'world'])).toBe(3)
+    })
+
+    it('returns correct count for array with zero values', () => {
+      expect(arrayItemCount([0, 1, 2, 3, 4])).toBe(5)
+    })
+
+    it('returns correct count for array with false values', () => {
+      expect(arrayItemCount([false, true, false])).toBe(3)
+    })
+
+    it('returns correct count for array with mixed types', () => {
+      expect(arrayItemCount([1, 'string', true, null, undefined, 0])).toBe(6)
     })
   })
 })
