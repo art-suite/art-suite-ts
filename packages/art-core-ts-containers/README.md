@@ -23,6 +23,8 @@ Basic usage:
 ```ts
 import {
   merge,
+  deepMerge,
+  deepMergeInfo,
   compactFlatten,
   objectHasKeys,
   objectKeyCount,
@@ -34,6 +36,17 @@ import {
 
 // Merge objects: later objects take priority, null deletes, undefined is ignored/stripped
 merge({ a: 1, b: 2, c: 3 }, { b: null, c: undefined, d: 4 }); // { a: 1, b: null, d: 4 }
+
+// Deep merge vs shallow merge with nested objects
+const base = { a: 1, b: { x: 1, y: 2 }, c: [1, 2] };
+const update = { b: { y: 3, z: 4 }, c: [3, 4], d: 5 };
+
+merge(base, update); // { a: 1, b: { y: 3, z: 4 }, c: [3, 4], d: 5 } - b.x is lost!
+deepMerge(base, update); // { a: 1, b: { x: 1, y: 3, z: 4 }, c: [3, 4], d: 5 } - b.x preserved
+
+// Deep merge into existing object (mutates the target)
+const target = { a: 1 };
+deepMergeInfo(target, { b: 2 }, { c: 3 }); // target is now { a: 1, b: 2, c: 3 }
 
 // Flatten and compact arrays (removes null/undefined, flattens nested arrays)
 compactFlatten([1, null, [2, undefined, [3, 4]], 5]); // [1, 2, 3, 4, 5]
@@ -57,10 +70,36 @@ stripNullish(data); // { a: 1, c: { d: null, e: 2 } }
 ### Object Merging
 
 - `merge(...objects)` — Merges a list of objects. Later objects in the list take priority.
+
   - **Null values**: Replace existing values (use `null` to "delete" a value).
   - **Undefined values**: Are ignored and stripped (do not overwrite or appear in the result).
 
-> Merge is NOT functionally optimized
+- `mergeInto(...objects)` — Same as `merge` but mutates the first object instead of creating a new one.
+  - **Performance**: More efficient when you want to merge into an existing object.
+  - **Returns**: The mutated `into` object.
+
+> Merge is NOT functionally optimized - i.e. if merge(a, b) deep-equals a, the result will still be a new object
+
+### Object Deep Merging
+
+Like Merge, except when plain objects or arrays are encountered, recursively merge them.
+
+General principles: when deepMerge(a, b):
+
+- **Intuitively:** "b" is the desired value and "a" is the default values
+- **b === undefined:** "a" is returned
+- **b === null**: `null` is returned; use this as a way for 'b' to logically delete elements in 'a'
+- **a and b are Arrays**: Merges by pair-wise index. 'b.length' is used for the output length
+- **a and b are Plain Objects**: Merge on matching keys; output will have the set union of both Object.keys(a) and Object.keys(b)
+- **else, a and b are different types**: b is returned
+
+- `deepMerge(...objects)` — Recursively merges nested objects and arrays. Later objects take priority.
+
+- `deepMergeInfo(into, ...objects)` — Same as `deepMerge` but mutates the first object instead of creating a new one.
+  - **Performance**: More efficient when you want to merge into an existing object.
+  - **Returns**: The mutated `into` object.
+
+> DeepMerge is NOT functionally optimized - i.e. if deepMerge(a, b) deep-equals a, the result will still be a new object.
 
 ### Array Utilities
 
