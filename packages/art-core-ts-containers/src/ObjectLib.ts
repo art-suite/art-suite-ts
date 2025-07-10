@@ -2,7 +2,8 @@ import { compactFlatten } from './CompactFlatten'
 import { NotPresent, PlainObject } from '@art-suite/art-core-ts-types'
 import { Simplify } from 'type-fest'
 
-export const objectHasKeys = (obj: Record<string, any>): boolean => {
+export const objectHasKeys = <T extends Record<string, any>>(obj: T | null | undefined): obj is T => {
+  if (!obj) return false
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       return true

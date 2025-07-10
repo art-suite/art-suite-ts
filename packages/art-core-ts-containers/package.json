@@ -33,6 +33,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@art-suite/art-core-ts-types": "*",
     "type-fest": "^4.41.0"
   }
 }
