@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-containers",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "A TypeScript string utility library",
   "keywords": [],
   "repository": {
@@ -33,7 +33,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-types": "*",
+    "@art-suite/art-core-ts-types": "^0.3.2",
     "type-fest": "^4.41.0"
   }
 }
