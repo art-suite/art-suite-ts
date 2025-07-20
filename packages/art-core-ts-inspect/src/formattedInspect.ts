@@ -46,13 +46,17 @@ const formattedInspectArray = (array: unknown[], options: FormattedInspectOption
  */
 export const formattedInspect = (value: unknown, options: FormattedInspectOptions = {}, _level = 0): string => {
   const { unquoted = false, colors = defaultColors, json = false } = options
-  if (value === null) return colors.nullOrUndefined('null')
-  if (value === undefined) return colors.nullOrUndefined(json ? 'null' : 'undefined')
-  if (typeof value === 'string') return colors.value(!json && (unquoted || _level === 0) ? value : JSON.stringify(value))
-  if (typeof value === 'number' || typeof value === 'boolean') return colors.value(String(value))
-  if (isDate(value)) return colors.value(
-    unquoted ? value.toLocaleString() : json ? JSON.stringify(value.toISOString()) : value.toISOString()
-  )
+  try {
+    if (value === null) return colors.nullOrUndefined('null')
+    if (value === undefined) return colors.nullOrUndefined(json ? 'null' : 'undefined')
+    if (typeof value === 'string') return colors.value(!json && (unquoted || _level === 0) ? value : JSON.stringify(value))
+    if (typeof value === 'number' || typeof value === 'boolean') return colors.value(String(value))
+    if (isDate(value)) return colors.value(
+      unquoted ? value.toLocaleString() : json ? JSON.stringify(value.toISOString()) : value.toISOString()
+    )
+  } catch (error) {
+    return colors.error(String(value))
+  }
   if (isArray(value)) return formattedInspectArray(value, options, _level)
   if (isPlainObject(value)) return formattedInspectObject(value as Record<string, unknown>, options, _level)
   return colors.value(String(value))
