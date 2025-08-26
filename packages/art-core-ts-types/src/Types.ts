@@ -84,7 +84,15 @@ export const isNullish = (value: any): boolean => value == null || value == unde
 export const isNotNullish = (value: any): boolean => !isNullish(value)
 
 /**
- * present - simply non-null, non-undefined, and non-empty-string OR object can implement a custom getPresent() or present() method
+ * present returns true if "there is a value _present_"
+ *
+ * Specifically:
+ * - if `value.getPresent()` is a function; it's called and it's value is returned
+ * - if `value.present()` is a function; it's called and it's value is returned
+ * - else: returns `true` if `!null`, `!undefined` and `!(string with only whitespace)`
+ *
+ * > Inspired by Ruby's `present?` method
+ *
  * @param v
  * @returns
  */
