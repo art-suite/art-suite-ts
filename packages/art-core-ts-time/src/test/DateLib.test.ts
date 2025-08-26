@@ -73,6 +73,12 @@ describe('toDate', () => {
     expect(Math.abs(result.getTime() - now.getTime())).toBeLessThan(1000)
   })
 
+  it('with undefined', () => {
+    const result = toDate(undefined)
+    const now = new Date()
+    expect(Math.abs(result.getTime() - now.getTime())).toBeLessThan(1000)
+  })
+
   it('should handle string dates', () => {
     const expected = new Date(2025, 0, 2).getTime()
     expect(toSeconds('2025-01-02')).toBe(expected / 1000)

@@ -27,7 +27,7 @@ export const objectKeyCount = (obj: Record<string, any> | null | undefined): num
  * Removes the specified keys from an object. If keys were removed, returns a fresh object, otherwise returns the original object.
  * @param obj - The object to remove keys from
  * @param properties - The keys to remove
- * @returns A new object with the specified keys removed
+ * @returns A new object with the specified keys removed UNLESS there are no keys to remove, in which case the original object is returned.
  */
 export const objectWithout = <T extends PlainObject, K extends string[]>(obj: T | NotPresent, ...properties: [...K]): Simplify<Omit<T, K[number]>> => {
   if (!obj) return {} as Omit<T, K[number]>
