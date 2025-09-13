@@ -64,22 +64,24 @@ switch (status) {
 
 ### Status Types
 
+Status are strings, or you can import constants with the identical name referencing the strings:
+
 - **Success Status:**
 
-  - `success` — Request completed successfully
+  - `success` — Request completed successfully (2xx)
 
 - **Missing Status:**
 
-  - `missing` — Resource not found / not available (404 and 501)
+  - `missing` — Resource not found / not available (404, 501)
 
 - **Client-side Failures:**
 
-  - `clientFailure` — Invalid request (needs client-side fixes)
-  - `clientFailureNotAuthorized` — Valid request but unauthorized
+  - `clientFailure` — Requires client-side fixes (4xx except 404, 505, 530)
+  - `clientFailureNotAuthorized` — Valid request but request was not allowed (401, 403, 407, 451, 511)
 
 - **Server-side Failures:**
 
-  - `serverFailure` — Server-side failure (including server-side infra failures like gateways)
+  - `serverFailure` — Requires server-side fixes (including server-side infra failures like gateways) (5xx other than 501, 505, 511, 530)
 
 - **Non HTTP Failure States:**
   - `networkFailure` — Network connectivity issues
