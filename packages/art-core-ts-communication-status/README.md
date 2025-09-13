@@ -26,32 +26,17 @@ Basic usage:
 
 ```ts
 import {
-  success,
-  serverFailure,
-  clientFailure,
-  clientFailureNotAuthorized,
-  missing,
-  networkFailure,
-  aborted,
-  pending,
   isSuccess,
   isServerFailure,
-  isClientFailure,
-  isClientFailureNotAuthorized,
-  isMissing,
-  isNetworkFailure,
-  isAborted,
-  isPending,
+  success, // === "success"
+  missing, // === "missing"
 } from "@art-suite/art-core-ts-communication-status";
 
 // Handle success
-if (isSuccess(status)) {
-}
+if (isSuccess(status)) {...}
 
 // Simply handle all server failures
-if (isServerFailure(status)) {
-  // Handle server failure
-}
+if (isServerFailure(status)) {...}
 
 // or Handle multiple statues as a simple switch:
 switch (status) {
@@ -87,11 +72,13 @@ Status are strings, or you can import constants with the identical name referenc
 
   - `serverFailure` — _server/infra bug_ (5xx other than 501, 505, 511, 530)
 
-- **Non HTTP Failure States:**
+- **Non HTTP Failure Statuses:**
   - `networkFailure` — Network connectivity issues
+  - `timeoutFailure` - Request timed out
+
+- **Liminal Statuses:** (not errors, not success)
   - `aborted` — Request was cancelled
   - `pending` — Request is in progress
-  - `timeoutFailure` - Request timed out
 
 ### Type Guards
 
