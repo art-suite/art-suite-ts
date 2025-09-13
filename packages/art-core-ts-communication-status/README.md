@@ -1,8 +1,18 @@
 # @art-suite/art-core-ts-communication-status
 
-_When writing HTTP clients, especially for APIs, error handling doesn't need to be such a pain!_ 
+_When writing HTTP APIs, error handling doesn't need to be such a pain!_ 
 
-A simple, consistent library for simplifying communication status in client-server applications.
+Simplifies all API communication-related state down to just 9, human-readable AND machine-interptable statuses, 4 of which HTTP doesn't even handle!
+
+- `"success"`
+- `"missing"`
+- `"clientFailure"`
+- `"clientFailureNotAuthorized"`
+- `"serverFailure"`
+- `"networkFailure"`
+- `"timeoutFailure"`
+- `"aborted"`
+- `"pending"`
 
 ## Why This Module?
 
