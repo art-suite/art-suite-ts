@@ -1,10 +1,14 @@
 # @art-suite/art-core-ts-communication-status
 
-A simple, consistent library for handling communication status in client-server applications.
+_When writing HTTP clients, especially for APIs, error handling doesn't need to be such a pain!_ 
+
+A simple, consistent library for simplifying communication status in client-server applications.
 
 ## Why This Module?
 
 HTTP status codes confound two distinct purposes: providing machine-actionable status codes and conveying semantic information about errors to humans. This dual purpose leads to complexity and confusion in client-side code that needs to handle different types of failures appropriately.
+
+Further, not all errors are captured by the HTTP status codes - i.e. network failures.
 
 This library teases apart these concerns by focusing solely on what software can act on. It reduces the complex space of HTTP status codes and other communication states into a small set of actionable categories that make client-side code simpler and more robust.
 
@@ -68,20 +72,20 @@ Status are strings, or you can import constants with the identical name referenc
 
 - **Success Status:**
 
-  - `success` — Request completed successfully (2xx)
+  - `success` — hurray! (2xx)
 
 - **Missing Status:**
 
-  - `missing` — Resource not found / not available (404, 501)
+  - `missing` — _resource not available_ (404, 501)
 
 - **Client-side Failures:**
 
-  - `clientFailure` — Requires client-side fixes (4xx except 404, 505, 530)
-  - `clientFailureNotAuthorized` — Valid request but request was not allowed (401, 403, 407, 451, 511)
+  - `clientFailure` — _client bug_ (4xx except 404, 505, 530)
+  - `clientFailureNotAuthorized` — _bad auth_ (401, 403, 407, 451, 511)
 
 - **Server-side Failures:**
 
-  - `serverFailure` — Requires server-side fixes (including server-side infra failures like gateways) (5xx other than 501, 505, 511, 530)
+  - `serverFailure` — _server/infra bug_ (5xx other than 501, 505, 511, 530)
 
 - **Non HTTP Failure States:**
   - `networkFailure` — Network connectivity issues
