@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-inspect",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A TypeScript inspection and logging utility library",
   "keywords": [],
   "repository": {
@@ -26,6 +26,8 @@
     "prebuild": "npm run clean",
     "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
     "build:clean": "npm run clean && npm run build",
+    "check:types": "tsc --noEmit",
+    "check:types:fast": "tsc --noEmit --incremental",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
@@ -33,7 +35,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-types": "^0.3.2"
+    "@art-suite/art-core-ts-types": "^0.3.5"
   },
   "devDependencies": {
     "strip-ansi": "^7.1.0",

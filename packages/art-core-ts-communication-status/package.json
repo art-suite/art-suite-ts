@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-communication-status",
-  "version": "0.3.2",
+  "version": "0.3.5",
   "description": "A TypeScript string utility library",
   "keywords": [],
   "repository": {
@@ -26,6 +26,8 @@
     "prebuild": "npm run clean",
     "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
     "build:clean": "npm run clean && npm run build",
+    "check:types": "tsc --noEmit",
+    "check:types:fast": "tsc --noEmit --incremental",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
     "test": "vitest run",

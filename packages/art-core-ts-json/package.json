@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-json",
-  "version": "0.4.1",
+  "version": "0.4.4",
   "description": "A TypeScript JSON utility library",
   "keywords": [],
   "repository": {
@@ -26,6 +26,8 @@
     "prebuild": "npm run clean",
     "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
     "build:clean": "npm run clean && npm run build",
+    "check:types": "tsc --noEmit",
+    "check:types:fast": "tsc --noEmit --incremental",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
@@ -33,9 +35,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-comprehensions": "^0.4.6",
-    "@art-suite/art-core-ts-containers": "^0.9.0",
-    "@art-suite/art-core-ts-types": "^0.3.2",
-    "type-fest": "^4.41.0"
+    "@art-suite/art-core-ts-comprehensions": "^0.4.9",
+    "@art-suite/art-core-ts-containers": "^0.9.3",
+    "@art-suite/art-core-ts-types": "^0.3.5",
+    "type-fest": "^5.0.1"
   }
 }
