@@ -1,10 +1,24 @@
 # @art-suite/art-core-ts-communication-status
 
-A simple, consistent library for handling communication status in client-server applications.
+_When writing HTTP APIs, error handling doesn't need to be such a pain!_ 
+
+Simplifies all API communication-related state down to just 9, human-readable AND machine-interptable statuses, 4 of which HTTP doesn't even handle!
+
+- `"success"`
+- `"missing"`
+- `"clientFailure"`
+- `"clientFailureNotAuthorized"`
+- `"serverFailure"`
+- `"networkFailure"`
+- `"timeoutFailure"`
+- `"aborted"`
+- `"pending"`
 
 ## Why This Module?
 
 HTTP status codes confound two distinct purposes: providing machine-actionable status codes and conveying semantic information about errors to humans. This dual purpose leads to complexity and confusion in client-side code that needs to handle different types of failures appropriately.
+
+Further, not all errors are captured by the HTTP status codes - i.e. network failures.
 
 This library teases apart these concerns by focusing solely on what software can act on. It reduces the complex space of HTTP status codes and other communication states into a small set of actionable categories that make client-side code simpler and more robust.
 
@@ -22,32 +36,17 @@ Basic usage:
 
 ```ts
 import {
-  success,
-  serverFailure,
-  clientFailure,
-  clientFailureNotAuthorized,
-  missing,
-  networkFailure,
-  aborted,
-  pending,
   isSuccess,
   isServerFailure,
-  isClientFailure,
-  isClientFailureNotAuthorized,
-  isMissing,
-  isNetworkFailure,
-  isAborted,
-  isPending,
+  success, // === "success"
+  missing, // === "missing"
 } from "@art-suite/art-core-ts-communication-status";
 
 // Handle success
-if (isSuccess(status)) {
-}
+if (isSuccess(status)) {...}
 
 // Simply handle all server failures
-if (isServerFailure(status)) {
-  // Handle server failure
-}
+if (isServerFailure(status)) {...}
 
 // or Handle multiple statues as a simple switch:
 switch (status) {
@@ -64,28 +63,32 @@ switch (status) {
 
 ### Status Types
 
+Status are strings, or you can import constants with the identical name referencing the strings:
+
 - **Success Status:**
 
-  - `success` — Request completed successfully
+  - `success` — hurray! (2xx)
 
 - **Missing Status:**
 
-  - `missing` — Resource not found / not available (404 and 501)
+  - `missing` — _resource not available_ (404, 501)
 
 - **Client-side Failures:**
 
-  - `clientFailure` — Invalid request (needs client-side fixes)
-  - `clientFailureNotAuthorized` — Valid request but unauthorized
+  - `clientFailure` — _client bug_ (4xx except 404, 505, 530)
+  - `clientFailureNotAuthorized` — _bad auth_ (401, 403, 407, 451, 511)
 
 - **Server-side Failures:**
 
-  - `serverFailure` — Server-side failure (including server-side infra failures like gateways)
+  - `serverFailure` — _server/infra bug_ (5xx other than 501, 505, 511, 530)
 
-- **Non HTTP Failure States:**
+- **Non HTTP Failure Statuses:**
   - `networkFailure` — Network connectivity issues
+  - `timeoutFailure` - Request timed out
+
+- **Liminal Statuses:** (not errors, not success)
   - `aborted` — Request was cancelled
   - `pending` — Request is in progress
-  - `timeoutFailure` - Request timed out
 
 ### Type Guards
 
