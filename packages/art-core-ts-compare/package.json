@@ -27,12 +27,14 @@
     "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
     "build:clean": "npm run clean && npm run build",
     "clean": "rm -rf dist",
+    "perf": "node performance-test.js",
     "prepublishOnly": "npm run build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@art-suite/art-core-ts-containers": "^0.0.1",
     "@art-suite/art-core-ts-types": "^0.3.2"
   },
   "devDependencies": {

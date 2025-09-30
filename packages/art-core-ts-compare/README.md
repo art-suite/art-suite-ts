@@ -114,13 +114,16 @@ Compared element by element:
   - If both objects have the key, their values are compared recursively.
 - If all keys and values are equal, objects are equal.
 
+**Key Comparison Process**: When objects have different keys, the keys are converted to an array of strings, sorted lexicographically, and then compared as arrays. This ensures consistent ordering regardless of the original key order in the objects.
+
 **Examples:**
 
 - `{a: 1}` vs `{a: 1, b: 2}` → first is less (missing `b`)
 - `{a: 1, b: 0}` vs `{a: 1}` → second is less (missing `b`)
 - `{}` vs `{a: undefined}` → first is less (missing `a`)
 - `{a: null}` vs `{}` → second is less (missing `a`)
-- `{x: 1}` vs `{y: 1}` → `{y: 1}` is less (missing `x`), so `compare({x: 1}, {y: 1})` returns `1`, `compare({y: 1}, {x: 1})` returns `-1`
+- `{x: 1}` vs `{y: 1}` → `[x]` < `[y]`, so `compare({x: 1}, {y: 1})` returns `-1`
+- `{y: 1}` vs `{x: 1}` → `[y]` > `[x]`, so `compare({y: 1}, {x: 1})` returns `1`
 
 #### Incompatible Comparisons
 

@@ -5,7 +5,7 @@ import { Simplify } from 'type-fest'
 export const objectHasKeys = <T extends Record<string, any>>(obj: T | null | undefined): obj is T => {
   if (!obj) return false
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (key in obj) {
       return true
     }
   }
@@ -16,7 +16,7 @@ export const objectKeyCount = (obj: Record<string, any> | null | undefined): num
   if (!obj) return 0
   let count = 0
   for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+    if (key in obj) {
       count++
     }
   }

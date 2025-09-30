@@ -280,6 +280,13 @@ export const array: ArrayFunction = ((source: any, withOrOptions: WithOrOptions)
  * - `key`/`withKey`: function to determine output keys
  * - `into`: object to assign results into (default: new object)
  *
+ * Defaults:
+ * - no `with`: uses the source container's "values" as the default
+ * - no `withKey`: from arrays, uses the values as keys, from objects, uses the keys as keys
+ * - no `into`: creates a new object
+ *
+ * Simplest example use: `object(["sally", "billy", "chad"])` => { "sally": "sally", "billy": "billy", "chad": "chad" }
+ *
  * @param source The collection to iterate (array, object, Map, Set, etc.)
  * @param withOrOptions Optional: `with` function, or options object, or `into` object.
  * @returns The resulting object.

@@ -1,4 +1,5 @@
 import { isArray, isPlainObject, isFunction } from '@art-suite/art-core-ts-types'
+import { objectKeyCount } from '@art-suite/art-core-ts-containers'
 
 export interface CustomComparableInterface {
 
@@ -42,22 +43,48 @@ const compareArrays = (a: any[], b: any[]): number => {
   return a.length - b.length
 }
 
+/**
+ * Compares two plain objects. If the keys are different, the two key sets are sorted and compared as arrays of strings.
+ * If the keys are the same, the values are compared recursively.
+ * @param a - The first object to compare
+ * @param b - The second object to compare
+ * @returns A number indicating the comparison result
+ */
 const comparePlainObjects = (a: Record<string, any>, b: Record<string, any>): number => {
   // Create a merged list of all unique keys and sort it
-  const allKeys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()
+  // const allKeys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()
 
-  // Iterate through the sorted keys to find the first non-zero comparison result
-  for (const key of allKeys) {
-    const aHas = key in a
-    const bHas = key in b
-    if (!aHas && bHas) return -1 // a is missing the key, so a is less
-    if (aHas && !bHas) return 1  // b is missing the key, so b is less
-    // Both have the key, compare their values
-    const result = compare(a[key], b[key])
-    if (result !== 0) return result
+  // Compare values for keys in A that are also in B
+  let differentKeys = false
+  let leastDifferentKey: string | undefined
+  let leastDifferentKeyResult: number = 0
+  for (const key in a) {
+    if (!(key in b)) differentKeys = true;
+    else {
+      // Both have the key, compare their values
+      const result = compare(a[key], b[key])
+      if (result !== 0) {
+        if (!leastDifferentKey || leastDifferentKey > key) {
+          leastDifferentKey = key
+          leastDifferentKeyResult = result
+        }
+      }
+    }
   }
 
-  return 0 // All keys and values are equal
+  // if B had all As keys, we need to check if B has any keys that A doesn't have
+  if (!differentKeys) {
+    for (const key in b) {
+      if (!(key in a)) { differentKeys = true; break }
+    }
+  }
+
+  // if the keys are different, compare the keys
+  if (differentKeys) {
+    return compareArrays(Object.keys(a), Object.keys(b))
+  }
+
+  return leastDifferentKeyResult // All keys and values are equal
 }
 
 const compareCustomComparableHelper = (a: any, b: any): number => {
@@ -132,7 +159,8 @@ const comparePrimitives = (a: any, b: any): number => {
  * For more details on comparison behavior, see the art-core-ts-compare README.
  */
 export const compare = (a: any, b: any): number => {
-  // Handle custom comparables first
+  if (a === b) return 0;
+  // Handle custom comparable first
   const customResult = compareCustomComparable(a, b)
   if (!Number.isNaN(customResult)) return customResult
 

@@ -115,16 +115,24 @@ describe('compare', () => {
 
     it('should compare objects using merged unique keys', () => {
       // Objects with different keys - should compare by first differing key
-      expect(compare({ a: 1, c: 3 }, { a: 1, b: 2 })).toBe(-1) // 'b' comes before 'c' in sorted order
-      expect(compare({ a: 1, b: 2 }, { a: 1, c: 3 })).toBe(1) // 'b' comes before 'c' in sorted order
+      expect(compare({ a: 1, c: 3 }, { a: 1, b: 2 })).toBe(1) // ['a', 'c'] > ['a', 'b']
+      expect(compare({ a: 1, b: 2 }, { a: 1, c: 3 })).toBe(-1) // ['a', 'b'] < ['a', 'c']
 
       // Objects with same keys but different values
       expect(compare({ a: 1, b: 2 }, { a: 1, b: 3 })).toBe(-1) // b: 2 < b: 3
       expect(compare({ a: 1, b: 3 }, { a: 1, b: 2 })).toBe(1) // b: 3 > b: 2
 
+      // order of keys should not matter if they are the same
+      expect(compare({ b: 3, a: 1 }, { a: 1, b: 2 })).toBe(1) // b: 3 > b: 2
+      expect(compare({ a: 1, b: 3 }, { b: 2, a: 1 })).toBe(1) // b: 3 > b: 2
+
+      // different keys takes precedence over different values
+      expect(compare({ a: 1, b: 3 }, { a: 1, b: 2, c: 4 })).toBe(-1) // b: 3 > b: 2
+      expect(compare({ a: 1, b: 3, c: 4 }, { a: 1, b: 2 })).toBe(1) // b: 3 > b: 2
+
       // Objects with completely different keys
-      expect(compare({ x: 1 }, { y: 1 })).toBe(1) // {y: 1} is missing 'x', so {y: 1} is less
-      expect(compare({ y: 1 }, { x: 1 })).toBe(-1) // {y: 1} is missing 'x', so {y: 1} is less
+      expect(compare({ x: 1 }, { y: 1 })).toBe(-1) // ['x'] < ['y']
+      expect(compare({ y: 1 }, { x: 1 })).toBe(1) // ['y'] > ['x']
       // Test missing key is always less, even if present value is empty/false/0/null/undefined
       expect(compare({}, { a: 0 })).toBe(-1)
       expect(compare({}, { a: '' })).toBe(-1)

@@ -11,9 +11,9 @@ describe('objectHasKey', () => {
     expect(objectHasKeys({})).toBe(false)
   })
 
-  it('returns false for object with only inherited properties', () => {
+  it('returns true for object with only inherited properties', () => {
     const obj = Object.create({ inherited: 1 })
-    expect(objectHasKeys(obj)).toBe(false)
+    expect(objectHasKeys(obj)).toBe(true)
   })
 })
 
@@ -25,12 +25,12 @@ describe('objectKeyCount', () => {
     expect(objectKeyCount({ a: 1, b: 2, c: 3 })).toBe(3)
   })
 
-  it('ignores inherited properties', () => {
+  it('includes inherited properties', () => {
     const obj = Object.create({ inherited: 1 })
-    expect(objectKeyCount(obj)).toBe(0)
+    expect(objectKeyCount(obj)).toBe(1)
 
     obj.own = 2
-    expect(objectKeyCount(obj)).toBe(1)
+    expect(objectKeyCount(obj)).toBe(2)
   })
 })
 
