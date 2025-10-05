@@ -16,7 +16,10 @@ export type LogFunction = <T extends any[]>(...args: T) => T extends [...infer R
 export const setLogColors = (_colors: InspectColors) => colors = _colors;
 
 const EMPTY_OPTIONS: FormattedInspectOptions = {}
-const formatArgs = (args: any[], options: FormattedInspectOptions = EMPTY_OPTIONS) => args.map(v => formattedInspect(v, { colors, ...options }))
+const formatArgs = (args: any[], options: FormattedInspectOptions = EMPTY_OPTIONS) =>
+  isNode
+    ? args.map(v => formattedInspect(v, { colors, ...options }))
+    : args // in-browser console log is interactive - let it handle the formatting
 
 export const log: LogFunction & {
   warn: LogFunction
@@ -25,30 +28,30 @@ export const log: LogFunction & {
   json: LogFunction
 } = (<T extends any[]>(...args: T): T extends [...infer Rest, infer Last] ? Last : never => {
   const last = args[args.length - 1]
-  console.log(formatArgs(args).join(' '))
+  console.log(...formatArgs(args))
   return last
 }) as LogFn
 
 log.warn = <T extends any[]>(...args: T): T extends [...infer Rest, infer Last] ? Last : never => {
   const last = args[args.length - 1]
-  console.warn(formatArgs(args).join(' '))
+  console.warn(...formatArgs(args))
   return last
 }
 
 log.error = <T extends any[]>(...args: T): T extends [...infer Rest, infer Last] ? Last : never => {
   const last = args[args.length - 1]
-  console.error(formatArgs(args).join(' '))
+  console.error(...formatArgs(args))
   return last
 }
 
 log.unquoted = <T extends any[]>(...args: T): T extends [...infer Rest, infer Last] ? Last : never => {
   const last = args[args.length - 1]
-  console.log(formatArgs(args, { unquoted: true }).join(' '))
+  console.log(...formatArgs(args, { unquoted: true }))
   return last
 }
 
 log.json = <T extends any[]>(...args: T): T extends [...infer Rest, infer Last] ? Last : never => {
   const last = args[args.length - 1]
-  console.log(formatArgs(args, { json: true }).join(' '))
+  console.log(...formatArgs(args, { json: true }))
   return last
 }

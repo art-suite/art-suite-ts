@@ -1,17 +1,18 @@
-import { isDate, isArray, isPlainObject } from '@art-suite/art-core-ts-types'
-import { defaultColors, InspectColors } from './colors'
+import { isDate, isArray, isPlainObject, isFunction } from '@art-suite/art-core-ts-types'
+import { defaultColors, getInspectColors, InspectColors, noColors } from './colors'
 import { json } from 'stream/consumers'
 
 const indent = (level: number) => '  '.repeat(level)
 
 export type FormattedInspectOptions = {
   unquoted?: boolean,
-  colors?: InspectColors,
+  colors?: InspectColors | boolean,
   json?: boolean,
 }
 
 const formattedInspectObject = (obj: Record<string, unknown>, options: FormattedInspectOptions, level: number): string => {
-  const { unquoted = false, colors = defaultColors, json = false } = options
+  const { unquoted = false, json = false } = options
+  const colors = getInspectColors(options.colors)
   const keys = Object.keys(obj)
   if (!keys.length) return colors.symbol('{}')
   const lines = keys.map((key, index) => {
@@ -26,7 +27,8 @@ const formattedInspectObject = (obj: Record<string, unknown>, options: Formatted
 }
 
 const formattedInspectArray = (array: unknown[], options: FormattedInspectOptions, level: number): string => {
-  const { unquoted = false, colors = defaultColors } = options
+  const { unquoted = false } = options
+  const colors = getInspectColors(options.colors)
   if (!array.length) return colors.symbol('[]')
   const lines = array.map((item, index) => `${indent(level + 1)}${formattedInspect(item, options, level + 1)}${!unquoted && index < array.length - 1 ? ',' : ''}`)
   return [
@@ -45,7 +47,9 @@ const formattedInspectArray = (array: unknown[], options: FormattedInspectOption
  * @returns The formatted value.
  */
 export const formattedInspect = (value: unknown, options: FormattedInspectOptions = {}, _level = 0): string => {
-  const { unquoted = false, colors = defaultColors, json = false } = options
+  const { unquoted = false, json = false } = options
+  const colors = getInspectColors(options.colors)
+
   try {
     if (value === null) return colors.nullOrUndefined('null')
     if (value === undefined) return colors.nullOrUndefined(json ? 'null' : 'undefined')
@@ -54,6 +58,7 @@ export const formattedInspect = (value: unknown, options: FormattedInspectOption
     if (isDate(value)) return colors.value(
       unquoted ? value.toLocaleString() : json ? JSON.stringify(value.toISOString()) : value.toISOString()
     )
+    if (isFunction((value as any).getPlainObjects)) return formattedInspect((value as any).getPlainObjects(), options, _level)
   } catch (error) {
     return colors.error(String(value))
   }

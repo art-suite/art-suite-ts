@@ -22,3 +22,8 @@ export const noColors: InspectColors = {
   nullOrUndefined: (s: string) => s,
   error: (s: string) => s,
 }
+
+export const getInspectColors = (colors: InspectColors | boolean | undefined | null) =>
+  colors === false || colors == null ? noColors
+    : colors === true ? defaultColors
+      : colors

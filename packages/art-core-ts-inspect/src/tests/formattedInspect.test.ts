@@ -1,6 +1,6 @@
-import { test, expect } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { formattedInspect } from '../'
-import { noColors } from '../colors'
+import { noColors, defaultColors } from '../colors'
 import stripAnsi from 'strip-ansi'
 
 test('formattedInspect handles null and undefined', () => {
@@ -214,3 +214,24 @@ test('formattedInspect with default options', () => {
   expect(formattedInspect({ a: 1 })).toContain('1')
 })
 
+describe('formattedInspect colors', () => {
+  test('defaults to no colors', () => {
+    expect(formattedInspect('test')).toEqual('test')
+  })
+  test('no colors', () => {
+    expect(formattedInspect('test', { colors: false })).not.toContain('\x1b[')
+  })
+  test('force colors', () => {
+    expect(formattedInspect('test', { colors: true })).toContain('\x1b[')
+  })
+  test('custom colors', () => {
+    const customColors = {
+      value: (s: string) => `***${s}***`,
+      propName: (s: string) => `<${s}>`,
+      symbol: (s: string) => `{${s}}`,
+      nullOrUndefined: (s: string) => `(${s})`,
+      error: (s: string) => `!${s}!`
+    }
+    expect(formattedInspect('test', { colors: customColors })).toContain('***test***')
+  })
+})
