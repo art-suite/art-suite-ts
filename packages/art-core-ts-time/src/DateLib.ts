@@ -10,9 +10,14 @@ const isDate = (v: any): v is Date => v instanceof Date
 
 const DEFAULT_FORMAT = 'yyyy-MM-dd\'T\'HH:mm:ssXXX'
 
-export type AllDateTypes = Date | string | number | null | undefined
+export type AnyDateType = Date | string | number | null | undefined
 
-export const formatDate = (value?: AllDateTypes, format?: string, utc?: boolean): string => {
+/**
+ * @deprecated: use AnyDateType instead
+ */
+export type AllDateTypes = AnyDateType
+
+export const formatDate = (value?: AnyDateType, format?: string, utc?: boolean): string => {
   if (isString(value) && !isString(format)) {
     format = value
     value = null
@@ -34,7 +39,7 @@ export const formatDate = (value?: AllDateTypes, format?: string, utc?: boolean)
  *     - else -> toMilliseconds(Date.parse(v))
  * @returns Number of Milliseconds since epoch-start
  */
-export const toMilliseconds = (v?: AllDateTypes): number => {
+export const toMilliseconds = (v?: AnyDateType): number => {
   if (!v) return Date.now()
 
   if (isString(v)) {
@@ -81,46 +86,46 @@ export const toMilliseconds = (v?: AllDateTypes): number => {
  *   - Number of Milliseconds since epoch-start
  * @returns (fractional) Number of Seconds since epoch-start
  */
-export const toSeconds = (v?: AllDateTypes): number => {
+export const toSeconds = (v?: AnyDateType): number => {
   if (!v) return Date.now() / 1000
   return toMilliseconds(v) / 1000
 }
 
-export const toDate = (v?: AllDateTypes): Date => {
+export const toDate = (v?: AnyDateType): Date => {
   if (!v) return new Date()
   if (isDate(v)) return v
   return new Date(toMilliseconds(v))
 }
 
-export const firstOfHour = (time: AllDateTypes): number =>
+export const firstOfHour = (time: AnyDateType): number =>
   Math.floor(toSeconds(time) / secondsPer.hour) * secondsPer.hour
 
-export const firstOfDay = (time: AllDateTypes): number =>
+export const firstOfDay = (time: AnyDateType): number =>
   Math.floor(toSeconds(time) / secondsPer.day) * secondsPer.day
 
-export const firstOfWeek = (time: AllDateTypes): number =>
+export const firstOfWeek = (time: AnyDateType): number =>
   firstOfDay(time) - ((toDate(time).getUTCDay() - 1) % 7) * secondsPer.day // monday is first day
 
-export const firstOfMonth = (time: AllDateTypes): number =>
+export const firstOfMonth = (time: AnyDateType): number =>
   firstOfDay(time) - (toDate(time).getUTCDate() - 1) * secondsPer.day
 
 // firstOfYear: using 3rd day of the month avoids any and all time-zone issues after applying firstOfMonth
-export const firstOfYear = (time: AllDateTypes): number =>
+export const firstOfYear = (time: AnyDateType): number =>
   firstOfMonth(new Date(toDate(time).getUTCFullYear(), 0, 3))
 
-export const firstOfDayLocale = (time: AllDateTypes): number =>
+export const firstOfDayLocale = (time: AnyDateType): number =>
   firstOfHour(time) - toDate(time).getHours() * secondsPer.hour
 
-export const firstOfWeekLocale = (time: AllDateTypes, sundayIsFirst = false): number => {
+export const firstOfWeekLocale = (time: AnyDateType, sundayIsFirst = false): number => {
   const day = toDate(time).getDay()
   const adjustedDay = sundayIsFirst ? day : day - 1
   return firstOfDayLocale(time) - secondsPer.day * (adjustedDay % 7)
 }
 
-export const firstOfMonthLocale = (time: AllDateTypes): number =>
+export const firstOfMonthLocale = (time: AnyDateType): number =>
   firstOfDayLocale(time) - (toDate(time).getDate() - 1) * secondsPer.day
 
-export const firstOfYearLocale = (time: AllDateTypes): Date => {
+export const firstOfYearLocale = (time: AnyDateType): Date => {
   const date = toDate(time)
   return new Date(date.getFullYear(), 0, 1)
 }

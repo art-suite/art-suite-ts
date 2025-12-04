@@ -53,6 +53,7 @@
   },
   "scripts": {
     "test": "vitest run",
+    "test:all": "npm run check:types:fast && npm run test",
     "build": "npx art-monorepo exec 'npm run build' --sync",
     "sync": "art-monorepo sync;./fix-package-json packages/**/package.json",
     "clean": "npx art-monorepo clean",
