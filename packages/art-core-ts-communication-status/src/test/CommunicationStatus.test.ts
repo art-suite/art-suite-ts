@@ -3,6 +3,7 @@ import {
   aborted,
   clientFailure,
   clientFailureNotAuthorized,
+  communicationStatuses,
   failure,
   getCommunicationStatus,
   getCommunicationStatusDetails,
@@ -212,123 +213,38 @@ describe('CommunicationStatus', () => {
 
   describe('getCommunicationStatusDetails', () => {
     it('should handle successful responses', () => {
-      expect(getCommunicationStatusDetails(200)).toEqual({
-        status: success,
-        httpStatus: 200,
-        message: 'success (200)'
-      });
-      expect(getCommunicationStatusDetails(201)).toEqual({
-        status: success,
-        httpStatus: 200,
-        message: 'success (200)',
-      });
+      expect(getCommunicationStatusDetails(200)).toEqual(communicationStatuses.success);
+      expect(getCommunicationStatusDetails(201)).toEqual(communicationStatuses.success);
     });
 
     it('should handle missing resources', () => {
-      expect(getCommunicationStatusDetails(404)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
-      expect(getCommunicationStatusDetails(501)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
-      expect(getCommunicationStatusDetails(301)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
-      expect(getCommunicationStatusDetails(302)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
-      expect(getCommunicationStatusDetails(307)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
-      expect(getCommunicationStatusDetails(308)).toEqual({
-        status: missing,
-        httpStatus: 404,
-        message: 'missing (404)',
-        failure: true,
-      });
+      expect(getCommunicationStatusDetails(404)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(501)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(301)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(302)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(307)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(308)).toEqual(communicationStatuses.missing);
     });
 
     it('should handle client failures', () => {
-      expect(getCommunicationStatusDetails(400)).toEqual({
-        status: clientFailure,
-        httpStatus: 400,
-        message: 'clientFailure (400)',
-        failure: true,
-        clientFailure: true,
-      });
-      expect(getCommunicationStatusDetails(505)).toEqual({
-        status: clientFailure,
-        httpStatus: 400,
-        message: 'clientFailure (400)',
-        failure: true,
-        clientFailure: true,
-      });
-      expect(getCommunicationStatusDetails(530)).toEqual({
-        status: clientFailure,
-        httpStatus: 400,
-        message: 'clientFailure (400)',
-        failure: true,
-        clientFailure: true,
-      });
+      expect(getCommunicationStatusDetails(400)).toEqual(communicationStatuses.clientFailure);
+      expect(getCommunicationStatusDetails(505)).toEqual(communicationStatuses.clientFailure);
+      expect(getCommunicationStatusDetails(530)).toEqual(communicationStatuses.clientFailure);
     });
 
     it('should handle authorization failures', () => {
-      expect(getCommunicationStatusDetails(401)).toEqual({
-        status: clientFailureNotAuthorized,
-        httpStatus: 403,
-        message: 'clientFailureNotAuthorized (403)',
-        failure: true,
-        clientFailure: true,
-      });
-      expect(getCommunicationStatusDetails(403)).toEqual({
-        status: clientFailureNotAuthorized,
-        httpStatus: 403,
-        message: 'clientFailureNotAuthorized (403)',
-        failure: true,
-        clientFailure: true,
-      });
-      expect(getCommunicationStatusDetails(511)).toEqual({
-        status: clientFailureNotAuthorized,
-        httpStatus: 403,
-        message: 'clientFailureNotAuthorized (403)',
-        failure: true,
-        clientFailure: true,
-      });
+      expect(getCommunicationStatusDetails(401)).toEqual(communicationStatuses.clientFailureNotAuthorized);
+      expect(getCommunicationStatusDetails(403)).toEqual(communicationStatuses.clientFailureNotAuthorized);
+      expect(getCommunicationStatusDetails(511)).toEqual(communicationStatuses.clientFailureNotAuthorized);
     });
 
     it('should handle server failures', () => {
-      expect(getCommunicationStatusDetails(500)).toEqual({
-        status: serverFailure,
-        httpStatus: 500,
-        message: 'serverFailure (500)',
-        failure: true,
-        serverFailure: true,
-      });
+      expect(getCommunicationStatusDetails(500)).toEqual(communicationStatuses.serverFailure);
     });
 
     it('should handle network failures', () => {
       expect(getCommunicationStatusDetails(undefined)).toEqual(undefined);
-      expect(getCommunicationStatusDetails(502)).toEqual({
-        status: networkFailure,
-        message: 'networkFailure',
-        failure: true,
-        httpStatus: undefined,
-      });
+      expect(getCommunicationStatusDetails(502)).toEqual(communicationStatuses.networkFailure);
     });
 
     it('should throw for unsupported HTTP status codes', () => {
