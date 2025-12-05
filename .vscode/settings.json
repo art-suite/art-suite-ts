@@ -1,0 +1,63 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "cSpell.words": [],
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json": "untitled:Untitled-1"
+  },
+  "typescript.reportUnusedLabels": "none",
+  "typescript.validate.enable": true,
+  "editor.formatOnSave": true,
+  "editor.trimAutoWhitespace": true,
+  "editor.codeActionsOnSave": ["source.organizeImports"],
+  "typescriptImportSorter.general.sortOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma",
+    "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.formatOnSave": true
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "vscode.markdown-language-features",
+    "editor.formatOnSave": true
+  },
+  "typescript.preferences.organizeImports": {
+    "typeOrder": "first",
+    "unicodeCollation": "unicode",
+    "caseFirst": "upper",
+    "caseSensitivity": "auto"
+  },
+  "javascript.format.enable": true,
+  "javascript.format.semicolons": "insert",
+  "typescript.format.enable": true,
+  "typescript.format.semicolons": "insert",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
+}
