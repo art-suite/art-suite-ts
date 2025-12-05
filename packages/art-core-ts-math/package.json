@@ -1,7 +1,7 @@
 {
-  "name": "@art-suite/art-core-ts",
-  "version": "0.24.0",
-  "description": "The full Art-Core-TS library",
+  "name": "@art-suite/art-core-ts-math",
+  "version": "0.1.0",
+  "description": "A TypeScript math utility library",
   "keywords": [],
   "repository": {
     "type": "git",
@@ -33,19 +33,5 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
-  },
-  "dependencies": {
-    "@art-suite/art-core-ts-async": "^0.2.11",
-    "@art-suite/art-core-ts-communication-status": "^0.4.2",
-    "@art-suite/art-core-ts-compare": "^0.0.11",
-    "@art-suite/art-core-ts-comprehensions": "^0.4.15",
-    "@art-suite/art-core-ts-containers": "^0.9.9",
-    "@art-suite/art-core-ts-inspect": "^0.1.5",
-    "@art-suite/art-core-ts-json": "^0.4.10",
-    "@art-suite/art-core-ts-math": "^0.1.0",
-    "@art-suite/art-core-ts-string-case": "^0.1.17",
-    "@art-suite/art-core-ts-string-lib": "^0.2.12",
-    "@art-suite/art-core-ts-time": "^0.2.1",
-    "@art-suite/art-core-ts-types": "^0.3.11"
   }
 }
