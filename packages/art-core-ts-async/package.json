@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-async",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Async and Promise utilities for TypeScript",
   "keywords": [],
   "repository": {
@@ -35,8 +35,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-comprehensions": "^0.4.14",
-    "@art-suite/art-core-ts-time": "^0.1.18"
+    "@art-suite/art-core-ts-comprehensions": "^0.4.15",
+    "@art-suite/art-core-ts-time": "^0.2.1"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.5"

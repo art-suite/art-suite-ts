@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-inspect",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A TypeScript inspection and logging utility library",
   "keywords": [],
   "repository": {
@@ -35,7 +35,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-types": "^0.3.10"
+    "@art-suite/art-core-ts-types": "^0.3.11"
   },
   "devDependencies": {
     "strip-ansi": "^7.1.0",

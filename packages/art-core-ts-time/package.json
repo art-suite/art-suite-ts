@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-time",
-  "version": "0.1.18",
+  "version": "0.2.1",
   "description": "A TypeScript string utility library",
   "keywords": [],
   "repository": {
@@ -35,7 +35,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-comprehensions": "workspace:*",
+    "@art-suite/art-core-ts-comprehensions": "^0.4.15",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0"
   }
