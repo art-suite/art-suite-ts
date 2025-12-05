@@ -71,5 +71,5 @@
     "release:patch:update": "npm run versions:patch && npm run versions:publish",
     "release:minor:core:update": "npm run sync && cd packages/art-core-ts && npm version minor && npm publish && git add . && git commit -m \"minor art-core-ts release\""
   },
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
