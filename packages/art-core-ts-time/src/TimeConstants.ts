@@ -1,3 +1,4 @@
+import { object } from '@art-suite/art-core-ts-comprehensions';
 
 export const longTimeNames = {
   ns: "nanosecond",
@@ -7,9 +8,9 @@ export const longTimeNames = {
   m: "minute",
   h: "hour",
   d: "day",
+  w: "week",
   mo: "month",
   y: "year",
-  w: "week",
   nanosecond: "nanosecond",
   microsecond: "microsecond",
   millisecond: "millisecond",
@@ -17,12 +18,14 @@ export const longTimeNames = {
   minute: "minute",
   hour: "hour",
   day: "day",
+  week: "week",
   month: "month",
   year: "year",
-  week: "week",
-}
+};
 
-export const secondsPer: Record<string, number> = {
+export type TimeUnit = keyof typeof longTimeNames;
+
+export const secondsPer: Record<TimeUnit, number> = {
   ns: .000000001,
   μs: .000001,
   ms: .001,
@@ -43,4 +46,12 @@ export const secondsPer: Record<string, number> = {
   month: 24 * 3600 * 365.2425 / 12,
   year: 24 * 3600 * 365.2425,
   week: 24 * 3600 * 7,
-}
+};
+
+export const millisecondsPer: Record<TimeUnit, number> = object(secondsPer, value => value * 1000) as Record<TimeUnit, number>;
+export const minutesPer: Record<TimeUnit, number> = object(secondsPer, value => value / 60) as Record<TimeUnit, number>;
+export const hoursPer: Record<TimeUnit, number> = object(secondsPer, value => value / 3600) as Record<TimeUnit, number>;
+export const daysPer: Record<TimeUnit, number> = object(secondsPer, value => value / 86400) as Record<TimeUnit, number>;
+export const weeksPer: Record<TimeUnit, number> = object(secondsPer, value => value / 604800) as Record<TimeUnit, number>;
+export const monthsPer: Record<TimeUnit, number> = object(secondsPer, value => value / 2592000) as Record<TimeUnit, number>;
+export const yearsPer: Record<TimeUnit, number> = object(secondsPer, value => value / 31556926) as Record<TimeUnit, number>;

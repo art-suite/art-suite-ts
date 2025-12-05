@@ -35,6 +35,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@art-suite/art-core-ts-comprehensions": "workspace:*",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0"
   }
