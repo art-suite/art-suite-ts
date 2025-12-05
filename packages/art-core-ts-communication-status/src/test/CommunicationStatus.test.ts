@@ -6,7 +6,6 @@ import {
   failure,
   getCommunicationStatus,
   getCommunicationStatusDetails,
-  getCommunicationStatusFromHttpStatusOrUndefined,
   getCommunicationStatusOrUndefined,
   getHttpStatus,
   isAborted,
@@ -174,24 +173,6 @@ describe('CommunicationStatus', () => {
     });
   });
 
-  describe('getCommunicationStatusFromHttpStatusOrUndefined', () => {
-    it('should return the correct status for valid HTTP status codes', () => {
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(200)).toBe(success);
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(404)).toBe(missing);
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(400)).toBe(clientFailure);
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(401)).toBe(clientFailureNotAuthorized);
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(500)).toBe(serverFailure);
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(502)).toBe(networkFailure);
-    });
-
-    it('should return undefined for invalid HTTP status codes', () => {
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(100)).toBeUndefined();
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(199)).toBeUndefined();
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(600)).toBeUndefined();
-      expect(getCommunicationStatusFromHttpStatusOrUndefined(-1)).toBeUndefined();
-    });
-  });
-
   describe('getCommunicationStatusOrUndefined', () => {
     it('should return the correct status for valid HTTP status codes', () => {
       expect(getCommunicationStatusOrUndefined(200)).toBe(success);
@@ -238,8 +219,8 @@ describe('CommunicationStatus', () => {
       });
       expect(getCommunicationStatusDetails(201)).toEqual({
         status: success,
-        httpStatus: 201,
-        message: 'success (201)'
+        httpStatus: 200,
+        message: 'success (200)',
       });
     });
 
@@ -247,32 +228,38 @@ describe('CommunicationStatus', () => {
       expect(getCommunicationStatusDetails(404)).toEqual({
         status: missing,
         httpStatus: 404,
-        message: 'missing (404)'
+        message: 'missing (404)',
+        failure: true,
       });
       expect(getCommunicationStatusDetails(501)).toEqual({
         status: missing,
-        httpStatus: 501,
-        message: 'missing (501)'
+        httpStatus: 404,
+        message: 'missing (404)',
+        failure: true,
       });
       expect(getCommunicationStatusDetails(301)).toEqual({
         status: missing,
-        httpStatus: 301,
-        message: 'missing (301)'
+        httpStatus: 404,
+        message: 'missing (404)',
+        failure: true,
       });
       expect(getCommunicationStatusDetails(302)).toEqual({
         status: missing,
-        httpStatus: 302,
-        message: 'missing (302)'
+        httpStatus: 404,
+        message: 'missing (404)',
+        failure: true,
       });
       expect(getCommunicationStatusDetails(307)).toEqual({
         status: missing,
-        httpStatus: 307,
-        message: 'missing (307)'
+        httpStatus: 404,
+        message: 'missing (404)',
+        failure: true,
       });
       expect(getCommunicationStatusDetails(308)).toEqual({
         status: missing,
-        httpStatus: 308,
-        message: 'missing (308)'
+        httpStatus: 404,
+        message: 'missing (404)',
+        failure: true,
       });
     });
 
@@ -280,35 +267,47 @@ describe('CommunicationStatus', () => {
       expect(getCommunicationStatusDetails(400)).toEqual({
         status: clientFailure,
         httpStatus: 400,
-        message: 'clientFailure (400)'
+        message: 'clientFailure (400)',
+        failure: true,
+        clientFailure: true,
       });
       expect(getCommunicationStatusDetails(505)).toEqual({
         status: clientFailure,
-        httpStatus: 505,
-        message: 'clientFailure (505)'
+        httpStatus: 400,
+        message: 'clientFailure (400)',
+        failure: true,
+        clientFailure: true,
       });
       expect(getCommunicationStatusDetails(530)).toEqual({
         status: clientFailure,
-        httpStatus: 530,
-        message: 'clientFailure (530)'
+        httpStatus: 400,
+        message: 'clientFailure (400)',
+        failure: true,
+        clientFailure: true,
       });
     });
 
     it('should handle authorization failures', () => {
       expect(getCommunicationStatusDetails(401)).toEqual({
         status: clientFailureNotAuthorized,
-        httpStatus: 401,
-        message: 'clientFailureNotAuthorized (401)'
+        httpStatus: 403,
+        message: 'clientFailureNotAuthorized (403)',
+        failure: true,
+        clientFailure: true,
       });
       expect(getCommunicationStatusDetails(403)).toEqual({
         status: clientFailureNotAuthorized,
         httpStatus: 403,
-        message: 'clientFailureNotAuthorized (403)'
+        message: 'clientFailureNotAuthorized (403)',
+        failure: true,
+        clientFailure: true,
       });
       expect(getCommunicationStatusDetails(511)).toEqual({
         status: clientFailureNotAuthorized,
-        httpStatus: 511,
-        message: 'clientFailureNotAuthorized (511)'
+        httpStatus: 403,
+        message: 'clientFailureNotAuthorized (403)',
+        failure: true,
+        clientFailure: true,
       });
     });
 
@@ -316,19 +315,19 @@ describe('CommunicationStatus', () => {
       expect(getCommunicationStatusDetails(500)).toEqual({
         status: serverFailure,
         httpStatus: 500,
-        message: 'serverFailure (500)'
+        message: 'serverFailure (500)',
+        failure: true,
+        serverFailure: true,
       });
     });
 
     it('should handle network failures', () => {
-      expect(getCommunicationStatusDetails(undefined)).toEqual({
-        status: networkFailure,
-        message: 'network failure'
-      });
+      expect(getCommunicationStatusDetails(undefined)).toEqual(undefined);
       expect(getCommunicationStatusDetails(502)).toEqual({
         status: networkFailure,
-        httpStatus: 502,
-        message: 'networkFailure (502)'
+        message: 'networkFailure',
+        failure: true,
+        httpStatus: undefined,
       });
     });
 

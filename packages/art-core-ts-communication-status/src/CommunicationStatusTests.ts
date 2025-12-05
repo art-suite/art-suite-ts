@@ -1,9 +1,10 @@
-import { communicationStatuses, CommunicationStatus, statusRegex } from './CommunicationStatusTypes'
-import { success, missing, clientFailure, clientFailureNotAuthorized, serverFailure, networkFailure, aborted, pending, timeoutFailure } from './CommunicationStatusConsts'
+import { aborted, clientFailureNotAuthorized, missing, networkFailure, pending, success, timeoutFailure } from './CommunicationStatusConsts';
+import { getCommunicationStatusOrUndefined } from './CommunicationStatusConversions';
+import { CommunicationStatus, communicationStatuses, statusRegex } from './CommunicationStatusTypes';
 
 // Core status check functions
 /** Returns true for HTTP 2xx responses */
-export const isSuccess = (status: CommunicationStatus) => status === success
+export const isSuccess = (status: CommunicationStatus | number) => getCommunicationStatusOrUndefined(status) === success;
 
 /**
  * Returns true for any error response (HTTP 4xx/5xx) or network/abort failures
@@ -17,7 +18,7 @@ export const isSuccess = (status: CommunicationStatus) => status === success
  * Client Can:
  * - Use a different is* function for more specific checks
  */
-export const isFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.failure
+export const isFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.failure;
 
 /**
  * Returns true for client-side errors
@@ -37,7 +38,7 @@ export const isFailure = (status: CommunicationStatus) => !!communicationStatuse
  * - use isClientFailureNotAuthorized to check for 401/403/407/451
  * - fix the request to avoid the 4xx error
 */
-export const isClientFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.clientFailure
+export const isClientFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.clientFailure;
 
 /**
  * Returns true for server-side errors
@@ -58,7 +59,7 @@ export const isClientFailure = (status: CommunicationStatus) => !!communicationS
  * - fix the server to avoid the 5xx error
  * - fix server infrastructure to avoid the 5xx error (e.g. Bad Gateway, Service Unavailable, Gateway Timeout)
 */
-export const isServerFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.serverFailure
+export const isServerFailure = (status: CommunicationStatus) => !!communicationStatuses[status]?.serverFailure;
 
 /**
  * Returns true when request fails due to network connectivity issues
@@ -72,10 +73,10 @@ export const isServerFailure = (status: CommunicationStatus) => !!communicationS
  * Client Developer Can:
  * - fix bad network constants (like address, ports, etc.)
 */
-export const isNetworkFailure = (status: CommunicationStatus) => status === networkFailure
+export const isNetworkFailure = (status: CommunicationStatus) => status === networkFailure;
 
 /** Returns true for server errors, network failures and aborted requests; i.e. the client did nothing wrong (as far as we can tell); client can ask the user to do something OR retry the request */
-export const isNonClientFailure = (status: CommunicationStatus) => isFailure(status) && !isClientFailure(status)
+export const isNonClientFailure = (status: CommunicationStatus) => isFailure(status) && !isClientFailure(status);
 
 /**
  * Returns true for unauthorized requests (not authenticated or not authorized)
@@ -95,7 +96,7 @@ export const isNonClientFailure = (status: CommunicationStatus) => isFailure(sta
  * Client and Server Developer Can:
  * - fix authorization / authentication bugs
  */
-export const isClientFailureNotAuthorized = (status: CommunicationStatus) => status === clientFailureNotAuthorized
+export const isClientFailureNotAuthorized = (status: CommunicationStatus) => status === clientFailureNotAuthorized;
 
 /**
  * Returns true when request was cancelled by client
@@ -107,7 +108,7 @@ export const isClientFailureNotAuthorized = (status: CommunicationStatus) => sta
  * Client Developer Can:
  * - fix the client to not abort the request
  */
-export const isAborted = (status: CommunicationStatus) => status === aborted
+export const isAborted = (status: CommunicationStatus) => status === aborted;
 
 /**
  * Returns true when resource not found / not available
@@ -123,7 +124,7 @@ export const isAborted = (status: CommunicationStatus) => status === aborted
  * Client Developer Can:
  * - fix the bad resource paths
  */
-export const isMissing = (status: CommunicationStatus) => status === missing
+export const isMissing = (status: CommunicationStatus) => status === missing;
 
 /**
  * Returns true while request is in progress
@@ -136,7 +137,7 @@ export const isMissing = (status: CommunicationStatus) => status === missing
  * Client Developer Can:
  * - if "pending" was not expected, maybe the client needs to `wait` for the request to complete?
  */
-export const isPending = (status: CommunicationStatus) => status === pending
+export const isPending = (status: CommunicationStatus) => status === pending;
 
 /**
  * Returns true if the request timed out
@@ -151,7 +152,7 @@ export const isPending = (status: CommunicationStatus) => status === pending
  * Server Developer Can:
  * - improve server performance and reliability
  */
-export const isTimeout = (status: CommunicationStatus) => status === timeoutFailure
+export const isTimeout = (status: CommunicationStatus) => status === timeoutFailure;
 
 /**
  * Returns true if client can safely retry the request
@@ -167,7 +168,7 @@ export const isTimeout = (status: CommunicationStatus) => status === timeoutFail
  * Client and Server Devs can
  * - investigate network, client and server performance and reliability issues
  */
-export const isRetryableFailure = (status: CommunicationStatus) => isNetworkFailure(status) || isTimeout(status) || isAborted(status)
+export const isRetryableFailure = (status: CommunicationStatus) => isNetworkFailure(status) || isTimeout(status) || isAborted(status);
 
 /**
  * Returns true if the status is a valid communication status
