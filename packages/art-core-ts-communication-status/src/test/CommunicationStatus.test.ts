@@ -7,6 +7,7 @@ import {
   failure,
   getCommunicationStatus,
   getCommunicationStatusDetails,
+  getCommunicationStatusDetailsOrUndefined,
   getCommunicationStatusOrUndefined,
   getHttpStatus,
   isAborted,
@@ -249,6 +250,34 @@ describe('CommunicationStatus', () => {
 
     it('should throw for unsupported HTTP status codes', () => {
       expect(() => getCommunicationStatusDetails(100)).toThrow();
+    });
+  });
+
+  describe('getCommunicationStatusDetailsOrUndefined', () => {
+    it('should return details for valid communication statuses', () => {
+      expect(getCommunicationStatusDetailsOrUndefined(aborted)).toEqual(communicationStatuses.aborted);
+      expect(getCommunicationStatusDetailsOrUndefined(success)).toEqual(communicationStatuses.success);
+      expect(getCommunicationStatusDetailsOrUndefined(networkFailure)).toEqual(communicationStatuses.networkFailure);
+    });
+
+    it('should return details for valid HTTP status codes', () => {
+      expect(getCommunicationStatusDetailsOrUndefined(200)).toEqual(communicationStatuses.success);
+      expect(getCommunicationStatusDetailsOrUndefined(404)).toEqual(communicationStatuses.missing);
+    });
+
+    it('should return undefined for null and undefined inputs', () => {
+      expect(getCommunicationStatusDetailsOrUndefined(null)).toBeUndefined();
+      expect(getCommunicationStatusDetailsOrUndefined(undefined)).toBeUndefined();
+    });
+
+    it('should return undefined for invalid status strings', () => {
+      expect(getCommunicationStatusDetailsOrUndefined('invalid' as any)).toBeUndefined();
+      expect(getCommunicationStatusDetailsOrUndefined('' as any)).toBeUndefined();
+    });
+
+    it('should return undefined for invalid HTTP status codes', () => {
+      expect(getCommunicationStatusDetailsOrUndefined(100)).toBeUndefined();
+      expect(getCommunicationStatusDetailsOrUndefined(600)).toBeUndefined();
     });
   });
 
