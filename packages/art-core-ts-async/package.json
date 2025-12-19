@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@art-suite/art-core-ts-comprehensions": "^0.4.15",
-    "@art-suite/art-core-ts-time": "^0.2.1"
+    "@art-suite/art-core-ts-time": "^0.3.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.5"
