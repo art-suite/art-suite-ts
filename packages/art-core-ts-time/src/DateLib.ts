@@ -16,15 +16,22 @@ const isNumber = (v: any): v is number => typeof v === 'number';
 const isDate = (v: any): v is Date => v instanceof Date;
 export const isAnyDateType = (v: any): v is AnyDateType => isDate(v) || isString(v) || isNumber(v);
 
-const DEFAULT_FORMAT = 'yyyy-MM-dd\'T\'HH:mm:ssXXX';
+const DEFAULT_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
+/**
+ * Formats a date as a string. Uses date-fns-tz format function under the hood.
+ * @param value - accepts AnyDateType (Date/string/number) - if null/undefined, defaults to current date-time
+ * @param format - The format string - https://date-fns.org/v4.1.0/docs/format - defaults to "yyyy-MM-dd'T'HH:mm:ssXXX"
+ * @param utc - Whether to use UTC time
+ * @returns The formatted date string
+ */
 export const formatDate = (value?: AnyDateType, format?: string, utc?: boolean): string => {
   if (isString(value) && !isString(format)) {
     format = value;
     value = null;
   }
   if (utc) {
-    return dateFnsTzFormat(toDate(value), 'UTC', format ?? 'yyyy-MM-dd\'T\'HH:mm:ssXXX');
+    return dateFnsTzFormat(toDate(value), 'UTC', format ?? DEFAULT_FORMAT);
   }
   return dateFnsFormat(toDate(value), format ?? DEFAULT_FORMAT);
 };
