@@ -1,5 +1,5 @@
 // Export status constants
-import type { CommunicationStatus } from './CommunicationStatusTypes'
+import type { CommunicationStatus } from './CommunicationStatusTypes';
 
 /**
  * HTTP 2xx responses
@@ -11,7 +11,7 @@ import type { CommunicationStatus } from './CommunicationStatusTypes'
  * Client Developer Can:
  * - Handle the successful response data
  */
-export const success: CommunicationStatus = "success"
+export const success: CommunicationStatus = "success";
 
 /**
  * Resource not found
@@ -26,7 +26,7 @@ export const success: CommunicationStatus = "success"
  * Client Developer Can:
  * - fix the bad resource paths
  */
-export const missing: CommunicationStatus = "missing"
+export const missing: CommunicationStatus = "missing";
 
 /**
  * Client-side errors; i.e. the client needs to change the request somehow to succeed
@@ -48,7 +48,7 @@ export const missing: CommunicationStatus = "missing"
  * - fix the request to avoid the 4xx error
  * - validate input before sending requests
  */
-export const clientFailure: CommunicationStatus = "clientFailure"
+export const clientFailure: CommunicationStatus = "clientFailure";
 
 /**
  * Unauthorized requests; i.e. client needs to change the credentials (or the grants for the current credentials) to succeed
@@ -67,7 +67,7 @@ export const clientFailure: CommunicationStatus = "clientFailure"
  * Client and Server Developer Can:
  * - fix authorization / authentication bugs
  */
-export const clientFailureNotAuthorized: CommunicationStatus = "clientFailureNotAuthorized"
+export const clientFailureNotAuthorized: CommunicationStatus = "clientFailureNotAuthorized";
 
 /**
  * Server-side errors; i.e. internal server errors
@@ -89,7 +89,7 @@ export const clientFailureNotAuthorized: CommunicationStatus = "clientFailureNot
  * - fix the server to avoid the 5xx error
  * - fix server infrastructure to avoid the 5xx error
  */
-export const serverFailure: CommunicationStatus = "serverFailure"
+export const serverFailure: CommunicationStatus = "serverFailure";
 
 /**
  * Request fails due to network connectivity issues
@@ -105,7 +105,7 @@ export const serverFailure: CommunicationStatus = "serverFailure"
  * - fix bad network constants (like address, ports, etc.)
  * - implement offline-first capabilities
  */
-export const networkFailure: CommunicationStatus = "networkFailure"
+export const networkFailure: CommunicationStatus = "networkFailure";
 
 /**
  * Request was cancelled by client
@@ -119,7 +119,7 @@ export const networkFailure: CommunicationStatus = "networkFailure"
  * - fix the client to not abort the request unnecessarily
  * - implement proper cleanup on abort
  */
-export const aborted: CommunicationStatus = "aborted"
+export const aborted: CommunicationStatus = "aborted";
 
 /**
  * Request is in progress
@@ -133,7 +133,7 @@ export const aborted: CommunicationStatus = "aborted"
  * - if "pending" was not expected, maybe the client needs to `wait` for the request to complete?
  * - implement proper loading states
  */
-export const pending: CommunicationStatus = "pending"
+export const pending: CommunicationStatus = "pending";
 
 /**
  * Any error response (HTTP 4xx/5xx) or network/abort failures
@@ -153,7 +153,7 @@ export const pending: CommunicationStatus = "pending"
  * - Use more specific is* functions for targeted error handling
  * - Implement proper error recovery strategies
  */
-export const failure: CommunicationStatus = "failure"
+export const failure: CommunicationStatus = "failure";
 
 /**
  * Request timed out
@@ -166,4 +166,20 @@ export const failure: CommunicationStatus = "failure"
  * - fix the client to not timeoutFailure the request
  * - implement proper timeoutFailure handling
  */
-export const timeoutFailure: CommunicationStatus = "timeoutFailure"
+export const timeoutFailure: CommunicationStatus = "timeoutFailure";
+
+/**
+ * Client has disabled the request explicitly.
+ *
+ * Client Can:
+ * - re-enable the request
+ */
+export const disabled: CommunicationStatus = "disabled";
+
+/**
+ * Unknown communication status
+ *
+ * Client Can:
+ * - log the unknown status for debugging
+ */
+export const unknown: CommunicationStatus = "unknown";

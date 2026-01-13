@@ -1,11 +1,12 @@
-import { clientFailure, clientFailureNotAuthorized, missing, networkFailure, serverFailure, success } from './CommunicationStatusConsts';
+import { clientFailure, clientFailureNotAuthorized, disabled, missing, networkFailure, serverFailure, success } from './CommunicationStatusConsts';
 import { isStatusValid } from './CommunicationStatusTests';
-import { CommunicationStatus, CommunicationStatusDetails, communicationStatuses } from './CommunicationStatusTypes';
+import { CommunicationStatus, CommunicationStatusDetails, communicationStatuses, UnknownCommunicationStatusDetails } from './CommunicationStatusTypes';
 
 //***************************************************************************************************************
 // Private Helpers
 //***************************************************************************************************************
 const getCommunicationStatusFromHttpStatusOrUndefined = (httpStatus: number): CommunicationStatus | undefined => {
+  if (httpStatus === 0) return disabled;
   switch (Math.floor(httpStatus / 100)) {
     case 2: return success;
     case 3: return missing;
@@ -99,23 +100,31 @@ export const getHttpStatus = <T extends CommunicationStatus | number | null | un
 /**
  * Returns CommunicationStatusDetails {status, httpStatus, message} given an HTTP status code
  *
- * Throws: Error if the HTTP status code is not supported (i.e. the 100 codes or non HTTP status code numbers)
+ * Never throws - returns UnknownCommunicationStatusDetails for invalid inputs
  *
  * @param status - The HTTP status code to get the communication status for
  * @returns The CommunicationStatusDetails for the given status. Note, if an HTTP status is given, it won't necessarily be the httpStatus returned; HTTPStatuses are simplified along with CommunicationStatuses.
  */
-export const getCommunicationStatusDetails = <T extends number | CommunicationStatus | null | undefined>(status: T):
-  T extends null | undefined ? undefined : CommunicationStatusDetails => {
-  if (status == null) return undefined as any;
-  const communicationStatus = getCommunicationStatus(status);
-  return communicationStatuses[communicationStatus] as any;
-};
+export function getCommunicationStatusDetails(status: null | undefined): undefined;
+export function getCommunicationStatusDetails(status: number | CommunicationStatus): CommunicationStatusDetails;
+export function getCommunicationStatusDetails(status: number | CommunicationStatus | null | undefined): CommunicationStatusDetails | undefined {
+  if (status == null) return undefined;
 
-export const getCommunicationStatusDetailsOrUndefined = <T extends number | CommunicationStatus | null | undefined>(
-  status: T
-): T extends null | undefined ? undefined : (CommunicationStatusDetails | undefined) => {
-  if (status == null) return undefined as any;
+  try {
+    const communicationStatus = getCommunicationStatus(status);
+    const details: CommunicationStatusDetails = communicationStatuses[communicationStatus] ?? UnknownCommunicationStatusDetails;
+    return details;
+  } catch {
+    return UnknownCommunicationStatusDetails;
+  }
+}
+
+export function getCommunicationStatusDetailsOrUndefined(status: null | undefined): undefined;
+export function getCommunicationStatusDetailsOrUndefined(status: number | CommunicationStatus): CommunicationStatusDetails | undefined;
+export function getCommunicationStatusDetailsOrUndefined(status: number | CommunicationStatus | null | undefined): CommunicationStatusDetails | undefined {
+  if (status == null) return undefined;
   const communicationStatus = getCommunicationStatusOrUndefined(status);
-  if (communicationStatus == null) return undefined as any;
-  return communicationStatuses[communicationStatus] as any;
-};
+  if (communicationStatus == null) return undefined;
+  const details: CommunicationStatusDetails | undefined = communicationStatuses[communicationStatus];
+  return details;
+}

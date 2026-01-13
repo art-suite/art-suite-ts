@@ -3,6 +3,7 @@ import {
   aborted,
   clientFailure,
   clientFailureNotAuthorized,
+  CommunicationStatus,
   communicationStatuses,
   failure,
   getCommunicationStatus,
@@ -28,7 +29,8 @@ import {
   pending,
   serverFailure,
   success,
-  timeoutFailure
+  timeoutFailure,
+  UnknownCommunicationStatusDetails
 } from '../';
 
 describe('CommunicationStatus', () => {
@@ -248,8 +250,241 @@ describe('CommunicationStatus', () => {
       expect(getCommunicationStatusDetails(502)).toEqual(communicationStatuses.networkFailure);
     });
 
-    it('should throw for unsupported HTTP status codes', () => {
-      expect(() => getCommunicationStatusDetails(100)).toThrow();
+    it('should return UnknownCommunicationStatusDetails for unsupported HTTP status codes', () => {
+      const result = getCommunicationStatusDetails(100);
+      expect(result).toEqual({
+        status: 'unknown',
+        communicationStatus: 'unknown',
+        message: 'Unknown communication status',
+        failure: true
+      });
+    });
+
+    describe('never fails - comprehensive edge case testing', () => {
+      it('should handle null and undefined gracefully', () => {
+        expect(getCommunicationStatusDetails(null)).toBeUndefined();
+        expect(getCommunicationStatusDetails(undefined)).toBeUndefined();
+      });
+
+      it('should handle valid communication status strings', () => {
+        expect(getCommunicationStatusDetails('success')).toEqual(communicationStatuses.success);
+        expect(getCommunicationStatusDetails('pending')).toEqual(communicationStatuses.pending);
+        expect(getCommunicationStatusDetails('networkFailure')).toEqual(communicationStatuses.networkFailure);
+        expect(getCommunicationStatusDetails('aborted')).toEqual(communicationStatuses.aborted);
+        expect(getCommunicationStatusDetails('timeoutFailure')).toEqual(communicationStatuses.timeoutFailure);
+        expect(getCommunicationStatusDetails('disabled')).toEqual(communicationStatuses.disabled);
+      });
+
+      it('should handle all valid HTTP status codes without throwing', () => {
+        // 2xx success codes
+        expect(() => getCommunicationStatusDetails(200)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(201)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(202)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(204)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(299)).not.toThrow();
+
+        // 3xx redirect codes (mapped to missing)
+        expect(() => getCommunicationStatusDetails(300)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(301)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(302)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(304)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(399)).not.toThrow();
+
+        // 4xx client error codes
+        expect(() => getCommunicationStatusDetails(400)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(401)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(403)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(404)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(407)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(409)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(422)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(451)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(499)).not.toThrow();
+
+        // 5xx server error codes
+        expect(() => getCommunicationStatusDetails(500)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(501)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(502)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(503)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(504)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(505)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(511)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(530)).not.toThrow();
+        expect(() => getCommunicationStatusDetails(599)).not.toThrow();
+
+        // Special case: 0 (disabled)
+        expect(() => getCommunicationStatusDetails(0)).not.toThrow();
+        expect(getCommunicationStatusDetails(0)).toEqual(communicationStatuses.disabled);
+      });
+
+      it('should handle extreme numeric values gracefully', () => {
+        // Should return UnknownCommunicationStatusDetails for invalid numeric inputs
+        expect(getCommunicationStatusDetails(-1)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(99)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(100)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(199)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(600)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(999)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(1000)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(Number.MAX_SAFE_INTEGER)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(Number.MIN_SAFE_INTEGER)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(Infinity)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(-Infinity)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(NaN)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should handle invalid string inputs gracefully', () => {
+        // Should return UnknownCommunicationStatusDetails for invalid string inputs
+        expect(getCommunicationStatusDetails('' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('invalid' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('notAStatus' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('Success' as any)).toEqual(UnknownCommunicationStatusDetails); // case sensitive
+        expect(getCommunicationStatusDetails('SUCCESS' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('client_failure' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('client-failure' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('200' as any)).toEqual(UnknownCommunicationStatusDetails); // string number
+      });
+
+      it('should handle non-primitive types gracefully', () => {
+        // Should return UnknownCommunicationStatusDetails for non-primitive types
+        expect(getCommunicationStatusDetails({} as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails([] as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(true as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(false as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(Symbol('test') as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails((() => { }) as any)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should handle edge case objects that might be passed', () => {
+        // Should return UnknownCommunicationStatusDetails for complex objects
+        expect(getCommunicationStatusDetails({ httpStatus: 200 } as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails({ status: 'success' } as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(new Date() as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(new Error('test') as any)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should always return a valid CommunicationStatusDetails object for valid inputs', () => {
+        const validInputs = [
+          200, 404, 500, 0,
+          'success', 'pending', 'networkFailure', 'aborted'
+        ];
+
+        validInputs.forEach(input => {
+          const result = getCommunicationStatusDetails(input as number | CommunicationStatus);
+          expect(result).toBeDefined();
+          expect(typeof result).toBe('object');
+          expect(result).toHaveProperty('status');
+          expect(result).toHaveProperty('communicationStatus');
+          expect(result).toHaveProperty('message');
+          expect(typeof result.status).toBe('string');
+          expect(typeof result.communicationStatus).toBe('string');
+          expect(typeof result.message).toBe('string');
+        });
+      });
+
+      it('should return undefined for null/undefined inputs', () => {
+        expect(getCommunicationStatusDetails(null)).toBeUndefined();
+        expect(getCommunicationStatusDetails(undefined)).toBeUndefined();
+      });
+
+      it('should never throw errors regardless of input type', () => {
+        const crazyInputs = [
+          // Primitives
+          '', 'invalid', 'Success', 'NULL', 'undefined',
+          0, -1, 99, 100, 199, 600, 999, 1000,
+          Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER,
+          Infinity, -Infinity, NaN,
+          true, false,
+
+          // Objects and arrays
+          {}, [], { httpStatus: 200 }, { status: 'success' },
+          [200], ['success'], [null], [undefined],
+
+          // Functions and symbols
+          (() => { }), (function namedFunc() { }), Symbol('test'), Symbol.for('test'),
+
+          // Date and Error objects
+          new Date(), new Error('test'), new TypeError('test'),
+
+          // Weird edge cases
+          Object.create(null), new Map(), new Set(), new WeakMap(), new WeakSet(),
+          /regex/, new RegExp('test'),
+
+          // Proxy objects (if supported)
+          ...(typeof Proxy !== 'undefined' ? [new Proxy({}, {})] : []),
+        ];
+
+        crazyInputs.forEach((input, index) => {
+          expect(() => {
+            const result = getCommunicationStatusDetails(input as any);
+            // Should either return UnknownCommunicationStatusDetails or undefined (for null-like inputs)
+            expect(result === UnknownCommunicationStatusDetails || result === undefined).toBe(true);
+          }).not.toThrow(`Input at index ${index}: ${typeof input === 'object' ? Object.prototype.toString.call(input) : String(input)}`);
+        });
+      });
+
+      it('should handle floating point numbers', () => {
+        // Note: Floating point numbers are handled by Math.floor() in the outer switch,
+        // but the inner switch compares the exact floating point value
+        // So 200.5 maps to 2xx (success) since Math.floor(200.5/100) = 2
+        expect(getCommunicationStatusDetails(200.5)).toEqual(communicationStatuses.success);
+        // But 404.1 !== 404 in the inner switch, so it falls to default (clientFailure)
+        expect(getCommunicationStatusDetails(404.1)).toEqual(communicationStatuses.clientFailure);
+        expect(getCommunicationStatusDetails(400.9)).toEqual(communicationStatuses.clientFailure);
+        // Non-HTTP-like floating points should return unknown
+        expect(getCommunicationStatusDetails(3.14159)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails(99.9)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should handle string representations of valid numbers', () => {
+        expect(getCommunicationStatusDetails('200' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('404' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('0' as any)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should handle whitespace and special characters in strings', () => {
+        expect(getCommunicationStatusDetails(' success ' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('\nsuccess\n' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('\tsuccess\t' as any)).toEqual(UnknownCommunicationStatusDetails);
+        expect(getCommunicationStatusDetails('success\0' as any)).toEqual(UnknownCommunicationStatusDetails);
+      });
+
+      it('should maintain consistent return type structure for all valid inputs', () => {
+        const validInputs = [
+          // Valid HTTP codes
+          200, 201, 204, 301, 404, 400, 401, 403, 500, 502, 0,
+          // Valid status strings
+          'success', 'pending', 'networkFailure', 'aborted', 'timeoutFailure', 'disabled',
+          'missing', 'clientFailure', 'clientFailureNotAuthorized', 'serverFailure', 'failure'
+        ];
+
+        validInputs.forEach(input => {
+          const result = getCommunicationStatusDetails(input as number | CommunicationStatus);
+          expect(result).toBeDefined();
+          expect(typeof result).toBe('object');
+          expect(result).toHaveProperty('status');
+          expect(result).toHaveProperty('communicationStatus');
+          expect(result).toHaveProperty('message');
+          expect(result).toHaveProperty('failure');
+          expect(typeof result.status).toBe('string');
+          expect(typeof result.communicationStatus).toBe('string');
+          expect(typeof result.message).toBe('string');
+          expect(typeof result.failure).toBe('boolean');
+          // httpStatus can be number or undefined
+          if (result.httpStatus !== undefined) {
+            expect(typeof result.httpStatus).toBe('number');
+          }
+        });
+      });
+
+      it('should handle rapid successive calls without issues', () => {
+        // Test for any potential state issues or memory leaks
+        for (let i = 0; i < 1000; i++) {
+          expect(() => getCommunicationStatusDetails(200)).not.toThrow();
+          expect(() => getCommunicationStatusDetails('invalid' as any)).not.toThrow();
+          expect(() => getCommunicationStatusDetails(null)).not.toThrow();
+        }
+      });
     });
   });
 

@@ -1,5 +1,5 @@
 import { isString } from '@art-suite/art-core-ts-types';
-import { aborted, clientFailureNotAuthorized, missing, networkFailure, pending, success, timeoutFailure } from './CommunicationStatusConsts';
+import { aborted, clientFailureNotAuthorized, disabled, missing, networkFailure, pending, success, timeoutFailure } from './CommunicationStatusConsts';
 import { getCommunicationStatus, getCommunicationStatusDetails } from './CommunicationStatusConversions';
 import { HttpOrCommunicationStatus, statusRegex } from './CommunicationStatusTypes';
 
@@ -185,3 +185,5 @@ export const isRetryableFailure = (status: HttpOrCommunicationStatus | null | un
  * Returns true if the status is a valid communication status
  */
 export const isStatusValid = (status: string | null | undefined): boolean => !!(isString(status) && statusRegex.test(status));
+
+export const isDisabled = (status: HttpOrCommunicationStatus | null | undefined): boolean => !!(status && getCommunicationStatus(status) === disabled);

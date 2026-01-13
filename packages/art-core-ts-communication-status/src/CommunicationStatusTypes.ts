@@ -15,7 +15,9 @@ const communicationStatusesPartials = {
   pending: { httpStatus: undefined },
   networkFailure: { httpStatus: undefined, failure: true },
   aborted: { httpStatus: undefined, failure: true },
-  timeoutFailure: { httpStatus: undefined, failure: true }
+  timeoutFailure: { httpStatus: undefined, failure: true },
+  disabled: { httpStatus: undefined },
+  unknown: { httpStatus: undefined, failure: true }
 };
 
 /**
@@ -45,6 +47,13 @@ export interface CommunicationStatusDetails {
   communicationStatus: CommunicationStatus;
   message: string;
 }
+
+export const UnknownCommunicationStatusDetails: CommunicationStatusDetails = {
+  status: 'unknown',
+  communicationStatus: 'unknown',
+  message: 'Unknown communication status',
+  failure: true
+};
 
 export const communicationStatuses: Record<CommunicationStatus, CommunicationStatusDetails> = object(communicationStatusesPartials, (details: any, status) => ({
   ...details,
