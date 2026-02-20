@@ -1,7 +1,7 @@
 import { isString } from '@art-suite/art-core-ts-types';
 import { aborted, clientFailureNotAuthorized, disabled, missing, networkFailure, pending, success, timeoutFailure } from './CommunicationStatusConsts';
-import { getCommunicationStatus, getCommunicationStatusDetails } from './CommunicationStatusConversions';
-import { HttpOrCommunicationStatus, statusRegex } from './CommunicationStatusTypes';
+import { getCommunicationStatus, getCommunicationStatusDetails, getCommunicationStatusOrUndefined } from './CommunicationStatusConversions';
+import { CommunicationStatus, HttpOrCommunicationStatus, statusRegex } from './CommunicationStatusTypes';
 
 // Core status check functions
 /** Returns true for HTTP 2xx responses */
@@ -187,3 +187,10 @@ export const isRetryableFailure = (status: HttpOrCommunicationStatus | null | un
 export const isStatusValid = (status: string | null | undefined): boolean => !!(isString(status) && statusRegex.test(status));
 
 export const isDisabled = (status: HttpOrCommunicationStatus | null | undefined): boolean => !!(status && getCommunicationStatus(status) === disabled);
+
+/**
+ * Returns true if the status is a valid communication status. True if it's a recognized HTTP status code number or a valid CommunicationStatus string. Otherwise false.
+ * @param status - The status to check
+ * @returns True if the status is a valid communication status
+ */
+export const isCommunicationStatus = (status: HttpOrCommunicationStatus | null | undefined): status is CommunicationStatus => !!(status && getCommunicationStatusOrUndefined(status) !== undefined);

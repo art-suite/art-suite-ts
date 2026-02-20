@@ -21,6 +21,7 @@ import {
   isPending,
   isRetryableFailure,
   isServerFailure,
+  isCommunicationStatus,
   isStatusValid,
   isSuccess,
   isTimeout,
@@ -137,6 +138,22 @@ describe('CommunicationStatus', () => {
       expect(isStatusValid('failure')).toBe(true);
       expect(isStatusValid('invalid')).toBe(false);
       expect(isStatusValid('')).toBe(false);
+    });
+
+    it('isCommunicationStatus', () => {
+      expect(isCommunicationStatus(success)).toBe(true);
+      expect(isCommunicationStatus(pending)).toBe(true);
+      expect(isCommunicationStatus(networkFailure)).toBe(true);
+      expect(isCommunicationStatus(200)).toBe(true);
+      expect(isCommunicationStatus(404)).toBe(true);
+      expect(isCommunicationStatus(500)).toBe(true);
+      expect(isCommunicationStatus(null)).toBe(false);
+      expect(isCommunicationStatus(0)).toBe(false); // 0 is falsy so short-circuits
+      expect(isCommunicationStatus(undefined)).toBe(false);
+      expect(isCommunicationStatus('invalid' as any)).toBe(false);
+      expect(isCommunicationStatus('' as any)).toBe(false);
+      expect(isCommunicationStatus(100)).toBe(false);
+      expect(isCommunicationStatus(600)).toBe(false);
     });
   });
 
