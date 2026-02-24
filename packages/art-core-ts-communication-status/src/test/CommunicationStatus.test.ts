@@ -267,6 +267,19 @@ describe('CommunicationStatus', () => {
       expect(getCommunicationStatusDetails(502)).toEqual(communicationStatuses.networkFailure);
     });
 
+    describe('4xx retriable (408, 423, 425, 429)', () => {
+      it.each([408, 423, 425, 429])('treats %i as network failure (retriable)', (code) => {
+        expect(getCommunicationStatus(code)).toBe(networkFailure);
+        expect(getCommunicationStatusOrUndefined(code)).toBe(networkFailure);
+        expect(getCommunicationStatusDetails(code)).toEqual(communicationStatuses.networkFailure);
+        expect(isNetworkFailure(code)).toBe(true);
+        expect(isClientFailure(code)).toBe(false);
+        expect(isNonClientFailure(code)).toBe(true);
+        expect(isRetryableFailure(code)).toBe(true);
+        expect(isFailure(code)).toBe(true);
+      });
+    });
+
     it('should return UnknownCommunicationStatusDetails for unsupported HTTP status codes', () => {
       const result = getCommunicationStatusDetails(100);
       expect(result).toEqual({

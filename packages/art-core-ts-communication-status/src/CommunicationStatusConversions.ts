@@ -17,6 +17,10 @@ const getCommunicationStatusFromHttpStatusOrUndefined = (httpStatus: number): Co
         case 407:
         case 451: return clientFailureNotAuthorized;
         case 404: return missing;
+        case 408:
+        case 423:
+        case 425:
+        case 429: return networkFailure;
         default: return clientFailure;
       }
     case 5:
