@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@art-suite/art-core-ts-async": "^0.2.11",
-    "@art-suite/art-core-ts-communication-status": "^0.10.0",
+    "@art-suite/art-core-ts-communication-status": "^0.10.1",
     "@art-suite/art-core-ts-compare": "^0.0.11",
     "@art-suite/art-core-ts-comprehensions": "^0.4.15",
     "@art-suite/art-core-ts-containers": "^0.9.9",
