@@ -1,27 +1,27 @@
-import { compactFlatten } from './CompactFlatten'
-import { NotPresent, PlainObject } from '@art-suite/art-core-ts-types'
-import { Simplify } from 'type-fest'
+import { NotPresent, PlainObject } from '@art-suite/art-core-ts-types';
+import { Simplify } from 'type-fest';
+import { compactFlatten } from './CompactFlatten';
 
 export const objectHasKeys = <T extends Record<string, any>>(obj: T | null | undefined): obj is T => {
-  if (!obj) return false
+  if (!obj) return false;
   for (const key in obj) {
     if (key in obj) {
-      return true
+      return true;
     }
   }
-  return false
-}
+  return false;
+};
 
 export const objectKeyCount = (obj: Record<string, any> | null | undefined): number => {
-  if (!obj) return 0
-  let count = 0
+  if (!obj) return 0;
+  let count = 0;
   for (const key in obj) {
     if (key in obj) {
-      count++
+      count++;
     }
   }
-  return count
-}
+  return count;
+};
 
 /**
  * Removes the specified keys from an object. If keys were removed, returns a fresh object, otherwise returns the original object.
@@ -30,25 +30,38 @@ export const objectKeyCount = (obj: Record<string, any> | null | undefined): num
  * @returns A new object with the specified keys removed UNLESS there are no keys to remove, in which case the original object is returned.
  */
 export const objectWithout = <T extends PlainObject, K extends string[]>(obj: T | NotPresent, ...properties: [...K]): Simplify<Omit<T, K[number]>> => {
-  if (!obj) return {} as Omit<T, K[number]>
-  const propsToRemove = compactFlatten(properties) as K[]
+  if (!obj) return {} as Omit<T, K[number]>;
+  const propsToRemove = compactFlatten(properties) as K[];
 
-  let found = false
+  let found = false;
   for (const key of propsToRemove) {
     if (Object.prototype.hasOwnProperty.call(obj, key as any)) {
-      found = true
-      break
+      found = true;
+      break;
     }
   }
 
   // fast path, no keys to remove
-  if (!found) return obj as Omit<T, K[number]>
+  if (!found) return obj as Omit<T, K[number]>;
 
-  const result: Record<string, any> = {}
+  const result: Record<string, any> = {};
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key) && !propsToRemove.includes(key as any))
-      result[key] = obj[key]
+      result[key] = obj[key];
   }
 
-  return result as Simplify<Omit<T, K[number]>>
-}
+  return result as Simplify<Omit<T, K[number]>>;
+};
+
+/**
+ * Returns the keys of an object. If the object is not present, returns an empty array.
+ * Main difference from Object.keys:
+ * - accepts null/undefined as input (returns empty array)
+ * - returns properly-typed keys (e.g. keys are keyof T, the type you passed in or specifically typed)
+ * @param obj - The object to get the keys of
+ * @returns The keys of the object
+ */
+export const objectKeys = <T extends PlainObject>(obj: T | NotPresent): Simplify<keyof T>[] => {
+  if (!obj) return [];
+  return Object.keys(obj) as Simplify<keyof T>[];
+};

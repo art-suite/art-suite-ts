@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { objectHasKeys, objectKeyCount, objectWithout } from '../index'
+import { objectHasKeys, objectKeyCount, objectKeys, objectWithout } from '../index'
 
 describe('objectHasKey', () => {
   it('returns true for object with own properties', () => {
@@ -31,6 +31,19 @@ describe('objectKeyCount', () => {
 
     obj.own = 2
     expect(objectKeyCount(obj)).toBe(2)
+  })
+})
+
+describe('objectKeys', () => {
+  it('returns empty array for null/undefined', () => {
+    expect(objectKeys(null)).toEqual([])
+    expect(objectKeys(undefined)).toEqual([])
+  })
+
+  it('returns keys for objects', () => {
+    expect(objectKeys({})).toEqual([])
+    expect(objectKeys({ a: 1 })).toEqual(['a'])
+    expect(objectKeys({ a: 1, b: 2 })).toEqual(['a', 'b'])
   })
 })
 
