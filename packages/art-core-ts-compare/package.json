@@ -40,6 +40,6 @@
     "@art-suite/art-core-ts-types": "^0.3.11"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.5"
+    "@vitest/coverage-v8": "^4.0.18"
   }
 }

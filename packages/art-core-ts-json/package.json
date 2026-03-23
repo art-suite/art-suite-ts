@@ -38,6 +38,6 @@
     "@art-suite/art-core-ts-comprehensions": "^0.4.15",
     "@art-suite/art-core-ts-containers": "^0.9.9",
     "@art-suite/art-core-ts-types": "^0.3.11",
-    "type-fest": "^5.0.1"
+    "type-fest": "^5.4.4"
   }
 }
