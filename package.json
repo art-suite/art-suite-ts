@@ -24,7 +24,7 @@
   "description": "The Standard Library that ought to exist for JavaScript/TypeScript",
   "devDependencies": {
     "@art-suite/monorepo": "^1.14.7",
-    "@types/node": "^24.10.13",
+    "@types/node": "^25.5.0",
     "@types/pluralize": "^0.0.33",
     "@vitest/coverage-v8": "^4.0.18",
     "art-monorepo": "^1.14.6",
