@@ -1,4 +1,4 @@
-import npmPluralize from 'pluralize'
+import npmPluralize from 'pluralize-esm'
 import { isString, isNumber } from '@art-suite/art-core-ts-types'
 
 const patchedNpmPluralize = (noun: string, count?: number | undefined, inclusive?: boolean | undefined) => {

@@ -35,7 +35,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-types": "^0.4.0"
+    "@art-suite/art-core-ts-types": "^0.4.0",
+    "pluralize-esm": "^9.0.5"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.18"

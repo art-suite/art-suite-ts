@@ -9,9 +9,7 @@ const intRand = (max: number): number => {
  * @returns A Uint8Array filled with random bytes.
  */
 const generateRandomBytes = (size: number): Uint8Array =>
-  typeof crypto?.getRandomValues === 'function'
-    ? crypto.getRandomValues(new Uint8Array(size))
-    : require('crypto').randomFillSync(new Uint8Array(size));
+  crypto.getRandomValues(new Uint8Array(size))
 
 /*
   @randomString: randomString = (length = 32, chars = base62Characters, randomNumbers) ->
