@@ -12,19 +12,19 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
     "prebuild": "npm run clean",
-    "build": "npx sort-package-json;tsup src/index.ts --format esm,cjs --dts --sourcemap",
+    "build": "npx sort-package-json;tsdown src/index.ts --format esm,cjs --dts --sourcemap",
     "build:clean": "npm run clean && npm run build",
     "check:types": "tsc --noEmit",
     "check:types:fast": "tsc --noEmit --incremental",
