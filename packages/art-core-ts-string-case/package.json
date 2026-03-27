@@ -35,7 +35,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-containers": "^0.9.9",
+    "@art-suite/art-core-ts-containers": "^0.10.0",
     "@art-suite/art-core-ts-types": "^0.3.11"
   }
 }
