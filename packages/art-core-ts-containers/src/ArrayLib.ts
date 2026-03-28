@@ -17,11 +17,11 @@
  * @returns The mutated input array
  */
 export const insertIntoArray = <T>(inputArray: T[] | undefined | null, index: number, item: T): T[] => {
-  if (!inputArray) return [item]
-  index = index < 0 ? inputArray.length + index + 1 : index
-  inputArray.splice(index, 0, item)
-  return inputArray
-}
+  if (!inputArray) return [item];
+  index = index < 0 ? inputArray.length + index + 1 : index;
+  inputArray.splice(index, 0, item);
+  return inputArray;
+};
 
 /**
  * Creates a new array with an item inserted at the specified index, leaving the original array unchanged.
@@ -31,7 +31,7 @@ export const insertIntoArray = <T>(inputArray: T[] | undefined | null, index: nu
  * @returns A new array with the item inserted
  */
 export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined | null, index: number, item: T): T[] =>
-  inputArray ? insertIntoArray(inputArray.slice(), index, item) : [item]
+  inputArray ? insertIntoArray(inputArray.slice(), index, item) : [item];
 
 
 /**
@@ -41,25 +41,34 @@ export const arrayWithInsertedAt = <T>(inputArray: T[] | undefined | null, index
  * @returns A new array with the additional items appended
  */
 export const arrayWith = <T>(inputArray: T[] | undefined | null, ...items: T[]): T[] =>
-  inputArray ? [...inputArray, ...items] : items
+  inputArray ? [...inputArray, ...items] : items;
+
+/**
+ * Creates a new array by removing the specified items from the original array.
+ * @param inputArray - The array to remove items from
+ * @param items - The items to remove from the array
+ * @returns A new array with the specified items removed
+ */
+export const arrayWithout = <T>(inputArray: T[] | undefined | null, ...items: T[]): T[] =>
+  inputArray ? inputArray.filter(item => !items.includes(item)) : [];
 
 /**
  * Returns the last element of an array, or undefined if the array is empty or undefined.
  * @param array - The array to peek into
  * @returns The last element of the array, or undefined if the array is empty or undefined
  */
-export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.[array.length - 1]
+export const peek = <T>(array: T[] | undefined | null): T | undefined => array?.[array.length - 1];
 
 /**
  * Returns true if the array has items, false otherwise. Useful tool if you don't know if the array is defined or not.
  * @param array - The array to check
  * @returns True if the array exists and has items, false otherwise.
  */
-export const arrayHasItems = <T>(array: T[] | undefined | null): array is T[] => array ? array.length > 0 : false
+export const arrayHasItems = <T>(array: T[] | undefined | null): array is T[] => array ? array.length > 0 : false;
 
 /**
  * Returns the number of items in an array, or 0 if the array is undefined or null. Useful tool if you don't know if the array is defined or not.
  * @param array - The array to count items in
  * @returns The number of items in the array, or 0 if the array is undefined or null
  */
-export const arrayItemCount = <T>(array: T[] | undefined | null): number => array ? array.length : 0
+export const arrayItemCount = <T>(array: T[] | undefined | null): number => array ? array.length : 0;

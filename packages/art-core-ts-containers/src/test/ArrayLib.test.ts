@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { insertIntoArray, arrayWithInsertedAt, arrayWith, peek, arrayHasItems, arrayItemCount } from '../ArrayLib'
+import { insertIntoArray, arrayWithInsertedAt, arrayWith, arrayWithout, peek, arrayHasItems, arrayItemCount } from '../ArrayLib'
 
 describe('ArrayLib', () => {
   describe('insertIntoArray', () => {
@@ -123,6 +123,74 @@ describe('ArrayLib', () => {
     it('handles mixed types when inputArray is undefined', () => {
       const result = arrayWith<unknown>(undefined, 'string', 42, true, null)
       expect(result).toEqual(['string', 42, true, null])
+    })
+  })
+
+  describe('arrayWithout', () => {
+    it('removes a single value', () => {
+      const arr = [1, 2, 3, 2]
+      const result = arrayWithout(arr, 2)
+      expect(result).toEqual([1, 3])
+      expect(arr).toEqual([1, 2, 3, 2])
+    })
+
+    it('removes multiple distinct values', () => {
+      const arr = [1, 2, 3, 4, 5]
+      const result = arrayWithout(arr, 2, 4)
+      expect(result).toEqual([1, 3, 5])
+      expect(arr).toEqual([1, 2, 3, 4, 5])
+    })
+
+    it('removes every occurrence of each value to exclude', () => {
+      expect(arrayWithout([1, 2, 1, 3, 1], 1)).toEqual([2, 3])
+    })
+
+    it('returns a new array and does not mutate the original', () => {
+      const arr = [1, 2, 3]
+      const result = arrayWithout(arr, 2)
+      expect(result).not.toBe(arr)
+      expect(arr).toEqual([1, 2, 3])
+    })
+
+    it('returns empty array when inputArray is undefined', () => {
+      expect(arrayWithout(undefined)).toEqual([])
+    })
+
+    it('returns empty array when inputArray is null', () => {
+      expect(arrayWithout(null)).toEqual([])
+    })
+
+    it('returns empty array when inputArray is undefined and items are passed', () => {
+      expect(arrayWithout(undefined, 1, 2)).toEqual([])
+    })
+
+    it('returns empty array for empty input', () => {
+      expect(arrayWithout([])).toEqual([])
+    })
+
+    it('returns a copy of the array when nothing is excluded', () => {
+      const arr = [1, 2, 3]
+      const result = arrayWithout(arr)
+      expect(result).toEqual([1, 2, 3])
+      expect(result).not.toBe(arr)
+    })
+
+    it('returns same elements when excluded values are not present', () => {
+      const arr = [1, 2, 3]
+      const result = arrayWithout(arr, 9, 10)
+      expect(result).toEqual([1, 2, 3])
+      expect(result).not.toBe(arr)
+    })
+
+    it('uses SameValueZero equality via includes (NaN)', () => {
+      expect(arrayWithout([NaN, 1, NaN], NaN)).toEqual([1])
+    })
+
+    it('uses reference equality for objects', () => {
+      const keep = { id: 'a' }
+      const remove = { id: 'b' }
+      const arr = [keep, remove]
+      expect(arrayWithout(arr, remove)).toEqual([keep])
     })
   })
 
