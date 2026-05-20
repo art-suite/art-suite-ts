@@ -127,7 +127,9 @@ describe('CommunicationStatus', () => {
     it('isRetryableFailure', () => {
       expect(isRetryableFailure(networkFailure)).toBe(true);
       expect(isRetryableFailure(timeoutFailure)).toBe(true);
-      expect(isRetryableFailure(aborted)).toBe(true);
+      // aborted is a deliberate cancellation — auto-retry would violate user intent
+      expect(isRetryableFailure(aborted)).toBe(false);
+      // serverFailure is a logic failure; idempotency matters — caller must decide
       expect(isRetryableFailure(serverFailure)).toBe(false);
       expect(isRetryableFailure(clientFailure)).toBe(false);
       expect(isRetryableFailure(success)).toBe(false);
@@ -239,7 +241,7 @@ describe('CommunicationStatus', () => {
 
     it('should handle missing resources', () => {
       expect(getCommunicationStatusDetails(404)).toEqual(communicationStatuses.missing);
-      expect(getCommunicationStatusDetails(501)).toEqual(communicationStatuses.missing);
+      expect(getCommunicationStatusDetails(410)).toEqual(communicationStatuses.missing); // Gone
       expect(getCommunicationStatusDetails(301)).toEqual(communicationStatuses.missing);
       expect(getCommunicationStatusDetails(302)).toEqual(communicationStatuses.missing);
       expect(getCommunicationStatusDetails(307)).toEqual(communicationStatuses.missing);
@@ -248,27 +250,61 @@ describe('CommunicationStatus', () => {
 
     it('should handle client failures', () => {
       expect(getCommunicationStatusDetails(400)).toEqual(communicationStatuses.clientFailure);
+      expect(getCommunicationStatusDetails(409)).toEqual(communicationStatuses.clientFailure);
+      expect(getCommunicationStatusDetails(422)).toEqual(communicationStatuses.clientFailure);
+      // 501 Not Implemented — request-capability problem, not a missing resource
+      expect(getCommunicationStatusDetails(501)).toEqual(communicationStatuses.clientFailure);
+      // 505 HTTP Version Not Supported — semantically a client problem despite being 5xx
       expect(getCommunicationStatusDetails(505)).toEqual(communicationStatuses.clientFailure);
-      expect(getCommunicationStatusDetails(530)).toEqual(communicationStatuses.clientFailure);
     });
 
     it('should handle authorization failures', () => {
       expect(getCommunicationStatusDetails(401)).toEqual(communicationStatuses.clientFailureNotAuthorized);
       expect(getCommunicationStatusDetails(403)).toEqual(communicationStatuses.clientFailureNotAuthorized);
+      expect(getCommunicationStatusDetails(407)).toEqual(communicationStatuses.clientFailureNotAuthorized);
+      expect(getCommunicationStatusDetails(451)).toEqual(communicationStatuses.clientFailureNotAuthorized);
       expect(getCommunicationStatusDetails(511)).toEqual(communicationStatuses.clientFailureNotAuthorized);
     });
 
-    it('should handle server failures', () => {
+    it('should handle server failures (logic errors; idempotency matters)', () => {
       expect(getCommunicationStatusDetails(500)).toEqual(communicationStatuses.serverFailure);
+      // 530 is Cloudflare wrapping an origin error — the server failed, not the client
+      expect(getCommunicationStatusDetails(530)).toEqual(communicationStatuses.serverFailure);
+      // Cloudflare SSL config errors — server-side, retry alone won't fix
+      expect(getCommunicationStatusDetails(525)).toEqual(communicationStatuses.serverFailure);
+      expect(getCommunicationStatusDetails(526)).toEqual(communicationStatuses.serverFailure);
+      // Various server-state errors fall to default serverFailure
+      expect(getCommunicationStatusDetails(506)).toEqual(communicationStatuses.serverFailure);
+      expect(getCommunicationStatusDetails(507)).toEqual(communicationStatuses.serverFailure);
+      expect(getCommunicationStatusDetails(508)).toEqual(communicationStatuses.serverFailure);
+      expect(getCommunicationStatusDetails(510)).toEqual(communicationStatuses.serverFailure);
     });
 
-    it('should handle network failures', () => {
+    it('should handle network failures (safe to retry with backoff)', () => {
       expect(getCommunicationStatusDetails(undefined)).toEqual(undefined);
-      expect(getCommunicationStatusDetails(502)).toEqual(communicationStatuses.networkFailure);
+      // 4xx codes that are really transport-level
+      expect(getCommunicationStatusDetails(423)).toEqual(communicationStatuses.networkFailure); // Locked
+      expect(getCommunicationStatusDetails(425)).toEqual(communicationStatuses.networkFailure); // Too Early
+      expect(getCommunicationStatusDetails(429)).toEqual(communicationStatuses.networkFailure); // Too Many Requests (rate-limit)
+      // 5xx codes that are really transport-level
+      expect(getCommunicationStatusDetails(502)).toEqual(communicationStatuses.networkFailure); // Bad Gateway
+      expect(getCommunicationStatusDetails(503)).toEqual(communicationStatuses.networkFailure); // Service Unavailable
+      expect(getCommunicationStatusDetails(521)).toEqual(communicationStatuses.networkFailure); // Cloudflare Web Server Down
+      expect(getCommunicationStatusDetails(523)).toEqual(communicationStatuses.networkFailure); // Cloudflare Origin Unreachable
+      expect(getCommunicationStatusDetails(527)).toEqual(communicationStatuses.networkFailure); // Cloudflare Railgun
     });
 
-    describe('4xx retriable (408, 423, 425, 429)', () => {
-      it.each([408, 423, 425, 429])('treats %i as network failure (retriable)', (code) => {
+    it('should handle timeout failures (safe to retry with backoff)', () => {
+      expect(getCommunicationStatusDetails(408)).toEqual(communicationStatuses.timeoutFailure); // Request Timeout
+      expect(getCommunicationStatusDetails(504)).toEqual(communicationStatuses.timeoutFailure); // Gateway Timeout
+      expect(getCommunicationStatusDetails(522)).toEqual(communicationStatuses.timeoutFailure); // Cloudflare Connection Timed Out
+      expect(getCommunicationStatusDetails(524)).toEqual(communicationStatuses.timeoutFailure); // Cloudflare timeout
+      expect(getCommunicationStatusDetails(598)).toEqual(communicationStatuses.timeoutFailure); // IIS Network Read Timeout
+      expect(getCommunicationStatusDetails(599)).toEqual(communicationStatuses.timeoutFailure); // IIS Network Connect Timeout
+    });
+
+    describe('4xx network-level retriable (423, 425, 429)', () => {
+      it.each([423, 425, 429])('treats %i as network failure (retriable)', (code) => {
         expect(getCommunicationStatus(code)).toBe(networkFailure);
         expect(getCommunicationStatusOrUndefined(code)).toBe(networkFailure);
         expect(getCommunicationStatusDetails(code)).toEqual(communicationStatuses.networkFailure);
@@ -277,6 +313,20 @@ describe('CommunicationStatus', () => {
         expect(isNonClientFailure(code)).toBe(true);
         expect(isRetryableFailure(code)).toBe(true);
         expect(isFailure(code)).toBe(true);
+      });
+    });
+
+    describe('408 Request Timeout is a timeout, not a network failure', () => {
+      it('treats 408 as timeoutFailure (retriable)', () => {
+        expect(getCommunicationStatus(408)).toBe(timeoutFailure);
+        expect(getCommunicationStatusOrUndefined(408)).toBe(timeoutFailure);
+        expect(getCommunicationStatusDetails(408)).toEqual(communicationStatuses.timeoutFailure);
+        expect(isTimeout(408)).toBe(true);
+        expect(isNetworkFailure(408)).toBe(false);
+        expect(isClientFailure(408)).toBe(false);
+        expect(isNonClientFailure(408)).toBe(true);
+        expect(isRetryableFailure(408)).toBe(true);
+        expect(isFailure(408)).toBe(true);
       });
     });
 
