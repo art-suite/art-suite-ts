@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts-compare",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A TypeScript comparison utility library",
   "keywords": [],
   "repository": {
@@ -36,8 +36,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-containers": "^1.0.0",
-    "@art-suite/art-core-ts-types": "^0.4.0"
+    "@art-suite/art-core-ts-containers": "^1.0.1",
+    "@art-suite/art-core-ts-types": "^0.4.1"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.18"

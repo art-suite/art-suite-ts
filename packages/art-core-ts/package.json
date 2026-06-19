@@ -1,6 +1,6 @@
 {
   "name": "@art-suite/art-core-ts",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "The full Art-Core-TS library",
   "keywords": [],
   "repository": {
@@ -35,17 +35,17 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@art-suite/art-core-ts-async": "^1.0.0",
-    "@art-suite/art-core-ts-communication-status": "^0.12.0",
-    "@art-suite/art-core-ts-compare": "^0.1.1",
-    "@art-suite/art-core-ts-comprehensions": "^0.5.0",
-    "@art-suite/art-core-ts-containers": "^1.0.0",
-    "@art-suite/art-core-ts-inspect": "^0.2.0",
-    "@art-suite/art-core-ts-json": "^0.5.1",
-    "@art-suite/art-core-ts-math": "^0.2.0",
-    "@art-suite/art-core-ts-string-case": "^0.2.1",
-    "@art-suite/art-core-ts-string-lib": "^1.0.0",
-    "@art-suite/art-core-ts-time": "^0.4.0",
-    "@art-suite/art-core-ts-types": "^0.4.0"
+    "@art-suite/art-core-ts-async": "^1.0.1",
+    "@art-suite/art-core-ts-communication-status": "^0.12.1",
+    "@art-suite/art-core-ts-compare": "^0.1.2",
+    "@art-suite/art-core-ts-comprehensions": "^0.5.1",
+    "@art-suite/art-core-ts-containers": "^1.0.1",
+    "@art-suite/art-core-ts-inspect": "^0.2.1",
+    "@art-suite/art-core-ts-json": "^0.5.2",
+    "@art-suite/art-core-ts-math": "^0.2.1",
+    "@art-suite/art-core-ts-string-case": "^0.2.2",
+    "@art-suite/art-core-ts-string-lib": "^1.0.1",
+    "@art-suite/art-core-ts-time": "^0.4.1",
+    "@art-suite/art-core-ts-types": "^0.4.1"
   }
 }
