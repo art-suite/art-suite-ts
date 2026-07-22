@@ -1,6 +1,5 @@
 import { isDate, isArray, isPlainObject, isFunction } from '@art-suite/art-core-ts-types'
 import { defaultColors, getInspectColors, InspectColors, noColors } from './colors'
-import { json } from 'stream/consumers'
 
 const indent = (level: number) => '  '.repeat(level)
 

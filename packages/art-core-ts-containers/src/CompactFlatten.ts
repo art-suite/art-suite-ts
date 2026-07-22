@@ -50,7 +50,7 @@ export const flatten = <T extends readonly any[]>(array: T | NotPresent, into?: 
   if (!into) into = []
   for (const item of array) {
     if (Array.isArray(item)) {
-      flatten(item, into)
+      flatten(item as any, into)
     } else {
       into.push(item as any)
     }

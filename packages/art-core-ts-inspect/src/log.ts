@@ -8,7 +8,8 @@ type LogFn = (<T>(...args: T[]) => T) & {
   json: <T>(...args: T[]) => T
 }
 
-const isNode = typeof process !== 'undefined' && process.versions?.node != null
+const nodeProcess = (globalThis as any).process as { versions?: { node?: string } } | undefined
+const isNode = nodeProcess?.versions?.node != null
 const colorsEnabled = isNode
 let colors = colorsEnabled ? defaultColors : noColors
 
