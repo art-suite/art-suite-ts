@@ -87,7 +87,7 @@ describe('toDate', () => {
 
 describe('formatDate', () => {
   it('should format Date', () => {
-    const date = new Date('2025-01-02')
+    const date = new Date(2025, 0, 2) // local midnight, so yyyy-MM-dd is timezone-independent
     expect(formatDate(date, 'yyyy-MM-dd')).toBe('2025-01-02')
   })
 
@@ -102,7 +102,7 @@ describe('formatDate', () => {
   })
 
   it('with format and date', () => {
-    expect(formatDate(new Date('2025-01-02'), 'yyyy-MM-dd')).toBe('2025-01-02')
+    expect(formatDate(new Date(2025, 0, 2), 'yyyy-MM-dd')).toBe('2025-01-02')
   })
 
   it('should handle UTC formatting', () => {
@@ -111,7 +111,9 @@ describe('formatDate', () => {
   })
 
   it('with only format string', () => {
-    const expected = new Date().toISOString().slice(0, 10) // yyyy-MM-dd
+    // formatDate renders in local time, so build the expected value from local date parts
+    const now = new Date()
+    const expected = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
     expect(formatDate('yyyy-MM-dd')).toBe(expected)
   })
 })
